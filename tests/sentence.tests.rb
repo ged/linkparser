@@ -26,7 +26,6 @@ require 'linkparser'
 class LinkParser::Sentence::TestCase < Test::Unit::TestCase
 
 	def setup
-		$deferr.puts "Creating a sentence test case"
 		@dict = LinkParser::Dictionary.new( :verbosity => 0 )
 		@sentence = LinkParser::Sentence.new( "The cat runs.", @dict )
 	end

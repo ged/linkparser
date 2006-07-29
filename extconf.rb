@@ -64,11 +64,14 @@ docs: docs/makedocs.rb
 	docs/makedocs.rb -v
 
 test: all
-	testrb -a tests/*.rb
+	testrb -a tests/*.tests.rb
 
 debugtest: clean all
-	ruby -wd test.rb
-
+	ruby -wd -e <<EOF \
+	require 'test/unit' \
+	(r = Test::Unit::AutoRunner.new(true)).process_args(ARGV) or \
+	  abort r.options.banner + " tests..." \
+	exit r.run \
 	EOF
 end
 
