@@ -73,5 +73,6 @@ debugtest: clean all
 	  abort r.options.banner + " tests..." \
 	exit r.run \
 	EOF
+	EOF
 end
 

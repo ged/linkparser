@@ -476,7 +476,7 @@ rlink_linkage_get_link_domain_names( self, index )
 	names_ary = rb_ary_new2( count );
 	
 	for ( i = 0; i < count; i++ ) {
-		rb_ary_store( names_ary, i, rb_str_new2(namesquicksilver[i]) );
+		rb_ary_store( names_ary, i, rb_str_new2(names[i]) );
 	}
 	
 	return names_ary;
@@ -528,7 +528,9 @@ rlink_linkage_compute_union( self )
 	rlink_LINKAGE *ptr = get_linkage( self );
 	int rval;
 	
-	rval = linkage_compute_union( )
+	rval = linkage_compute_union( (Linkage)ptr->linkage );
+	
+	return INT2FIX( rval );
 }
 
 /*
@@ -706,5 +708,7 @@ rlink_init_linkage(void)
 
 /*	rb_define_method( rlink_cLinkage, "print_constituent_tree",
 	 	rlink_linkage_print_constituent_tree, 1 );
-*/}
+*/
+
+}
 

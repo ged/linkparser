@@ -1,0 +1,29 @@
+Only in link-grammar-4.2.4/link-grammar: link-features.h
+diff -ubr link-grammar-4.2.4/link-grammar/link-grammar.def link-grammar-4.2.4.patched/link-grammar/link-grammar.def
+--- link-grammar-4.2.4/link-grammar/link-grammar.def	2006-06-18 11:44:25.000000000 -0700
++++ link-grammar-4.2.4.patched/link-grammar/link-grammar.def	2006-09-17 16:28:37.000000000 -0700
+@@ -114,3 +114,4 @@
+ linkage_constituent_node_get_end
+ lperrno
+ lperrmsg
++string_delete
+diff -ubr link-grammar-4.2.4/link-grammar/link-includes.h link-grammar-4.2.4.patched/link-grammar/link-includes.h
+--- link-grammar-4.2.4/link-grammar/link-includes.h	2006-06-18 11:42:13.000000000 -0700
++++ link-grammar-4.2.4.patched/link-grammar/link-includes.h	2006-09-17 16:36:59.000000000 -0700
+@@ -325,6 +325,15 @@
+ extern link_public_api(char) 
+      lperrmsg[];
+ 
++
++link_public_api(void)
++	string_delete(char *s);
++
++link_public_api(CNode *) 
++     linkage_constituent_tree(Linkage linkage);
++link_public_api(void)
++     linkage_free_constituent_tree(CNode * n);
++
+ LINK_END_DECLS
+ 
+ #endif
+Only in link-grammar-4.2.4: link-grammar.spec
