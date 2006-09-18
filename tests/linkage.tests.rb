@@ -25,11 +25,13 @@ require 'linkparser'
 
 class LinkParser::Linkage::TestCase < Test::Unit::TestCase
 
+	@@dict = LinkParser::Dictionary.new( :verbosity => 0 )
+
 	def setup
-		@dict = LinkParser::Dictionary.new( :verbosity => 0 )
-		@simple_sentence = @dict.parse( "The flag was wet." )
+		@simple_sentence = @@dict.parse( "The flag was wet." )
+		@ss_linkage = @simple_sentence.linkages.first
 		@conjunct_sentence = 
-			@dict.parse( "The ball rolled down the hill and bumped the curb." )
+			@@dict.parse( "The ball rolled down the hill and bumped the curb." )
 	end
 
 
@@ -37,7 +39,7 @@ class LinkParser::Linkage::TestCase < Test::Unit::TestCase
 		rval = nil
 		
 		assert_nothing_raised do
-			rval = @simple_sentence.linkages.first.diagram
+			rval = @ss_linkage.diagram
 		end
 		
 		assert_match( /LEFT-WALL/, rval )
@@ -59,7 +61,7 @@ class LinkParser::Linkage::TestCase < Test::Unit::TestCase
 		rval = nil
 		
 		assert_nothing_raised do
-			rval = @simple_sentence.linkages.first.links_and_domains
+			rval = @ss_linkage.links_and_domains
 		end
 		
 		assert_match( /LEFT-WALL/, rval )
@@ -82,9 +84,130 @@ class LinkParser::Linkage::TestCase < Test::Unit::TestCase
 			rval = @conjunct_sentence.linkages.first.num_sublinkages
 		end
 		
-		assert_equal 2, rval, "2 conjunctions"
+		assert_equal 2, rval, "2 sublinkages"
 	end
 	
+	def test_linkage_api_should_respond_to_num_words
+		assert_respond_to @ss_linkage, :num_words
+	end
+
+
+	def test_simple_sentence_linkage_should_have_seven_words
+		rval = nil
+		
+		assert_nothing_raised do
+			rval = @ss_linkage.num_words
+		end
+		
+		assert_equal 7, rval, "words: %p" % 
+			[ @ss_linkage.words ]
+	end
+
+	def test_linkage_api_should_respond_to_num_links
+		assert_respond_to @ss_linkage, :num_links
+	end
+
+	def test_simple_sentence_linkage_should_have_six_links
+		rval = nil
+		
+		assert_nothing_raised do
+			rval = @ss_linkage.num_links
+		end
+		
+         #1         LEFT-WALL      Xp      <---Xp---->  Xp        .
+         #2   (m)   LEFT-WALL      Wd      <---Wd---->  Wd        flag.n
+         #3+4 (m)   the            D       <---Ds---->  Ds        flag.n
+         #5   (m)   flag.n         Ss      <---Ss---->  Ss        was.v
+         #6   (m)   was.v          Pa      <---Pa---->  Pa        wet.a
+		assert_equal 6, rval
+	end
 	
+	def test_linkage_api_should_respond_to_link_lword
+		assert_respond_to @ss_linkage, :link_lword
+	end
+
+
+	def test_linkage_api_should_respond_to_link_rword
+		assert_respond_to @ss_linkage, :link_rword
+	end
+
+
+	def test_linkage_api_should_respond_to_link_length
+		assert_respond_to @ss_linkage, :link_length
+	end
+
+
+	def test_linkage_api_should_respond_to_link_label
+		assert_respond_to @ss_linkage, :link_label
+	end
+
+
+	def test_linkage_api_should_respond_to_link_llabel
+		assert_respond_to @ss_linkage, :link_llabel
+	end
+
+
+	def test_linkage_api_should_respond_to_link_rlabel
+		assert_respond_to @ss_linkage, :link_rlabel
+	end
+
+
+	def test_linkage_api_should_respond_to_link_num_domains
+		assert_respond_to @ss_linkage, :link_num_domains
+	end
+
+	def test_linkage_api_should_respond_to_link_domain_names
+		assert_respond_to @ss_linkage, :link_domain_names
+	end
+	
+	def test_linkage_api_should_respond_to_words
+		assert_respond_to @ss_linkage, :words
+	end
+
+
+	def test_linkage_api_should_respond_to_compute_union
+		assert_respond_to @ss_linkage, :compute_union
+	end
+
+
+	def test_linkage_api_should_respond_to_unused_word_cost
+		assert_respond_to @ss_linkage, :unused_word_cost
+	end
+
+
+	def test_linkage_api_should_respond_to_disjunct_cost
+		assert_respond_to @ss_linkage, :disjunct_cost
+	end
+
+
+	def test_linkage_api_should_respond_to_and_cost
+		assert_respond_to @ss_linkage, :and_cost
+	end
+
+
+	def test_linkage_api_should_respond_to_link_cost
+		assert_respond_to @ss_linkage, :link_cost
+	end
+
+
+	def test_linkage_api_should_respond_to_canonical?
+		assert_respond_to @ss_linkage, :canonical?
+	end
+
+
+	def test_linkage_api_should_respond_to_improper?
+		assert_respond_to @ss_linkage, :improper?
+	end
+
+
+	def test_linkage_api_should_respond_to_has_inconsistent_domains?
+		assert_respond_to @ss_linkage, :has_inconsistent_domains?
+	end
+
+
+	def test_linkage_api_should_respond_to_violation_name
+		assert_respond_to @ss_linkage, :violation_name
+	end
+
 end
 
