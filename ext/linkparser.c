@@ -29,6 +29,8 @@ VALUE rlink_cSentence;
 VALUE rlink_cLinkage;
 VALUE rlink_cParseOptions;
 
+VALUE rlink_sLinkageCTree;
+
 
 /* --------------------------------------------------
  * Utility functions
@@ -91,7 +93,7 @@ rlink_make_parse_options( default_options, options )
 
 /* Library init function */
 void
-Init_linkparser(void)
+Init_linkparser_ext(void)
 {
 	rlink_mLinkParser = rb_define_module( "LinkParser" );
 	rlink_eLpError = rb_define_class_under( rlink_mLinkParser, "Error", rb_eRuntimeError );

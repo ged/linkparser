@@ -1,13 +1,17 @@
 #!/usr/bin/ruby
 
-$LOAD_PATH.unshift "ext"
+BEGIN {
+	require 'pathname'
+	basedir = Pathname.new( __FILE__ ).dirname.parent
+	require basedir + 'linkparser-path.rb'
+	require basedir + 'utils.rb'
+
+	include UtilityFunctions
+}
 
 require 'linkparser'
-require './utils.rb'
 
-include UtilityFunctions
-
-dict = LinkParser::Dictionary.new( :screen_width => 120 )
+dict = LinkParser::Dictionary.new( :screen_width => 120, :verbosity => 2 )
 loop do
 	input_string = prompt( "Sentence to diagram: " )
 	break if input_string.empty?

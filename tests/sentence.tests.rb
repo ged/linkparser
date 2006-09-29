@@ -15,10 +15,9 @@
 BEGIN {
 	require 'pathname'
 	basedir = Pathname.new( __FILE__ ).dirname.parent
-	
-	$LOAD_PATH.unshift( basedir + 'ext' ) unless 
-		$LOAD_PATH.include?( basedir + 'ext' )
+	require basedir + "linkparser-path.rb"
 }
+
 
 require 'test/unit'
 require 'linkparser'
