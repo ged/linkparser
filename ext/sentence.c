@@ -77,7 +77,15 @@ rlink_sentence_gc_free( ptr )
 	rlink_SENTENCE *ptr;
 {
 	if ( ptr ) {
-		sentence_delete( (Sentence)ptr->sentence );
+		debugMsg(( "In free function of Sentence <%p>", ptr ));
+		
+		if ( rlink_get_dict(ptr->dictionary) ) {
+			debugMsg(( "Freeing Sentence <%p>", ptr->sentence ));
+			sentence_delete( (Sentence)ptr->sentence );
+		} else {
+			debugMsg(( "Not freeing a Sentence belonging to an already-freed dictionary." ));
+		}
+
 		ptr->sentence = NULL;
 		ptr->options = Qnil;
 		ptr->dictionary = Qnil;
@@ -142,9 +150,11 @@ rlink_get_sentence( self )
  * -------------------------------------------------- */
 
 /*
- * allocate()
- * --
- * Allocate a new LinkParser::Sentence object.
+ *  call-seq:
+ *     LinkParser::Sentence.allocate   => sentence
+ *
+ *  Allocate a new LinkParser::Sentence object.
+ *
  */
 static VALUE
 rlink_sentence_s_alloc( klass )
@@ -161,10 +171,14 @@ rlink_sentence_s_alloc( klass )
 
 
 /*
- * initialize( input_string, dictionary )
- * --
- * Create a new LinkParser::Sentence object from the given +input_string+
- * .
+ *  call-seq:
+ *     LinkParser::Sentence.new( str, dict )   => sentence
+ *
+ *  Create a new LinkParser::Sentence object from the given input string
+ #  using the specified LinkParser::Dictionary.
+ *
+ *     dict = LinkParser::Dictionary.new
+ *     LinkParser::Sentence.new( "The boy runs", dict )  #=> #<LinkParser::Sentence:0x5481ac>
  */
 static VALUE
 rlink_sentence_init( self, input_string, dictionary )
@@ -193,12 +207,14 @@ rlink_sentence_init( self, input_string, dictionary )
 }
 
 
-
 /*
- * parse( options={} )
- * --
- * Attach a parse set to this sentence and return the number of linkages
- * found.
+ *  call-seq:
+ *     sent.parse( options={} )   => fixnum
+ *
+ *  Attach a parse set to this sentence and return the number of linkages
+ *  found. If any +options+ are specified, they override those set in the 
+ *  sentence's dictionary.
+ * 
  */
 static VALUE
 rlink_sentence_parse( argc, argv, self )
@@ -237,9 +253,14 @@ rlink_sentence_parse( argc, argv, self )
 
 
 /*
- * parsed? => true or false
- * --
- * Returns +true+ if the sentence has been parsed.
+ *  call-seq:
+ *     parsed?   => true or false
+ *
+ *  Returns +true+ if the sentence has been parsed.
+ *
+ *     sentence.parsed?   #=> false
+ *     sentence.parse     #=> 6
+ *     sentence.parsed?   #=> true
  */
 static VALUE
 rlink_sentence_parsed_p( self )
@@ -250,10 +271,13 @@ rlink_sentence_parsed_p( self )
 }
 
 
-/* 
- * linkages
- * --
- * Returns an Array of the linkages
+/*
+ *  call-seq:
+ *     linkages   => array
+ *
+ *  Returns an Array of LinkParser::Linkage objects which represent the
+ *  parts parsed from the sentence for the current linkage.
+ *
  */
 static VALUE
 rlink_sentence_linkages( self )
@@ -284,12 +308,15 @@ rlink_sentence_linkages( self )
 }
 
 
-/* 
- * length
- * --
- * Returns the number of words in the tokenized sentence, including the 
- * boundary words and punctuation.
+/*
+ *  call-seq:
+ *     sentence.length   => fixnum
+ *
+ *  Returns the number of words in the tokenized sentence, including the 
+ *  boundary words and punctuation.
+ *
  */
+
 static VALUE
 rlink_sentence_length( self )
 	VALUE self;
@@ -315,7 +342,35 @@ rlink_sentence_word( self, n )
 	word = sentence_get_word( (Sentence)ptr->sentence, FIX2INT(n) );
 	return rb_str_new2( word );
 }
+
+
+/*
+ *  call-seq:
+ *     words   => array
+ *
+ *  Returns the words of the sentence as they appear after tokenization.
+ *
+ *     sentence = LinkParser::Dictionary.new.parse( "The dogs barks." )
+ *     sentence.words  #=> 
+ */
+static VALUE
+rlink_sentence_words( self )
+	VALUE self;
+{
+	rlink_SENTENCE *ptr = get_sentence( self );
+	char *word;
+	int i, length;
+	VALUE words = rb_ary_new();
 	
+	length = sentence_length( (Sentence)ptr->sentence );
+	for ( i = 0; i < length; i++ ) {
+		word = sentence_get_word( (Sentence)ptr->sentence, i );
+		rb_ary_push( words, rb_str_new2(word) );
+	}
+	
+	return words;
+}
+
 
 /* 
  * null_count
@@ -441,6 +496,7 @@ rlink_init_sentence( void )
 
 	rb_define_method( rlink_cSentence, "length", rlink_sentence_length, 0 );
 	rb_define_method( rlink_cSentence, "word", rlink_sentence_word, 1 );
+	rb_define_method( rlink_cSentence, "words", rlink_sentence_words, 0 );
 	rb_define_alias( rlink_cSentence, "[]", "word" );
 
 	rb_define_method( rlink_cSentence, "null_count", 

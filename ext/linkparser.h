@@ -59,6 +59,8 @@ extern VALUE rlink_cParseOptions;
 extern VALUE rlink_cPostProcessor;
 extern VALUE rlink_cConstituentTree;
 
+extern VALUE rlink_sLinkageCTree;
+
 extern VALUE rlink_eLpError;
 
 

@@ -15,9 +15,7 @@
 BEGIN {
 	require 'pathname'
 	basedir = Pathname.new( __FILE__ ).dirname.parent
-	
-	$LOAD_PATH.unshift( basedir + 'ext' ) unless 
-		$LOAD_PATH.include?( basedir + 'ext' )
+	require basedir + 'linkparser-path.rb'
 }
 
 require 'test/unit'
@@ -209,5 +207,58 @@ class LinkParser::Linkage::TestCase < Test::Unit::TestCase
 		assert_respond_to @ss_linkage, :violation_name
 	end
 
+    #1         LEFT-WALL      Xp      <---Xp---->  Xp        .
+    #2   (m)   LEFT-WALL      Wd      <---Wd---->  Wd        flag.n
+    #3+4 (m)   the            D       <---Ds---->  Ds        flag.n
+    #5   (m)   flag.n         Ss      <---Ss---->  Ss        was.v
+    #6   (m)   was.v          Pa      <---Pa---->  Pa        wet.a
+	def test_linkage_links_should_contain_link_structs_describing_the_linkage
+		rval = nil
+		
+		assert_nothing_raised do
+			rval = @ss_linkage.links
+		end
+		
+		assert_instance_of Array, rval
+		assert_kind_of Struct, rval.first
+		assert_equal 'LEFT-WALL', rval.first.lword, "left word of first link"
+		assert_equal 'Xp', rval.first.label, "label of first link"
+		assert_equal 'RIGHT-WALL', rval.last.rword, "right word of last link"
+		assert_equal 'RW', rval.last.label, "label of last link"
+		assert_equal 'flag.n', rval[3].lword, "left word of the fourth link"
+		assert_equal 'was.v', rval[3].rword, "right word of the fourth link"
+		assert_equal 'Ss', rval[3].label, "label of the fourth link"
+	end
+
+
+	def test_linkage_verb_should_return_sentence_verb
+		rval = nil
+		
+		assert_nothing_raised do
+			rval = @ss_linkage.verb
+		end
+		
+		assert_equal "was", rval
+	end
+
+
+	# The ball rolled down the hill and bumped the curb.
+	def test_linkage_verb_should_return_vword_of_current_sublinkage_of_conjunction
+		rval = nil
+		linkage = @conjunct_sentence.linkages.first
+		
+		assert_nothing_raised do
+			rval = linkage.verb
+		end
+		
+		assert_equal 'rolled', rval
+		
+		assert_nothing_raised do
+			linkage.current_sublinkage = 1
+			rval = linkage.verb
+		end
+		
+		assert_equal 'bumped', rval
+	end
 end
 

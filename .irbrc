@@ -27,10 +27,9 @@ IRB.conf[:PROMPT_MODE] = :LINKPARSER
 begin
 	puts "Requiring 'linkparser' module..."
 	require 'linkparser'
-	
-	$dict = LinkParser::Dictionary.new
 rescue => e
 	$stderr.puts "Ack! LinkParser module failed to load: #{e.message}\n\t" +
 		e.backtrace.join( "\n\t" )
 end
 
+$dict = LinkParser::Dictionary.new

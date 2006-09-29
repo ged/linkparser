@@ -21,6 +21,8 @@
  *  Forward declarations
  * -------------------------------------------------- */
 
+static VALUE rlink_linkage_make_cnode_array( CNode * );
+
 
 /* --------------------------------------------------
  * Macros and constants
@@ -123,12 +125,12 @@ get_linkage( self )
 /*
  * Publicly-usable linkage-fetcher
  */
-/*rlink_LINKAGE *
+rlink_LINKAGE *
 rlink_get_linkage( self )
 {
 	return get_linkage( self );
 }
-*/
+
 
 
 /* --------------------------------------------------
@@ -136,9 +138,10 @@ rlink_get_linkage( self )
  * -------------------------------------------------- */
 
 /*
- * allocate()
- * --
- * Allocate a new LinkParser::Linkage object.
+ *  call-seq:
+ *     LinkParser::Linkage.allocate   => LinkParser::Linkage
+ *
+ *  Allocate a new LinkParser::Linkage object.
  */
 static VALUE
 rlink_linkage_s_alloc( klass )
@@ -153,14 +156,14 @@ rlink_linkage_s_alloc( klass )
  * Instance methods
  * -------------------- */
 
-
 /*
- * initialize( index, sentence, options={} )
- * --
- * Create a new LinkParser::Linkage object out of the linkage indicated by
- * +index+ (a positive Integer) from the specified sentence (a 
- * LinkParser::Sentence). The optional options hash can be used to override
- * the parse options of the Sentence for the new linkage.
+ *  call-seq:
+ *     new( index, sentence, options={} )   => LinkParser::Linkage
+ *
+ *  Create a new LinkParser::Linkage object out of the linkage indicated by
+ *  +index+ (a positive Integer) from the specified sentence (a 
+ *  LinkParser::Sentence). The optional options hash can be used to override
+ *  the parse options of the Sentence for the new linkage.
  */
 static VALUE
 rlink_linkage_init( argc, argv, self )
@@ -209,10 +212,11 @@ rlink_linkage_init( argc, argv, self )
 
 
 
-/* 
- * diagram
- * --
- * Return a String containing a diagram of the linkage.
+/*
+ *  call-seq:
+ *     diagram   => str
+ *
+ *  Return a String containing a diagram of the linkage.
  */
 static VALUE
 rlink_linkage_diagram( self )
@@ -230,13 +234,14 @@ rlink_linkage_diagram( self )
 }
 
 
-/* 
- * postscript_diagram( full_doc=false )
- * --
- * Returns the macros needed to print out the linkage in a postscript file. 
- * By default, the output is just the set of postscript macros that describe 
- * the diagram. With full_doc=true a complete encapsulated postscript document 
- * is returned.
+/*
+ *  call-seq:
+ *     postscript_diagram( full_doc=false )   => str
+ *
+ *  Returns the macros needed to print out the linkage in a postscript file. 
+ *  By default, the output is just the set of postscript macros that describe 
+ *  the diagram. With full_doc=true a complete encapsulated postscript document 
+ *  is returned.
  */
 static VALUE
 rlink_linkage_print_postscript( self, full_doc )
@@ -255,22 +260,25 @@ rlink_linkage_print_postscript( self, full_doc )
 }
 
 
-/* 
- * links_and_domains
- * --
- * Return a String containing a lists all of the links and domain names for 
- * the current sublinkage. For example, for the sentence "I eat, therefore I 
- * think":
- * 
- *             /////          RW      <---RW---->  RW        /////
- *   (m)       /////          Wd      <---Wd---->  Wd        I.p
- *   (m)       I.p            CC      <---CC---->  CC        therefore
- *   (m)       I.p            Sp*i    <---Sp*i-->  Sp        eat
- *   (m)       ,              Xd      <---Xd---->  Xd        therefore
- *   (m) (m)   therefore      Wd      <---Wd---->  Wd        I.p
- *   (m) (m)   I.p            Sp*i    <---Sp*i-->  Sp        think.v
- * 
- * 
+/*
+ *  call-seq:
+ *     links_and_domains   => str
+ *
+ *  Return a String containing a lists all of the links and domain names for 
+ *  the current sublinkage.
+ *
+ *  Example:
+ *    sent = dict.parse("I eat, therefore I think")
+ *    puts sent.linkages.first.links_and_domains
+ *  
+ *  prints:
+ *              /////          RW      <---RW---->  RW        /////
+ *    (m)       /////          Wd      <---Wd---->  Wd        I.p
+ *    (m)       I.p            CC      <---CC---->  CC        therefore
+ *    (m)       I.p            Sp*i    <---Sp*i-->  Sp        eat
+ *    (m)       ,              Xd      <---Xd---->  Xd        therefore
+ *    (m) (m)   therefore      Wd      <---Wd---->  Wd        I.p
+ *    (m) (m)   I.p            Sp*i    <---Sp*i-->  Sp        think.v
  * 
  */
 static VALUE
@@ -290,11 +298,12 @@ rlink_linkage_links_and_domains( self )
 
 
 
-/* 
- * num_sublinkages
- * --
- * Return the number of sublinkages for a linkage with conjunctions, 1 
- * otherwise.
+/*
+ *  call-seq:
+ *     num_sublinkages   => fixnum
+ *
+ *  Return the number of sublinkages for a linkage with conjunctions, 1 
+ *  otherwise.
  */
 static VALUE
 rlink_linkage_num_sublinkages( self )
@@ -302,6 +311,46 @@ rlink_linkage_num_sublinkages( self )
 {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	return INT2FIX( linkage_get_num_sublinkages((Linkage)ptr->linkage) );
+}
+
+
+/*
+ *  call-seq:
+ *     current_sublinkage = index   => true or false
+ *
+ *  After this call, all operations on the linkage will refer to the index-th 
+ *  sublinkage. In the case of a linkage without conjunctions, this has no 
+ *  effect.
+ */
+static VALUE
+rlink_linkage_current_sublinkage_eq( self, index )
+	VALUE self, index;
+{
+	rlink_LINKAGE *ptr = get_linkage( self );
+	int rval = 0;
+	
+	rval = linkage_set_current_sublinkage( (Linkage)ptr->linkage, NUM2INT(index) );
+	
+	return INT2FIX( rval );
+}
+
+
+/*
+ *  call-seq:
+ *     current_sublinkage   => fixnum
+ *
+ *  Get the index of the current sublinkage.
+ */
+static VALUE
+rlink_linkage_current_sublinkage( self )
+	VALUE self;
+{
+	rlink_LINKAGE *ptr = get_linkage( self );
+	int rval = 0;
+
+	rval = linkage_get_current_sublinkage( (Linkage)ptr->linkage );
+	
+	return INT2FIX( rval );
 }
 
 
@@ -346,7 +395,7 @@ rlink_linkage_get_link_lword( self, index )
 	VALUE self, index;
 {
 	rlink_LINKAGE *ptr = get_linkage( self );
-	int i = FIX2INT( index );
+	int i = NUM2INT( index );
 	
 	return INT2FIX( linkage_get_link_lword((Linkage)ptr->linkage, i) );
 }
@@ -359,11 +408,11 @@ rlink_linkage_get_link_lword( self, index )
  * current sublinkage.
  */
 static VALUE
-rlink_linkage_get_link_rword( self, arg )
-	VALUE self, arg;
+rlink_linkage_get_link_rword( self, index )
+	VALUE self, index;
 {
 	rlink_LINKAGE *ptr = get_linkage( self );
-	int i = FIX2INT( index );
+	int i = NUM2INT( index );
 	
 	return INT2FIX( linkage_get_link_rword((Linkage)ptr->linkage, i) );
 }
@@ -379,7 +428,7 @@ rlink_linkage_get_link_length( self, index )
 	VALUE self, index;
 {
 	rlink_LINKAGE *ptr = get_linkage( self );
-	int i = FIX2INT( index );
+	int i = NUM2INT( index );
 	
 	return INT2FIX( linkage_get_link_length((Linkage)ptr->linkage, i) );
 }
@@ -395,7 +444,7 @@ rlink_linkage_get_link_label( self, index )
 	VALUE self, index;
 {
 	rlink_LINKAGE *ptr = get_linkage( self );
-	int i = FIX2INT( index );
+	int i = NUM2INT( index );
 	char *label;
 	
 	label = linkage_get_link_label( (Linkage)ptr->linkage, i );
@@ -409,14 +458,16 @@ rlink_linkage_get_link_label( self, index )
  * The label on the left word of the index-th link of the current sublinkage.
  */
 static VALUE
-rlink_linkage_get_link_llabel( self, arg )
-	VALUE self, arg;
+rlink_linkage_get_link_llabel( self, index )
+	VALUE self, index;
 {
 	rlink_LINKAGE *ptr = get_linkage( self );
-	int i = FIX2INT( index );
-	char *label;
+	int i = NUM2INT( index );
+	char *label = NULL;
 	
 	label = linkage_get_link_llabel( (Linkage)ptr->linkage, i );
+	if ( !label ) return Qnil;
+	
 	return rb_str_new2( label );
 }
 
@@ -426,29 +477,33 @@ rlink_linkage_get_link_llabel( self, arg )
  * The label on the right word of the index-th link of the current sublinkage.
  */
 static VALUE
-rlink_linkage_get_link_rlabel( self, arg )
-	VALUE self, arg;
+rlink_linkage_get_link_rlabel( self, index )
+	VALUE self, index;
 {
 	rlink_LINKAGE *ptr = get_linkage( self );
-	int i = FIX2INT( index );
-	char *label;
+	int i = NUM2INT( index );
+	char *label = NULL;
 	
 	label = linkage_get_link_rlabel( (Linkage)ptr->linkage, i );
+	if ( !label ) return Qnil;
+	
 	return rb_str_new2( label );
 }
 
 
 /*
- * link_num_domains( index ) => fixnum
- * --
- * The number of domains in the index-th link.
+ *  call-seq:
+ *     link_num_domains( index )   => fixnum
+ *
+ *  Returns the number of domains in the index-th link.
+ *
  */
 static VALUE
 rlink_linkage_get_link_num_domains( self, index )
 	VALUE self, index;
 {
 	rlink_LINKAGE *ptr = get_linkage( self );
-	int i = FIX2INT( index );
+	int i = NUM2INT( index );
 	int count = 0;
 	
 	count = linkage_get_link_num_domains( (Linkage)ptr->linkage, i );
@@ -457,9 +512,10 @@ rlink_linkage_get_link_num_domains( self, index )
 
 
 /*
- * link_domain_names => array
- * --
- * The names of the domains the index-th link belongs to.
+ *  call-seq:
+ *     link_domain_names( index )   => array
+ *
+ *  Returns the names of the domains the index-th link belongs to.
  */
 static VALUE
 rlink_linkage_get_link_domain_names( self, index )
@@ -467,7 +523,7 @@ rlink_linkage_get_link_domain_names( self, index )
 {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	char **names;
-	int i = FIX2INT( index );
+	int i = NUM2INT( index );
 	int count;
 	VALUE names_ary;
 	
@@ -484,11 +540,12 @@ rlink_linkage_get_link_domain_names( self, index )
 
 
 /*
- * words => array
- * --
- * Return the Array of word spellings or individual word spelling for the 
- * current sublinkage. These are the "inflected" spellings, such as "dog.n". 
- * The original spellings can be obtained by calls to Sentence#words.
+ *  call-seq:
+ *     words   => array
+ *
+ *  Return the Array of word spellings or individual word spelling for the 
+ *  current sublinkage. These are the "inflected" spellings, such as "dog.n". 
+ *  The original spellings can be obtained by calls to Sentence#words.
  */
 static VALUE
 rlink_linkage_get_words( self )
@@ -512,14 +569,15 @@ rlink_linkage_get_words( self )
 
 
 /*
- * compute_union
- * --
- * If the linkage has a conjunction, combine all of the links occurring in all
- * sublinkages together -- in effect creating a "master" linkage (which may
- * have crossing links). The union is created as another sublinkage, thus
- * increasing the number of sublinkages by one, and is returned by this method.
- * If the linkage has no conjunctions, computing its union has no effect, and
- * nil is returned.
+ *  call-seq:
+ *     compute_union   => fixnum or nil
+ *
+ *  If the linkage has a conjunction, combine all of the links occurring in all
+ *  sublinkages together -- in effect creating a "master" linkage (which may
+ *  have crossing links). The union is created as another sublinkage, thus
+ *  increasing the number of sublinkages by one, and is returned by this method.
+ *  If the linkage has no conjunctions, computing its union has no effect, and
+ *  nil is returned.
  */
 static VALUE
 rlink_linkage_compute_union( self )
@@ -533,111 +591,267 @@ rlink_linkage_compute_union( self )
 	return INT2FIX( rval );
 }
 
+
 /*
- * unused_word_cost
- * --
- * 
+ *  call-seq:
+ *     linkage.unused_word_cost   => fixnum
+ *
+ *  Returns the unused word cost of the linkage, which corresponds to the number
+ *  of null links that were required to parse it.
+ *     
  */
 static VALUE
 rlink_linkage_unused_word_cost( self )
 	VALUE self;
 {
 	rlink_LINKAGE *ptr = get_linkage( self );
-	return Qnil;
+	int rval;
+	
+	rval = linkage_unused_word_cost( (Linkage)ptr->linkage );
+	
+	return INT2FIX( rval );
 }
 
+
 /*
- * disjunct_cost
- * --
- * 
+ *  call-seq:
+ *     disjunct_cost( fixnum )   => fixnum
+ *
+ *  Returns the connector or disjunct cost of the linkage.
+ *
  */
 static VALUE
 rlink_linkage_disjunct_cost( self )
 	VALUE self;
 {
 	rlink_LINKAGE *ptr = get_linkage( self );
-	return Qnil;
+	int rval;
+	
+	rval = linkage_disjunct_cost( (Linkage)ptr->linkage );
+	
+	return INT2FIX( rval );
 }
 
+
 /*
- * and_cost
- * --
- * 
+ *  call-seq:
+ *     and_cost   => fixnum
+ *
+ *  Returns the AND cost of the linkage, which is the difference in length 
+ *  between and-list elements.
+ *
  */
 static VALUE
 rlink_linkage_and_cost( self )
 	VALUE self;
 {
 	rlink_LINKAGE *ptr = get_linkage( self );
-	return Qnil;
+	int rval;
+	
+	rval = linkage_and_cost( (Linkage)ptr->linkage );
+	
+	return INT2FIX( rval );
 }
 
+
 /*
- * link_cost
- * --
- * 
+ *  call-seq:
+ *     link_cost   => fixnum
+ *
+ *  Returns the total (LEN) cost of the linkage, which is the total length of 
+ *  all links in the sentence minus the number of words -- since the total link 
+ *  length is never less than the number of words.
+ *
  */
 static VALUE
 rlink_linkage_link_cost( self )
 	VALUE self;
 {
 	rlink_LINKAGE *ptr = get_linkage( self );
-	return Qnil;
+	int rval;
+	
+	rval = linkage_link_cost( (Linkage)ptr->linkage );
+	
+	return INT2FIX( rval );
 }
 
+
 /*
- * canonical?
- * --
- * 
+ *  call-seq:
+ *     canonical?   => true or false
+ *
+ *  Returns +true+ if the linkage is canonical. The canonical linkage is the 
+ *  one in which the minimal disjunct that ever occurrs in a position is used 
+ *  in that position.
  */
 static VALUE
 rlink_linkage_canonical_p( self )
 	VALUE self;
 {
 	rlink_LINKAGE *ptr = get_linkage( self );
-	return Qnil;
+	int rval = 0;
+	
+	rval = linkage_is_canonical( (Linkage)ptr->linkage );
+	
+	return rval ? Qtrue : Qfalse;
 }
 
 
 /*
- * improper?
- * --
- * 
+ *  call-seq:
+ *     improper?   => true or false
+ *
+ *  Returns +true+ if the linkage is "improper". 
+ *  --
+ *  :FIXME: Find out what an "improper fat linkage" is.
+ *
  */
 static VALUE
 rlink_linkage_improper_p( self )
 	VALUE self;
 {
 	rlink_LINKAGE *ptr = get_linkage( self );
-	return Qnil;
+	int rval = 0;
+	
+	rval = linkage_is_improper( (Linkage)ptr->linkage );
+	
+	return rval ? Qtrue : Qfalse;
 }
 
 
 /*
- * has_inconsistent_domains?
- * --
- * 
+ *  call-seq:
+ *     has_inconsistent_domains?   => true or false
+ *
+ *  Returns +true+ if the linkage has inconsistent domains. 
+ *  --
+ *  :FIXME: Find out what it means that a linkage has inconsistent domains.
+ *
  */
 static VALUE
 rlink_linkage_has_inconsistent_domains_p( self )
 	VALUE self;
 {
 	rlink_LINKAGE *ptr = get_linkage( self );
-	return Qnil;
+	int rval = 0;
+	
+	rval = linkage_has_inconsistent_domains( (Linkage)ptr->linkage );
+	
+	return rval ? Qtrue : Qfalse;
 }
 
 
 /*
- * violation_name
- * --
- * 
+ *  call-seq:
+ *     violation_name   => str
+ *
+ *  If the linkage violated any post-processing rules, this method returns the 
+ *  name of the violated rule in the post-process knowledge file. 
  */
 static VALUE
 rlink_linkage_get_violation_name( self )
 	VALUE self;
 {
 	rlink_LINKAGE *ptr = get_linkage( self );
-	return Qnil;
+	char *violation_name = NULL;
+	
+	violation_name = linkage_get_violation_name( (Linkage)ptr->linkage );
+	
+	if ( violation_name ) {
+		return rb_str_new2( violation_name );
+	} else {
+		return Qnil;
+	}
+}
+
+
+/*
+ *  call-seq:
+ *     constituent_tree   => hash
+ *
+ *  Return the Linkage's constituent tree as a hash of hashes.
+ *
+ *     sent = dict.parse( "He is a big dog." )
+ *     link = sent.linkages.first
+ *     ctree = link.constituent_tree
+ *     #=> {}
+ *     
+ */
+static VALUE
+rlink_linkage_constituent_tree( self )
+	VALUE self;
+{
+	rlink_LINKAGE *ptr = get_linkage( self );
+	CNode *ctree = NULL;
+	VALUE rval = Qnil;
+	
+	ctree = linkage_constituent_tree( (Linkage)ptr->linkage );
+	rval = rlink_linkage_make_cnode_array( ctree );
+	
+	linkage_free_constituent_tree( ctree );
+	return rval;
+}
+
+static VALUE
+rlink_linkage_make_cnode_array( ctree )
+	CNode *ctree;
+{
+	VALUE nodes = rb_ary_new();
+	VALUE rnode;
+	CNode *cnode = ctree;
+	
+	/*	
+		struct CNode_s {
+		  char  * label;
+		  CNode * child;
+		  CNode * next;
+		  int   start, end;
+		};
+	*/
+	while ( cnode ) {
+		rnode = rb_struct_new( rlink_sLinkageCTree,
+			rb_str_new2( linkage_constituent_node_get_label(cnode) ),
+			Qnil,
+			INT2FIX( linkage_constituent_node_get_start(cnode) ),
+			INT2FIX( linkage_constituent_node_get_end(cnode) )			/* end */
+		  );
+
+		/* Make a node array for any children */
+		rb_struct_aset( rnode, INT2FIX(1), 
+			rlink_linkage_make_cnode_array(linkage_constituent_node_get_child(cnode)) );
+
+		rb_ary_push( nodes, rnode );
+		cnode = linkage_constituent_node_get_next( cnode );
+	}
+	
+	return nodes;
+}
+
+
+/*
+ *  call-seq:
+ *     linkage.constituent_tree_string( mode=1 )   => str
+ *
+ *  Return 
+ *
+ *     example code
+ */
+static VALUE
+rlink_linkage_constituent_tree_string( self, mode )
+	VALUE self, mode;
+{
+	rlink_LINKAGE *ptr = get_linkage( self );
+	char *ctree_string = NULL;
+	VALUE rval = Qnil;
+	
+	ctree_string = linkage_print_constituent_tree( (Linkage)ptr->linkage, NUM2INT(mode) );
+
+	if ( ctree_string ) {
+		rval = rb_str_new2( ctree_string );
+		string_delete( ctree_string );
+	}
+	
+	return rval;
 }
 
 
@@ -659,11 +873,17 @@ rlink_init_linkage(void)
 
 	rb_define_method( rlink_cLinkage, "num_sublinkages", 
 		rlink_linkage_num_sublinkages, 0 );
+	rb_define_method( rlink_cLinkage, "current_sublinkage=",
+		rlink_linkage_current_sublinkage_eq, 1 );
+	rb_define_method( rlink_cLinkage, "current_sublinkage",
+		rlink_linkage_current_sublinkage, 0 );
 	
 	rb_define_method( rlink_cLinkage, "num_words",
 	 	rlink_linkage_get_num_words, 0 );
+	rb_define_alias ( rlink_cLinkage, "word_count", "num_words" );
 	rb_define_method( rlink_cLinkage, "num_links",
 	 	rlink_linkage_get_num_links, 0 );
+	rb_define_alias ( rlink_cLinkage, "link_count", "num_links" );
 	
 	rb_define_method( rlink_cLinkage, "link_lword",
 	 	rlink_linkage_get_link_lword, 1 );
@@ -704,11 +924,14 @@ rlink_init_linkage(void)
 	 	rlink_linkage_has_inconsistent_domains_p, 0 );
 	rb_define_method( rlink_cLinkage, "violation_name",
 	 	rlink_linkage_get_violation_name, 0 );
+
 	
-
-/*	rb_define_method( rlink_cLinkage, "print_constituent_tree",
-	 	rlink_linkage_print_constituent_tree, 1 );
-*/
-
+	rb_define_const( rlink_cLinkage, "CTree", rlink_sLinkageCTree );
+	rlink_sLinkageCTree = rb_struct_define( "LinkParserLinkageCTree", 
+		"label", "children", "start", "end", NULL );
+	rb_define_method( rlink_cLinkage, "constituent_tree",
+		rlink_linkage_constituent_tree, 0 );
+	rb_define_method( rlink_cLinkage, "constituent_tree_string",
+	 	rlink_linkage_constituent_tree_string, 1 );
 }
 

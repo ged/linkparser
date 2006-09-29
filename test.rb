@@ -5,12 +5,10 @@
 #
 
 BEGIN {
-	$basedir = File.expand_path( File.dirname(__FILE__) )
-	["lib", "ext"].each do |subdir|
-		$LOAD_PATH.unshift File.join( $basedir, subdir )
-	end
-
-	require "#{$basedir}/utils"
+	require 'pathname'
+	$basedir = Pathname.new( __FILE__ ).dirname
+	require $basedir + "linkparser-path.rb"
+	require $basedir + "utils.rb"
 	include UtilityFunctions
 }
 
@@ -60,7 +58,7 @@ $stderr.puts "#{patterns.length} patterns given on the command line:",
     patterns.collect {|pat| "  " + pat.to_s }.join( "\n" )
 
 ### Load all the tests from the tests dir
-Find.find( File.join($basedir, "tests") ) {|file|
+Find.find( $basedir + "tests" ) {|file|
 	Find.prune if /\/\./ =~ file or /~$/ =~ file
 	Find.prune if /TEMPLATE/ =~ file
 	next if File.stat( file ).directory?

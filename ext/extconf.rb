@@ -25,10 +25,12 @@ end
 $CFLAGS << ' -Wall'
 $CFLAGS << ' -DDEBUG'
 
-dir_config( "linkparser" )
-have_header( "link-grammar/link-includes.h")
-have_header( "link-grammar/utilities.h")
+dir_config( "linkparser_ext" )
 have_library( "link-grammar", "dictionary_create" ) or
 	abort( "Could not find link-grammar library." )
+have_header( "link-grammar/link-includes.h" )
+have_header( "link-grammar/utilities.h" )
+have_func( "linkage_get_current_sublinkage", "link-grammar/link-includes.h" ) or
+	warn "Link grammar library is unpatched."
 
-create_makefile( "linkparser" )
+create_makefile( "linkparser_ext" )
