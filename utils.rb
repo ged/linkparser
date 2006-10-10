@@ -43,6 +43,7 @@ module UtilityFunctions
 		/\bTEMPLATE\.\w+\.tpl\b/,
 		/\.cvsignore/,
 		/\.s?o$/,
+		%r{/\._},
 	]
 
 	# Set some ANSI escape code constants (Shamelessly stolen from Perl's

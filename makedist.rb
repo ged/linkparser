@@ -112,6 +112,7 @@ def main
 	snapshot = false
 	wantsTag = true
 	wantsPrompt = true
+	make_manifest_flag = false
 
 	# Read command-line options
 	ARGV.options do |oparser|
@@ -120,6 +121,10 @@ def main
 		oparser.on( "--verbose", "-v", TrueClass, "Make progress verbose" ) do
 			$VERBOSE = true
 			debugMsg "Turned verbose on."
+		end
+
+		oparser.on( "--make-manifest", "-m", TrueClass, "(Re)create the MANIFEST file." ) do
+			make_manifest_flag = true
 		end
 
 		oparser.on( "--snapshot", "-s", TrueClass,
@@ -146,6 +151,12 @@ def main
 		oparser.parse!
 	end
 
+	if make_manifest_flag
+		$VERBOSE = true
+		makeManifest()
+		exit
+	end
+	
 	userversion = ARGV.shift
 
 	# Find the project name
