@@ -25,7 +25,7 @@ end
 $CFLAGS << ' -Wall'
 $CFLAGS << ' -DDEBUG'
 
-dir_config( "linkparser_ext" )
+dir_config( "linkgrammar" )
 have_library( "link-grammar", "dictionary_create" ) or
 	abort( "Could not find link-grammar library." )
 have_header( "link-grammar/link-includes.h" )
