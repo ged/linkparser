@@ -27,6 +27,7 @@ def rule( target, clean = nil )
      # wr << "\t@-rm tmp/* tests/tmp/* 2> /dev/null\n"
 	  wr << "\t@-rm -f mkmf.log ext/mkmf.log 2> /dev/null\n"
 	  wr << "\t@-rm -f ext/depend 2> /dev/null\n"
+	  wr << "\t@-rm -f .tests.passed 2> /dev/null\n"
       wr << "\t@rm Makefile\n" if clean
    end
    wr

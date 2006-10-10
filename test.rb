@@ -8,7 +8,10 @@ BEGIN {
 	require 'pathname'
 	$basedir = Pathname.new( __FILE__ ).dirname
 	require $basedir + "linkparser-path.rb"
-	require $basedir + "utils.rb"
+
+	unless defined? UtilityFunctions
+		require $basedir + "utils.rb"
+	end
 	include UtilityFunctions
 }
 
@@ -99,9 +102,18 @@ class LinkParserTests
 	end
 end
 
-# Run tests
-Dir.chdir( $basedir ) do
-	$SAFE = safelevel
+def runtests
 	Test::Unit::UI::Console::TestRunner.new( LinkParserTests ).start
+end	
+
+# Run tests
+if $0 == __FILE__
+	$SAFE = safelevel
+	Dir.chdir( $basedir ) do
+		runtests
+	end
 end
+
+
+	
 
