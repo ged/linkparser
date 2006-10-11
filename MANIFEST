@@ -1,0 +1,23 @@
+#
+# Distribution Manifest
+# Created: Tue Oct 10 16:14:57 -0700 2006
+# 
+
+
+utils.rb
+tests/**/*.tests.rb
+test.rb
+MANIFEST
+linkparser-path.rb
+link-grammar-4.2.4.tar.gz
+link-grammar-4.2.4.patch
+lib/**/*.rb
+install.rb
+extconf.rb
+ext
+ext/*.c
+ext/*.h
+ext/extconf.rb
+docs
+docs/makedocs.rb
+docs/CATALOG
