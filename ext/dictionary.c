@@ -127,12 +127,16 @@ rlink_make_oldstyle_dict( dict_file, pp_file, cons_file, affix_file )
 
 
 /*
- * new( options={} )
- * new( language, options={} )
- * new( dict, pp, ck, affix, option={} )
- * --
- * Create a new LinkParser::Dictionary with data files for the given +language+, or
- * using the specified data files.
+ *  call-seq:
+ *    LinkParser::Dictionary.new( options={} )
+ *    LinkParser::Dictionary.new( language, options={} )
+ *    LinkParser::Dictionary.new( dict, pp, ck, affix, option={} )
+ * 
+ *  Create a new LinkParser::Dictionary with data files for the given +language+, or
+ *  using the specified data files.
+ *
+ *
+ *
  */
 static VALUE
 rlink_dict_initialize( argc, argv, self )
@@ -289,6 +293,11 @@ rlink_parse( argc, argv, self )
 void
 rlink_init_dict(void)
 {
+#ifdef FOR_RDOC
+	rlink_mLinkParser = rb_define_module( "LinkParser" );
+	rlink_eLpError = rb_define_class_under( rlink_mLinkParser, "Error", rb_eRuntimeError );
+#endif
+
 	rlink_cDictionary = rb_define_class_under( rlink_mLinkParser, "Dictionary",
 	 	rb_cObject );
 	

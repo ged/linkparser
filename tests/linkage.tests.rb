@@ -260,5 +260,80 @@ class LinkParser::Linkage::TestCase < Test::Unit::TestCase
 		
 		assert_equal 'bumped', rval
 	end
+
+	
+	
+	Mode1CTreeString = "(S (NP The flag)\n   (VP was\n       (ADJP wet))\n   .)\n"
+	Mode2CTreeString = "[S [NP The flag NP] [VP was [ADJP wet ADJP] VP] . S] \n"
+	Mode3CTreeString = "(S (NP The flag) (VP was (ADJP wet)) .)\n"
+	
+	def test_constituent_tree_string_without_mode_should_return_mode1_string
+		rval = nil
+		
+		assert_nothing_raised do
+			rval = @ss_linkage.constituent_tree_string
+		end
+		
+		assert_equal Mode1CTreeString, rval
+	end
+
+
+	def test_constituent_tree_string_with_mode1_should_return_mode1_string
+		rval = nil
+		
+		assert_nothing_raised do
+			rval = @ss_linkage.constituent_tree_string( 1 )
+		end
+		
+		assert_equal Mode1CTreeString, rval
+	end
+
+	def test_constituent_tree_string_with_mode2_should_return_mode2_string
+		rval = nil
+		
+		assert_nothing_raised do
+			rval = @ss_linkage.constituent_tree_string( 2 )
+		end
+		
+		assert_equal Mode2CTreeString, rval
+	end
+
+	def test_constituent_tree_string_with_mode3_should_return_mode3_string
+		rval = nil
+		
+		assert_nothing_raised do
+			rval = @ss_linkage.constituent_tree_string( 3 )
+		end
+		
+		assert_equal Mode3CTreeString, rval
+	end
+
+	def test_constituent_tree_string_with_mode4_should_raise_exception
+		assert_raises( ArgumentError ) do
+			@ss_linkage.constituent_tree_string( 4 )
+		end
+	end
+
+	def test_constituent_tree_string_with_nonnumeric_should_raise_exception
+		assert_raises( TypeError ) do
+			@ss_linkage.constituent_tree_string( "Glah" )
+		end
+	end
+
+
+	def test_constituent_tree_should_return_array_of_CTree_structs
+		rval = nil
+		
+		assert_nothing_raised do 
+			rval = @ss_linkage.constituent_tree
+		end
+		
+		assert_kind_of Array, rval
+		assert_kind_of Struct, rval.first
+		assert_equal "S", rval.first.label
+		assert_equal "NP", rval.first.children.first.label
+		assert_equal "The", rval.first.children.first.children.first.label
+	end
+	
 end
 
