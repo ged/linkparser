@@ -832,19 +832,36 @@ rlink_linkage_make_cnode_array( ctree )
  *  call-seq:
  *     linkage.constituent_tree_string( mode=1 )   => str
  *
- *  Return 
+ *  Return the constituent tree as a printable string.
  *
- *     example code
+ *  Example:
+ *     sent = dict.parse( "He is a big dog." )
+ *     link = sent.linkages.first
+ *     link.constituent_tree_string
+ #  
+ #  # ==> "(S (NP He)\n   (VP is\n       (NP a big dog))\n   .)\n"
  */
 static VALUE
-rlink_linkage_constituent_tree_string( self, mode )
-	VALUE self, mode;
+rlink_linkage_constituent_tree_string( argc, argv, self )
+	int argc;
+	VALUE *argv;
+	VALUE self;
 {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	char *ctree_string = NULL;
-	VALUE rval = Qnil;
+	VALUE rval, modenum;
+	int mode;
 	
-	ctree_string = linkage_print_constituent_tree( (Linkage)ptr->linkage, NUM2INT(mode) );
+	if ( rb_scan_args(argc, argv, "01", &modenum) == 1 ) {
+		mode = NUM2INT( modenum );
+	} else {
+		mode = 1;
+	}
+
+	if ( mode < 1 || mode > 3 )
+		rb_raise( rb_eArgError, "Illegal mode %d specified.", mode );
+
+	ctree_string = linkage_print_constituent_tree( (Linkage)ptr->linkage, mode );
 
 	if ( ctree_string ) {
 		rval = rb_str_new2( ctree_string );
@@ -860,6 +877,11 @@ rlink_linkage_constituent_tree_string( self, mode )
 void
 rlink_init_linkage(void)
 {
+#ifdef FOR_RDOC
+	rlink_mLinkParser = rb_define_module( "LinkParser" );
+	rlink_eLpError = rb_define_class_under( rlink_mLinkParser, "Error", rb_eRuntimeError );
+#endif
+
 	rlink_cLinkage = rb_define_class_under( rlink_mLinkParser, "Linkage", rb_cObject );
 	
 	rb_define_alloc_func( rlink_cLinkage, rlink_linkage_s_alloc );
@@ -932,6 +954,6 @@ rlink_init_linkage(void)
 	rb_define_method( rlink_cLinkage, "constituent_tree",
 		rlink_linkage_constituent_tree, 0 );
 	rb_define_method( rlink_cLinkage, "constituent_tree_string",
-	 	rlink_linkage_constituent_tree_string, 1 );
+	 	rlink_linkage_constituent_tree_string, -1 );
 }
 

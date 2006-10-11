@@ -970,6 +970,11 @@ rlink_parseopts_reset_resources(Parse_Options opts);
 void
 rlink_init_parseoptions(void)
 {
+#ifdef FOR_RDOC
+	rlink_mLinkParser = rb_define_module( "LinkParser" );
+	rlink_eLpError = rb_define_class_under( rlink_mLinkParser, "Error", rb_eRuntimeError );
+#endif
+	
 	rlink_cParseOptions = rb_define_class_under( rlink_mLinkParser, 
 		"ParseOptions", rb_cObject );
 

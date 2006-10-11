@@ -484,6 +484,11 @@ rlink_sentence_disjunct_cost( self, i )
 void
 rlink_init_sentence( void )
 {
+#ifdef FOR_RDOC
+	rlink_mLinkParser = rb_define_module( "LinkParser" );
+	rlink_eLpError = rb_define_class_under( rlink_mLinkParser, "Error", rb_eRuntimeError );
+#endif
+
 	rlink_cSentence = rb_define_class_under( rlink_mLinkParser, "Sentence",
 	 	rb_cObject );
 	
