@@ -2,10 +2,6 @@
 # 
 # Additional high-level functionality for LinkParser::Sentence objects.
 # 
-# == Synopsis
-# 
-#   
-# 
 # == Authors
 # 
 # * Michael Granger <ged@FaerieMUD.org>
@@ -61,6 +57,27 @@ class LinkParser::Sentence
 		end
 	end
 	
+	
+	#########
+	protected
+	#########
+
+	### Return the singleton class for this object
+	def singleton_class
+		class << self; self; end
+	end
+	
+
+	### Proxy method -- auto-delegate calls to the first linkage.
+	def method_missing( sym, *args )
+		linkage = self.linkages.first
+		return super unless linkage.respond_to?( sym )
+		
+		meth = linkage.method( sym )
+		self.singleton_class.send( :define_method, sym, &meth )
+		
+		meth.call( *args )
+	end
 
 end # class Sentence
 

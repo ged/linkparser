@@ -23,13 +23,14 @@ require 'linkparser'
 
 class LinkParser::Linkage::TestCase < Test::Unit::TestCase
 
-	@@dict = LinkParser::Dictionary.new( :verbosity => 0 )
+	@dict = LinkParser::Dictionary.new( :verbosity => 0 )
+	class << self; attr_accessor :dict; end
 
 	def setup
-		@simple_sentence = @@dict.parse( "The flag was wet." )
+		@simple_sentence = self.class.dict.parse( "The flag was wet." )
 		@ss_linkage = @simple_sentence.linkages.first
 		@conjunct_sentence = 
-			@@dict.parse( "The ball rolled down the hill and bumped the curb." )
+			self.class.dict.parse( "The ball rolled down the hill and bumped the curb." )
 	end
 
 

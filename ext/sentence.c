@@ -169,7 +169,6 @@ rlink_sentence_s_alloc( klass )
  * Instance methods
  * -------------------- */
 
-
 /*
  *  call-seq:
  *     LinkParser::Sentence.new( str, dict )   => sentence
@@ -209,7 +208,7 @@ rlink_sentence_init( self, input_string, dictionary )
 
 /*
  *  call-seq:
- *     sent.parse( options={} )   => fixnum
+ *     sentence.parse( options={} )   => fixnum
  *
  *  Attach a parse set to this sentence and return the number of linkages
  *  found. If any +options+ are specified, they override those set in the 
@@ -254,7 +253,7 @@ rlink_sentence_parse( argc, argv, self )
 
 /*
  *  call-seq:
- *     parsed?   => true or false
+ *     sentence.parsed?   => true or false
  *
  *  Returns +true+ if the sentence has been parsed.
  *
@@ -273,7 +272,7 @@ rlink_sentence_parsed_p( self )
 
 /*
  *  call-seq:
- *     linkages   => array
+ *     sentence.linkages   => array
  *
  *  Returns an Array of LinkParser::Linkage objects which represent the
  *  parts parsed from the sentence for the current linkage.
@@ -326,11 +325,12 @@ rlink_sentence_length( self )
 }
 	
 
-/* 
- * word( n )
- * --
- * Returns the spelling of the n-th word in the sentence as it appears after 
- * tokenization.
+/*
+ *  call-seq:
+ *     sentence.word( idx )   => str
+ *
+ *  Returns the spelling of the n-th word in the sentence as it appears after 
+ *  tokenization.
  */
 static VALUE
 rlink_sentence_word( self, n )
@@ -346,7 +346,7 @@ rlink_sentence_word( self, n )
 
 /*
  *  call-seq:
- *     words   => array
+ *     sentence.words   => array
  *
  *  Returns the words of the sentence as they appear after tokenization.
  *
@@ -372,10 +372,41 @@ rlink_sentence_words( self )
 }
 
 
-/* 
- * null_count
- * --
- * Returns the number of null links that were used in parsing the sentence.
+/*
+ *  call-seq:
+ *     sentence[index]   		 => str
+ *     sentence[start, length]   => str
+ *     sentence[range]   		 => str
+ *
+ *  Element Reference---Returns the element at index, or returns a subarray 
+ *  starting at start and continuing for length elements, or returns a subarray 
+ *  specified by range. Negative indices count backward from the end of the 
+ *  array (-1 is the last element). Returns nil if the index (or starting 
+ *  index) are out of range.
+ *
+ *     sent = dict.parse( "Birds fly south for the winter." )
+ *     
+ *     sent[1]		# => "birds"
+ *     sent[0,4]	# => ["LEFT-WALL", "birds", "fly", "south"]
+ *     sent[1..3]	# => ["birds", "fly", "south"]
+ *     
+ */
+static VALUE
+rlink_sentence_aref( argc, argv, self )
+	int argc;
+	VALUE *argv;
+	VALUE self;
+{
+	VALUE words = rlink_sentence_words( self );
+	return rb_funcall2( words, rb_intern("[]"), argc, argv );
+}
+
+
+/*
+ *  call-seq:
+ *     sentence.null_count   => int
+ *
+ *  Returns the number of null links that were used in parsing the sentence.
  */
 static VALUE
 rlink_sentence_null_count( self )
@@ -390,10 +421,11 @@ rlink_sentence_null_count( self )
 	
 
 /*
- * num_linkages_found => fixnum
- * --
- * Returns the number of linkages found when parsing the sentence. This will 
- * cause the sentence to be parsed if it hasn't been already.
+ *  call-seq:
+ *     sentence.num_linkages_found   => fixnum
+ *
+ *  Returns the number of linkages found when parsing the sentence. This will 
+ *  cause the sentence to be parsed if it hasn't been already.
  */
 static VALUE
 rlink_sentence_num_linkages_found( self )
@@ -410,10 +442,11 @@ rlink_sentence_num_linkages_found( self )
 }
 
 
-/* 
- * num_valid_linkages => fixnum
- * --
- * Return the number of linkages that had no post-processing violations.
+/*
+ *  call-seq:
+ *     sentence.num_valid_linkages   => fixnum
+ *
+ *  Return the number of linkages that had no post-processing violations.
  */
 static VALUE
 rlink_sentence_num_valid_linkages( self )
@@ -427,11 +460,12 @@ rlink_sentence_num_valid_linkages( self )
 }
 	
 
-/* 
- * num_linkages_post_processed => fixnum
- * --
- * Return the number of linkages that were actually post-processed (which may 
- * be less than the number found because of the linkage_limit parameter).
+/*
+ *  call-seq:
+ *     sentence.num_linkages_post_processed   => fixnum
+ *
+ *  Return the number of linkages that were actually post-processed (which may 
+ *  be less than the number found because of the linkage_limit parameter).
  */
 static VALUE
 rlink_sentence_num_linkages_post_processed( self )
@@ -445,11 +479,12 @@ rlink_sentence_num_linkages_post_processed( self )
 }
 	
 
-/* 
- * num_violations( i )
- * --
- * The number of post-processing violations that the i-th linkage had during 
- * the last parse.
+/*
+ *  call-seq:
+ *     sentence.num_violations( i )   => fixnum
+ *
+ *  The number of post-processing violations that the i-th linkage had during 
+ *  the last parse.
  */
 static VALUE
 rlink_sentence_num_violations( self, i )
@@ -463,10 +498,11 @@ rlink_sentence_num_violations( self, i )
 }
 	
 
-/* 
- * disjunct_cost( i )
- * --
- * The maximum cost of connectors used in the i-th linkage of the sentence.
+/*
+ *  call-seq:
+ *     sentence.disjunct_cost( i )   => fixnum
+ *
+ *  The maximum cost of connectors used in the i-th linkage of the sentence.
  */
 static VALUE
 rlink_sentence_disjunct_cost( self, i )
@@ -502,7 +538,7 @@ rlink_init_sentence( void )
 	rb_define_method( rlink_cSentence, "length", rlink_sentence_length, 0 );
 	rb_define_method( rlink_cSentence, "word", rlink_sentence_word, 1 );
 	rb_define_method( rlink_cSentence, "words", rlink_sentence_words, 0 );
-	rb_define_alias( rlink_cSentence, "[]", "word" );
+	rb_define_method( rlink_cSentence, "[]", rlink_sentence_aref, -1 );
 
 	rb_define_method( rlink_cSentence, "null_count", 
 		rlink_sentence_null_count, 0 );
