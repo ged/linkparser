@@ -33,6 +33,13 @@ class LinkParser::Linkage::TestCase < Test::Unit::TestCase
 			self.class.dict.parse( "The ball rolled down the hill and bumped the curb." )
 	end
 
+        def test_linkage_current_sublinkage_should_return
+          rval = nil
+          assert_nothing_raised do
+            rval = @ss_linkage.current_sublinkage
+          end
+          assert_kind_of(Fixnum, rval)
+        end
 
 	def test_diagram_should_return_a_diagram_string
 		rval = nil
