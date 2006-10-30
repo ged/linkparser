@@ -1,0 +1,9 @@
+building instructions:
+----------------------
+
+  $ tar -xvzf link-grammar-4.2.4.tar.gz
+  $ cd link-grammar-4.2.4
+  $ patch -p1 < ../link-grammar-4.2.4.patch
+  $ ./configure; make; sudo make install
+  $ cd ..
+  $ sudo ./install.rb
