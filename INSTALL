@@ -1,5 +1,5 @@
-building instructions:
-----------------------
+These instructions assume a UNIX or UNIX-like environment. I'm not sure how to get 
+this to build under Windows. Suggestions welcomed.
 
   $ tar -xvzf link-grammar-4.2.4.tar.gz
   $ cd link-grammar-4.2.4
@@ -7,3 +7,4 @@ building instructions:
   $ ./configure; make; sudo make install
   $ cd ..
   $ sudo ./install.rb
+
