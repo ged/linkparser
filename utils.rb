@@ -86,11 +86,17 @@ module UtilityFunctions
 	# Create a string that contains the ANSI codes specified and return it
 	def ansiCode( *attributes )
 		return '' unless /(?:vt10[03]|xterm(?:-color)?|linux|screen)/i =~ ENV['TERM']
-		attr = attributes.collect {|a| AnsiAttributes[a] ? AnsiAttributes[a] : nil}.compact.join(';')
-		if attr.empty? 
+		codes = attributes.
+			collect {|a| a =~ /\s/ ? a.split(/\s+/) : a }.
+			flatten.
+			collect {|a| AnsiAttributes[a] ? AnsiAttributes[a] : nil }.
+			compact.
+			join(';')
+
+		if codes.empty?
 			return ''
 		else
-			return "\e[%sm" % attr
+			return "\e[%sm" % codes
 		end
 	end
 
@@ -99,7 +105,7 @@ module UtilityFunctions
 	def colorize( string, *attributes )
 		ending = string[/(\s)$/] || ''
 		string = string.rstrip
-		return ansiCode( attributes ) + string + ansiCode( 'reset' ) + ending
+		return ansiCode( *attributes ) + string + ansiCode( 'reset' ) + ending
 	end
 
 
