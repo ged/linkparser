@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>Rakefile</string>
+	<string>spec/linkage_spec.rb</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -18,23 +18,9 @@
 		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
-	<integer>219</integer>
+	<integer>281</integer>
 	<key>metaData</key>
 	<dict>
-		<key>Rakefile</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>4</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
 		<key>ext/Makefile</key>
 		<dict>
 			<key>caret</key>
@@ -48,20 +34,6 @@
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>79</integer>
-		</dict>
-		<key>ext/dictionary.c</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>3</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>85</integer>
 		</dict>
 		<key>ext/extconf.rb</key>
 		<dict>
@@ -84,12 +56,12 @@
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>0</integer>
+				<integer>609</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>558</integer>
 		</dict>
 		<key>ext/linkparser.c</key>
 		<dict>
@@ -105,64 +77,6 @@
 			<key>firstVisibleLine</key>
 			<integer>4</integer>
 		</dict>
-		<key>ext/linkparser.h</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>7</integer>
-				<key>line</key>
-				<integer>61</integer>
-			</dict>
-			<key>columnSelection</key>
-			<false/>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>45</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>32</integer>
-				<key>line</key>
-				<integer>61</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>7</integer>
-				<key>line</key>
-				<integer>61</integer>
-			</dict>
-		</dict>
-		<key>ext/parseoptions.c</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>1093</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>959</integer>
-		</dict>
-		<key>ext/sentence.c</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>496</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>465</integer>
-		</dict>
 		<key>extconf.rb</key>
 		<dict>
 			<key>caret</key>
@@ -176,50 +90,6 @@
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>21</integer>
-		</dict>
-		<key>install.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>0</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
-		<key>lib/extconf.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>40</integer>
-			</dict>
-			<key>columnSelection</key>
-			<false/>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>20</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>40</integer>
-			</dict>
 		</dict>
 		<key>lib/linkparser/linkage.rb</key>
 		<dict>
@@ -235,33 +105,75 @@
 			<key>firstVisibleLine</key>
 			<integer>170</integer>
 		</dict>
-		<key>tests/linkage.tests.rb</key>
+		<key>spec/bugfixes_spec.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>236</integer>
+				<integer>2</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>114</integer>
+			<integer>0</integer>
+		</dict>
+		<key>spec/dictionary_spec.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>35</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>35</integer>
+			</dict>
+		</dict>
+		<key>spec/linkage_spec.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>264</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>223</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>extconf.rb</string>
-		<string>ext/extconf.rb</string>
-		<string>lib/extconf.rb</string>
-		<string>Rakefile</string>
-		<string>ext/Makefile</string>
-		<string>install.rb</string>
+		<string>ext/linkage.c</string>
+		<string>spec/linkage_spec.rb</string>
+		<string>spec/dictionary_spec.rb</string>
+		<string>spec/bugfixes_spec.rb</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{45, 28}, {718, 1000}}</string>
+	<string>{{589, 77}, {892, 1501}}</string>
 </dict>
 </plist>

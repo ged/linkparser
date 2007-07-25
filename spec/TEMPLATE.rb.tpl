@@ -1,14 +1,9 @@
-#!/usr/bin/ruby
-# 
-# Additional high-level functionality for the LinkParser library.
-# 
-# == Authors
-# 
-# * Michael Granger <ged@FaerieMUD.org>
-# 
-# == License
+#!/usr/bin/ruby -w
 #
-# Copyright (c) 2007 The FaerieMUD Consortium
+# Unit tests for the #{vars[:class_under_test]} class
+# $Id$
+#
+# Copyright (c) #{date.year} #{tm[:organization_name]}
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -28,25 +23,17 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 # 
-# == Version
-#
-#  $Id$
-# 
 
-require 'linkparser_ext'
+BEGIN {
+	require 'pathname'
+	basedir = Pathname.new( __FILE__ ).dirname.parent
+	require basedir + "linkparser-path.rb"
+}
 
+require 'spec/runner'
+require 'linkparser'
 
-### Additional high-level functionality for the LinkParser library.
-module LinkParser
-
-	require 'linkparser/sentence'
-	require 'linkparser/linkage'
-
-	# SVN Revision
-	SVNRev = %q$Rev$
-
-	# SVN Id
-	SVNId = %q$Id$
-
-end # class LinkParser
+describe #{vars[:class_under_test]} do
+	
+end
 

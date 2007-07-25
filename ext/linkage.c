@@ -5,12 +5,25 @@
  *  Authors:
  *    * Michael Granger <ged@FaerieMUD.org>
  *  
- *  Copyright (c) 2006 The FaerieMUD Consortium.
+ *  Copyright (c) 2007 The FaerieMUD Consortium
  *  
- *  This work is licensed under the Creative Commons Attribution License. To
- *  view a copy of this license, visit
- *  http://creativecommons.org/licenses/by/1.0 or send a letter to Creative
- *  Commons, 559 Nathan Abbott Way, Stanford, California 94305, USA.
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *  
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
  *  
  */
 
@@ -448,6 +461,8 @@ rlink_linkage_get_link_label( self, index )
 	char *label;
 	
 	label = linkage_get_link_label( (Linkage)ptr->linkage, i );
+	if ( !label ) return Qnil;
+	
 	return rb_str_new2( label );
 }
 
@@ -529,6 +544,8 @@ rlink_linkage_get_link_domain_names( self, index )
 	
 	names = linkage_get_link_domain_names( (Linkage)ptr->linkage, i );
 	count = linkage_get_link_num_domains( (Linkage)ptr->linkage, i );
+	if ( count < 0 ) return rb_ary_new();
+	
 	names_ary = rb_ary_new2( count );
 	
 	for ( i = 0; i < count; i++ ) {
@@ -570,25 +587,28 @@ rlink_linkage_get_words( self )
 
 /*
  *  call-seq:
- *     compute_union   => fixnum or nil
+ *     compute_union   => true or false
  *
  *  If the linkage has a conjunction, combine all of the links occurring in all
  *  sublinkages together -- in effect creating a "master" linkage (which may
  *  have crossing links). The union is created as another sublinkage, thus
  *  increasing the number of sublinkages by one, and is returned by this method.
- *  If the linkage has no conjunctions, computing its union has no effect, and
- *  nil is returned.
+ *  If the linkage has no conjunctions, computing its union has no effect. This 
+ *  method returns true if computing its union caused another sublinkage to be
+ *  created.
  */
 static VALUE
 rlink_linkage_compute_union( self )
 	VALUE self;
 {
 	rlink_LINKAGE *ptr = get_linkage( self );
-	int rval;
+	int before, after;
 	
-	rval = linkage_compute_union( (Linkage)ptr->linkage );
+	before = linkage_get_num_sublinkages( (Linkage)ptr->linkage );
+	linkage_compute_union( (Linkage)ptr->linkage );
+	after = linkage_get_num_sublinkages( (Linkage)ptr->linkage );
 	
-	return INT2FIX( rval );
+	return (after > before) ? Qtrue : Qfalse;
 }
 
 
@@ -615,7 +635,7 @@ rlink_linkage_unused_word_cost( self )
 
 /*
  *  call-seq:
- *     disjunct_cost( fixnum )   => fixnum
+ *     linkage.disjunct_cost   => fixnum
  *
  *  Returns the connector or disjunct cost of the linkage.
  *
@@ -635,7 +655,7 @@ rlink_linkage_disjunct_cost( self )
 
 /*
  *  call-seq:
- *     and_cost   => fixnum
+ *     linkage.and_cost   => fixnum
  *
  *  Returns the AND cost of the linkage, which is the difference in length 
  *  between and-list elements.
@@ -656,7 +676,7 @@ rlink_linkage_and_cost( self )
 
 /*
  *  call-seq:
- *     link_cost   => fixnum
+ *     linkage.link_cost   => fixnum
  *
  *  Returns the total (LEN) cost of the linkage, which is the total length of 
  *  all links in the sentence minus the number of words -- since the total link 
@@ -678,7 +698,7 @@ rlink_linkage_link_cost( self )
 
 /*
  *  call-seq:
- *     canonical?   => true or false
+ *     linkage.canonical?   => true or false
  *
  *  Returns +true+ if the linkage is canonical. The canonical linkage is the 
  *  one in which the minimal disjunct that ever occurrs in a position is used 
@@ -699,7 +719,7 @@ rlink_linkage_canonical_p( self )
 
 /*
  *  call-seq:
- *     improper?   => true or false
+ *     linkage.improper?   => true or false
  *
  *  Returns +true+ if the linkage is "improper". 
  *  --
@@ -721,7 +741,7 @@ rlink_linkage_improper_p( self )
 
 /*
  *  call-seq:
- *     has_inconsistent_domains?   => true or false
+ *     linkage.has_inconsistent_domains?   => true or false
  *
  *  Returns +true+ if the linkage has inconsistent domains. 
  *  --
@@ -743,7 +763,7 @@ rlink_linkage_has_inconsistent_domains_p( self )
 
 /*
  *  call-seq:
- *     violation_name   => str
+ *     linkage.violation_name   => str
  *
  *  If the linkage violated any post-processing rules, this method returns the 
  *  name of the violated rule in the post-process knowledge file. 
@@ -767,7 +787,7 @@ rlink_linkage_get_violation_name( self )
 
 /*
  *  call-seq:
- *     constituent_tree   => hash
+ *     linkage.constituent_tree   => hash
  *
  *  Return the Linkage's constituent tree as a hash of hashes.
  *
@@ -866,6 +886,8 @@ rlink_linkage_constituent_tree_string( argc, argv, self )
 	if ( ctree_string ) {
 		rval = rb_str_new2( ctree_string );
 		string_delete( ctree_string );
+	} else {
+		rval = Qnil;
 	}
 	
 	return rval;

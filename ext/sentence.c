@@ -5,12 +5,25 @@
  *  Authors:
  *    * Michael Granger <ged@FaerieMUD.org>
  *  
- *  Copyright (c) 2006 The FaerieMUD Consortium.
+ *  Copyright (c) 2007 The FaerieMUD Consortium
  *  
- *  This work is licensed under the Creative Commons Attribution License. To
- *  view a copy of this license, visit
- *  http://creativecommons.org/licenses/by/1.0 or send a letter to Creative
- *  Commons, 559 Nathan Abbott Way, Stanford, California 94305, USA.
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *  
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
  *  
  */
 
@@ -268,6 +281,26 @@ rlink_sentence_parsed_p( self )
 	rlink_SENTENCE *ptr = get_sentence( self );
 	return ptr->parsed_p;
 }
+
+
+/*
+ *  call-seq:
+ *     sentence.options   => parseoptions
+ *
+ *  Returns a ParseOptions object for the receiving sentence.
+ *
+ *     sentence.options.verbosity = 3
+ *     sentence.options.islands_ok?  # => true
+ */
+static VALUE
+rlink_sentence_options( self )
+	VALUE self;
+{
+	rlink_SENTENCE *ptr = get_sentence( self );
+	return ptr->options;
+}
+
+
 
 
 /*
@@ -534,6 +567,8 @@ rlink_init_sentence( void )
 	rb_define_method( rlink_cSentence, "parse", rlink_sentence_parse, -1 );
 	rb_define_method( rlink_cSentence, "parsed?", rlink_sentence_parsed_p, 0 );
 	rb_define_method( rlink_cSentence, "linkages", rlink_sentence_linkages, 0 );
+
+	rb_define_method( rlink_cSentence, "options", rlink_sentence_options, 0 );
 
 	rb_define_method( rlink_cSentence, "length", rlink_sentence_length, 0 );
 	rb_define_method( rlink_cSentence, "word", rlink_sentence_word, 1 );

@@ -1,12 +1,7 @@
-#!/usr/bin/ruby
-# 
-# Additional high-level functionality for the LinkParser library.
-# 
-# == Authors
-# 
-# * Michael Granger <ged@FaerieMUD.org>
-# 
-# == License
+#!/usr/bin/ruby -w
+#
+# Specification for various bugfixes to the LinkParser binding
+# $Id$
 #
 # Copyright (c) 2007 The FaerieMUD Consortium
 # 
@@ -28,25 +23,33 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 # 
-# == Version
-#
-#  $Id$
-# 
 
-require 'linkparser_ext'
+BEGIN {
+	require 'pathname'
+	basedir = Pathname.new( __FILE__ ).dirname.parent
+	require basedir + "linkparser-path.rb"
+}
 
+require 'spec/runner'
+require 'linkparser'
 
-### Additional high-level functionality for the LinkParser library.
-module LinkParser
+# @dict = LinkParser::Dictionary.new( :verbosity => 0 )
+# s = LinkParser::Sentence.new('The cat runs.',@dict)
+# puts s.linkages.first.verb  #  "cat.n" !?!?!
+describe %{bugfix for #3: The first linkage for "The cat runs."} do
+	before( :each ) do
+		@dict = LinkParser::Dictionary.new( :verbosity => 0 )
+		@sentence = @dict.parse( "The cat runs." )
+		@linkage = @sentence.linkages.first
+	end
+	
 
-	require 'linkparser/sentence'
-	require 'linkparser/linkage'
+	it "thinks cat is the subject" do
+		@linkage.subject.should == "cat"
+	end
 
-	# SVN Revision
-	SVNRev = %q$Rev$
-
-	# SVN Id
-	SVNId = %q$Id$
-
-end # class LinkParser
+	it "thinks runs is the verb" do
+		@linkage.verb.should == "runs"
+	end
+end
 
