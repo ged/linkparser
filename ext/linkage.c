@@ -201,7 +201,7 @@ rlink_linkage_init( argc, argv, self )
 		sent_ptr = (rlink_SENTENCE *)rlink_get_sentence( sentence );
 
 		link_index = NUM2INT(index);
-		max_index = sentence_num_linkages_found((Sentence)sent_ptr->sentence) - 1;
+		max_index = sentence_num_valid_linkages((Sentence)sent_ptr->sentence) - 1;
 		if ( link_index > max_index )
 			rb_raise( rlink_eLpError, "Invalid linkage %d (max is %d)", 
 				link_index, max_index );
@@ -869,7 +869,7 @@ rlink_linkage_constituent_tree_string( argc, argv, self )
 {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	char *ctree_string = NULL;
-	VALUE rval, modenum;
+	VALUE rval = Qnil, modenum = Qnil;
 	int mode;
 	
 	if ( rb_scan_args(argc, argv, "01", &modenum) == 1 ) {

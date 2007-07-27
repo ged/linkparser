@@ -322,7 +322,7 @@ rlink_sentence_linkages( self )
 	if ( !RTEST(ptr->parsed_p) )
 		rlink_sentence_parse( 0, 0, self );
 
-	count = sentence_num_linkages_found( (Sentence)ptr->sentence );
+	count = sentence_num_valid_linkages( (Sentence)ptr->sentence );
 	rary = rb_ary_new2( count );
 	
 	for ( i = 0; i < count; i++ ) {
