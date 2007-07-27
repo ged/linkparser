@@ -90,12 +90,14 @@ class LinkParser::Sentence
 	### Proxy method -- auto-delegate calls to the first linkage.
 	def method_missing( sym, *args )
 		linkage = self.linkages.first
-		return super unless linkage.respond_to?( sym )
+		return super unless !linkage.nil? && linkage.respond_to?( sym )
 		
 		meth = linkage.method( sym )
 		self.singleton_class.send( :define_method, sym, &meth )
 		
 		meth.call( *args )
+	rescue => err
+		raise err, err.message, err.backtrace[ 0..-2 ]
 	end
 
 end # class Sentence

@@ -110,9 +110,10 @@ rlink_get_parseopts( obj )
  * -------------------------------------------------- */
 
 /*
- * allocate()
- * --
- * Allocate a new LinkParser::ParseOptions object.
+ *  call-seq:
+ *     LinkParser::ParseOptions.allocate   => obj
+ *
+ *  Allocate a new LinkParser::ParseOptions object.
  */
 static VALUE
 rlink_parseopts_s_alloc( klass )
@@ -130,9 +131,13 @@ rlink_parseopts_s_alloc( klass )
 
 
 /*
- * initialize( opthash={} )
- * --
- * Create a new ParseOptions object and set values from opthash.
+ *  call-seq:
+ *     LinkParser::ParseOptions.new( opthash )   => obj
+ *
+ *  Create a new ParseOptions object and set values from opthash.
+ *  
+ *     po = LinkParser::ParseOptions.new( :allow_null => true, :batch_mode => true )
+ *     
  */
 static VALUE
 rlink_parseopts_init( argc, argv, self )
@@ -187,10 +192,11 @@ rlink_parseopts_each_opthash_i( pair, self )
 
 
 /*
- * merge( other )
- * --
- * Merge the receiving parse options with the given +other+ object, which can
- * be either another LinkParser::ParseOptions object or a Hash of options.
+ *  call-seq:
+ *     merge( other )   => parseopts
+ *
+ *  Merge the receiving parse options with the given +other+ object, which can
+ *  be either another LinkParser::ParseOptions object or a Hash of options.
  */
 /*static VALUE
 rlink_parseopts_merge( self, other )
@@ -202,10 +208,11 @@ rlink_parseopts_merge( self, other )
 
 
 /*
- * verbosity=( int )
- * --
- * This sets the level of description printed to stderr/stdout about the 
- * parsing process.
+ *  call-seq:
+ *     opts.verbosity= fixnum
+ *
+ *  This sets the level of description printed to stderr/stdout about the 
+ *  parsing process.
  */
 static VALUE
 rlink_parseopts_set_verbosity( self, verbosity )
@@ -216,11 +223,13 @@ rlink_parseopts_set_verbosity( self, verbosity )
 	return verbosity;
 }
 
+
 /*
- * verbosity => int
- * --
- * This gets the level of description printed to stderr/stdout about the 
- * parsing process.
+ *  call-seq:
+ *     opts.verbosity   => fixnum
+ *
+ *  This gets the level of description printed to stderr/stdout about the 
+ *  parsing process.
  */
 static VALUE
 rlink_parseopts_get_verbosity( self )
@@ -234,12 +243,13 @@ rlink_parseopts_get_verbosity( self )
 }
 
 /*
- * linkage_limit=( int )
- * --
- * This parameter determines the maximum number of linkages that are 
- * considered in post-processing. If more than +linkage_limit+ linkages are found, 
- * then a random sample of +linkage_limit+ is chosen for post-processing. When 
- * this happen a warning is displayed at verbosity levels greater than 1.
+ *  call-seq:
+ *     opts.linkage_limit= fixnum
+ *
+ *  This parameter determines the maximum number of linkages that are 
+ *  considered in post-processing. If more than +linkage_limit+ linkages are found, 
+ *  then a random sample of +linkage_limit+ is chosen for post-processing. When 
+ *  this happen a warning is displayed at verbosity levels greater than 1.
  */
 static VALUE
 rlink_parseopts_set_linkage_limit( self, linkage_limit )
@@ -251,12 +261,13 @@ rlink_parseopts_set_linkage_limit( self, linkage_limit )
 }
 
 /*
- * linkage_limit => int
- * --
- * This parameter determines the maximum number of linkages that are 
- * considered in post-processing. If more than +linkage_limit+ linkages are found, 
- * then a random sample of +linkage_limit+ is chosen for post-processing. When 
- * this happen a warning is displayed at verbosity levels greater than 1.
+ *  call-seq:
+ *     opts.linkage_limit   => fixnum
+ *
+ *  This parameter determines the maximum number of linkages that are 
+ *  considered in post-processing. If more than +linkage_limit+ linkages are found, 
+ *  then a random sample of +linkage_limit+ is chosen for post-processing. When 
+ *  this happen a warning is displayed at verbosity levels greater than 1.
  */
 static VALUE
 rlink_parseopts_get_linkage_limit( self )
@@ -270,9 +281,10 @@ rlink_parseopts_get_linkage_limit( self )
 }
 
 /*
- * disjunct_cost=( int )
- * --
- * Determines the maximum disjunct cost used during parsing, where the cost 
+ *  call-seq:
+ *     opts.disjunct_cost= fixnum
+ *
+ *  Determines the maximum disjunct cost used during parsing, where the cost 
  * of a disjunct is equal to the maximum cost of all of its connectors. The 
  * default is that all disjuncts, no matter what their cost, are considered.
  */
@@ -286,9 +298,10 @@ rlink_parseopts_set_disjunct_cost( self, disjunct_cost )
 }
 
 /*
- * disjunct_cost => int
- * --
- * Get the maximum disjunct cost used during parsing.
+ *  call-seq:
+ *     opts.disjunct_cost   => fixnum
+ *
+ *  Get the maximum disjunct cost used during parsing.
  */
 static VALUE
 rlink_parseopts_get_disjunct_cost( self )
@@ -302,11 +315,12 @@ rlink_parseopts_get_disjunct_cost( self )
 }
 
 /*
- * min_null_count=( null_count )
- * --
- * Set the minimum of null links that a parse can have. A call to 
- * LinkParser::Sentence#parse will find all linkages having the minimum 
- * number of null links within the range specified by this parameter.
+ *  call-seq:
+ *     opts.min_null_count= fixnum   => fixnum
+ *
+ *  Set the minimum of null links that a parse can have. A call to 
+ *  LinkParser::Sentence#parse will find all linkages having the minimum 
+ *  number of null links within the range specified by this parameter.
  */
 static VALUE
 rlink_parseopts_set_min_null_count( self, null_count )
@@ -318,9 +332,10 @@ rlink_parseopts_set_min_null_count( self, null_count )
 }
 
 /*
- * min_null_count => fixnum
- * --
- * Get the minimum of null links that a parse can have.
+ *  call-seq:
+ *     opts.min_null_count   => fixnum
+ *
+ *  Get the minimum of null links that a parse can have.
  */
 static VALUE
 rlink_parseopts_get_min_null_count( self )
@@ -334,9 +349,10 @@ rlink_parseopts_get_min_null_count( self )
 }
 
 /*
- * max_null_count=( null_count )
- * --
- * Set the max_null_count option to the specified value.
+ *  call-seq:
+ *     opts.max_null_count= fixnum
+ *
+ *  Set the maximum number of null links allowed in a parse.
  */
 static VALUE
 rlink_parseopts_set_max_null_count( self, null_count )
@@ -348,9 +364,10 @@ rlink_parseopts_set_max_null_count( self, null_count )
 }
 
 /*
- * max_null_count
- * --
- * Get the value of the max_null_count option.
+ *  call-seq:
+ *     opts.max_null_count   => fixnum
+ *
+ *  Get the maximum number of null links allowed in a parse.
  */
 static VALUE
 rlink_parseopts_get_max_null_count( self )
@@ -364,9 +381,13 @@ rlink_parseopts_get_max_null_count( self )
 }
 
 /*
- * null_block=( null_block )
- * --
- * Set the null_block option to the specified value.
+ *  call-seq:
+ *     opts.null_block= null_block
+ *
+ *  Set the null_block option to the specified value. The null_block option 
+ *  allows null links to be counted in "bunches." For example, if null_block 
+ *  is 4, then a linkage with 1,2,3 or 4 null links has a null cost of 1, a 
+ *  linkage with 5,6,7 or 8 null links has a null cost of 2, etc.
  */
 static VALUE
 rlink_parseopts_set_null_block( self, null_block )
@@ -378,9 +399,10 @@ rlink_parseopts_set_null_block( self, null_block )
 }
 
 /*
- * null_block
- * --
- * Get the value of the null_block option.
+ *  call-seq:
+ *     opts.null_block   => fixnum
+ *
+ *  Get the value of the null_block option.
  */
 static VALUE
 rlink_parseopts_get_null_block( self )
@@ -394,9 +416,16 @@ rlink_parseopts_get_null_block( self )
 }
 
 /*
- * islands_ok=( islands_ok )
- * --
- * Set the islands_ok option to the specified value.
+ *  call-seq:
+ *     opts.islands_ok= boolean
+ *
+ *  This option determines whether or not "islands" of links are allowed. For 
+ *  example, the following linkage has an island:
+ *
+ *       +------Wd-----+                                           
+ *       |     +--Dsu--+---Ss--+-Paf-+      +--Dsu--+---Ss--+--Pa-+
+ *       |     |       |       |     |      |       |       |     |
+ *     ///// this sentence.n is.v false.a this sentence.n is.v true.a
  */
 static VALUE
 rlink_parseopts_set_islands_ok( self, islands_ok )
@@ -408,9 +437,10 @@ rlink_parseopts_set_islands_ok( self, islands_ok )
 }
 
 /*
- * islands_ok
- * --
- * Get the value of the islands_ok option.
+ *  call-seq:
+ *     opts.islands_ok?   => true or false
+ *
+ *  Get the value of the islands_ok option.
  */
 static VALUE
 rlink_parseopts_get_islands_ok_p( self )
@@ -424,9 +454,14 @@ rlink_parseopts_get_islands_ok_p( self )
 }
 
 /*
- * short_length=( short_length )
- * --
- * Set the short_length option to the specified value.
+ *  call-seq:
+ *     opts.short_length= fixnum
+ *
+ *  The short_length parameter determines how long the links are allowed to 
+ *  be. The intended use of this is to speed up parsing by not considering 
+ *  very long links for most connectors, since they are very rarely used in a 
+ *  correct parse. An entry for UNLIMITED-CONNECTORS in the dictionary will 
+ *  specify which connectors are exempt from the length limit.
  */
 static VALUE
 rlink_parseopts_set_short_length( self, short_length )
@@ -438,9 +473,10 @@ rlink_parseopts_set_short_length( self, short_length )
 }
 
 /*
- * short_length
- * --
- * Get the value of the short_length option.
+ *  call-seq:
+ *     opts.short_length   => fixnum
+ *
+ *  Get the value of the short_length option.
  */
 static VALUE
 rlink_parseopts_get_short_length( self )
@@ -454,9 +490,13 @@ rlink_parseopts_get_short_length( self )
 }
 
 /*
- * max_memory=( mem )
- * --
- * Set the max_memory option to the specified value.
+ *  call-seq:
+ *     opts.max_memory= fixnum
+ *
+ *  Determines the maximum memory allowed during parsing. This is used just as 
+ *  max_parse_time is, so that the parsing process is terminated as quickly as 
+ *  possible after the total memory (including that allocated to all 
+ *  dictionaries, etc.) exceeds the maximum allowed.
  */
 static VALUE
 rlink_parseopts_set_max_memory( self, mem )
@@ -468,9 +508,10 @@ rlink_parseopts_set_max_memory( self, mem )
 }
 
 /*
- * max_memory
- * --
- * Get the value of the max_memory option.
+ *  call-seq:
+ *     opts.max_memory   => fixnum
+ *
+ *  Get the value of the max_memory option.
  */
 static VALUE
 rlink_parseopts_get_max_memory( self )
@@ -484,9 +525,10 @@ rlink_parseopts_get_max_memory( self )
 }
 
 /*
- * max_sentence_length=( len )
- * --
- * Set the max_sentence_length option to the specified value.
+ *  call-seq:
+ *     opts.max_sentence_length= fixnum
+ *
+ *  Determines the maximum length of a parsed sentence.
  */
 static VALUE
 rlink_parseopts_set_max_sentence_length( self, len )
@@ -498,9 +540,10 @@ rlink_parseopts_set_max_sentence_length( self, len )
 }
 
 /*
- * max_sentence_length
- * --
- * Get the value of the max_sentence_length option.
+ *  call-seq:
+ *     opts.max_sentence_length   => fixnum
+ *
+ *  Get the value of the max_sentence_length option.
  */
 static VALUE
 rlink_parseopts_get_max_sentence_length( self )
@@ -514,9 +557,14 @@ rlink_parseopts_get_max_sentence_length( self )
 }
 
 /*
- * max_parse_time=( secs )
- * --
- * Set the max_parse_time option to the specified value.
+ *  call-seq:
+ *     opts.max_parse_time= seconds
+ *
+ *  Determines the approximate maximum time that parsing is allowed to take. 
+ *  The way it works is that after this time has expired, the parsing process 
+ *  is artificially forced to complete quickly by pretending that no further 
+ *  solutions (entries in the hash table) can be constructed. The actual 
+ *  parsing time might be slightly longer.
  */
 static VALUE
 rlink_parseopts_set_max_parse_time( self, secs )
@@ -528,9 +576,10 @@ rlink_parseopts_set_max_parse_time( self, secs )
 }
 
 /*
- * max_parse_time
- * --
- * Get the value of the max_parse_time option.
+ *  call-seq:
+ *     opts.max_parse_time   => fixnum
+ *
+ *  Get the number of seconds of the max_parse_time option.
  */
 static VALUE
 rlink_parseopts_get_max_parse_time( self )
@@ -544,9 +593,10 @@ rlink_parseopts_get_max_parse_time( self )
 }
 
 /*
- * screen_width=( val )
- * --
- * Set the screen_width option to the specified value.
+ *  call-seq:
+ *     opts.screen_width= columns
+ *
+ *  Set the screen width assumed by the diagramming functions.
  */
 static VALUE
 rlink_parseopts_set_screen_width( self, val )
@@ -558,9 +608,10 @@ rlink_parseopts_set_screen_width( self, val )
 }
 
 /*
- * screen_width
- * --
- * Get the value of the screen_width option.
+ *  call-seq:
+ *     opts.screen_width   => fixnum
+ *
+ *  Get the screen width assumed by the diagramming functions.
  */
 static VALUE
 rlink_parseopts_get_screen_width( self )
@@ -574,9 +625,10 @@ rlink_parseopts_get_screen_width( self )
 }
 
 /*
- * allow_null=( val )
- * --
- * Set the allow_null option to the specified value.
+ *  call-seq:
+ *     opts.allow_null= boolean
+ *
+ *  Indicates whether or not linkages are allowed to have null links.
  */
 static VALUE
 rlink_parseopts_set_allow_null( self, val )
@@ -588,9 +640,10 @@ rlink_parseopts_set_allow_null( self, val )
 }
 
 /*
- * allow_null?
- * --
- * Get the value of the allow_null option.
+ *  call-seq:
+ *     opts.allow_null?   => true or false
+ *
+ *  Get the value of the allow_null option.
  */
 static VALUE
 rlink_parseopts_get_allow_null_p( self )
@@ -604,9 +657,10 @@ rlink_parseopts_get_allow_null_p( self )
 }
 
 /*
- * display_walls=( val )
- * --
- * Set the display_walls option to the specified value.
+ *  call-seq:
+ *     opts.display_walls= boolean
+ *
+ *  Whether or not to show the wall word(s) when a linkage diagram is printed.
  */
 static VALUE
 rlink_parseopts_set_display_walls( self, val )
@@ -618,9 +672,10 @@ rlink_parseopts_set_display_walls( self, val )
 }
 
 /*
- * display_walls
- * --
- * Get the value of the display_walls option.
+ *  call-seq:
+ *     opts.display_walls?   => true or false
+ *
+ *  Whether or not to show the wall word(s) when a linkage diagram is printed.
  */
 static VALUE
 rlink_parseopts_get_display_walls_p( self )
@@ -634,9 +689,12 @@ rlink_parseopts_get_display_walls_p( self )
 }
 
 /*
- * all_short_connectors=( val )
- * --
- * Set the all_short_connectors option to the specified value.
+ *  call-seq:
+ *     opts.all_short_connectors= boolean
+ *
+ *  If true, then all connectors have length restrictions imposed on them -- 
+ *  they can be no farther than short_length apart. This is used when parsing 
+ *  in "panic" mode, for example.
  */
 static VALUE
 rlink_parseopts_set_all_short_connectors( self, val )
@@ -648,9 +706,10 @@ rlink_parseopts_set_all_short_connectors( self, val )
 }
 
 /*
- * all_short_connectors
- * --
- * Get the value of the all_short_connectors option.
+ *  call-seq:
+ *     opts.all_short_connectors?   => true or false
+ *
+ *  Get the value of the all_short_connectors option.
  */
 static VALUE
 rlink_parseopts_get_all_short_connectors_p( self )
@@ -664,9 +723,12 @@ rlink_parseopts_get_all_short_connectors_p( self )
 }
 
 /*
- * cost_model_type=( cm )
- * --
- * Set the cost_model_type option to the specified value.
+ *  call-seq:
+ *     opts.cost_model_type= 
+ *
+ *  The cost model type for ranking linkages, which is an index into an array 
+ *  of function pointers. The current code only has a single entry, but others 
+ *  could easily be added.
  */
 static VALUE
 rlink_parseopts_set_cost_model_type( self, cm )
@@ -678,9 +740,10 @@ rlink_parseopts_set_cost_model_type( self, cm )
 }
 
 /*
- * cost_model_type
- * --
- * Get the value of the cost_model_type option.
+ *  call-seq:
+ *     opts.cost_model_type   => fixnum
+ *
+ *  Get the cost model type for ranking linkages.
  */
 /*
 
@@ -700,9 +763,12 @@ rlink_parseopts_get_cost_model_type( self )
 */
 
 /*
- * batch_mode=( val )
- * --
- * Set the batch_mode option to the specified value.
+ *  call-seq:
+ *     opts.batch_mode= boolean
+ *
+ *  Enable or disable "batch mode."
+ *
+ *  :TODO: Figure out what batch mode is.
  */
 static VALUE
 rlink_parseopts_set_batch_mode( self, val )
@@ -714,9 +780,10 @@ rlink_parseopts_set_batch_mode( self, val )
 }
 
 /*
- * batch_mode
- * --
- * Get the value of the batch_mode option.
+ *  call-seq:
+ *     opts.batch_mode?   => true or false
+ *
+ *  Returns +true+ if batch mode is enabled.
  */
 static VALUE
 rlink_parseopts_get_batch_mode_p( self )
@@ -730,9 +797,13 @@ rlink_parseopts_get_batch_mode_p( self )
 }
 
 /*
- * panic_mode=( val )
- * --
- * Set the panic_mode option to the specified value.
+ *  call-seq:
+ *     opts.panic_mode= boolean
+ *
+ *  Enable or disable "panic mode."
+ *  
+ *  :TODO: Figure out what enabling this option does. I only know about panic
+ *  mode in the parser -- does this allow/disallow the parser from entering it?
  */
 static VALUE
 rlink_parseopts_set_panic_mode( self, val )
@@ -744,9 +815,10 @@ rlink_parseopts_set_panic_mode( self, val )
 }
 
 /*
- * panic_mode
- * --
- * Get the value of the panic_mode option.
+ *  call-seq:
+ *     opts.panic_mode?   => true or false
+ *
+ *  Returns +true+ if panic mode is enabled.
  */
 static VALUE
 rlink_parseopts_get_panic_mode_p( self )
@@ -760,9 +832,13 @@ rlink_parseopts_get_panic_mode_p( self )
 }
 
 /*
- * display_on=( val )
- * --
- * Set the display_on option to the specified value.
+ *  call-seq:
+ *     opts.display_on= boolean
+ *
+ *  Enable/disable display.
+ *  
+ *  :TODO: Figure out what this setting does.
+ *  
  */
 static VALUE
 rlink_parseopts_set_display_on( self, val )
@@ -774,9 +850,10 @@ rlink_parseopts_set_display_on( self, val )
 }
 
 /*
- * display_on
- * --
- * Get the value of the display_on option.
+ *  call-seq:
+ *     opts.display_on?   => true or false
+ *
+ *  Returns +true+ if ...?
  */
 static VALUE
 rlink_parseopts_get_display_on_p( self )
@@ -790,9 +867,10 @@ rlink_parseopts_get_display_on_p( self )
 }
 
 /*
- * display_postscript=( val )
- * --
- * Set the display_postscript option to the specified value.
+ *  call-seq:
+ *     opts.display_postscript= boolean
+ *
+ *  Enable/disable display using Postscript.
  */
 static VALUE
 rlink_parseopts_set_display_postscript( self, val )
@@ -804,9 +882,10 @@ rlink_parseopts_set_display_postscript( self, val )
 }
 
 /*
- * display_postscript
- * --
- * Get the value of the display_postscript option.
+ *  call-seq:
+ *     opts.display_postscript?   => true or false
+ *
+ *  Returns +true+ if display should use Postscript instead of plain text.
  */
 static VALUE
 rlink_parseopts_get_display_postscript_p( self )
@@ -820,9 +899,10 @@ rlink_parseopts_get_display_postscript_p( self )
 }
 
 /*
- * display_constituents=( val )
- * --
- * Set the display_constituents option to the specified value.
+ *  call-seq:
+ *     opts.display_constituents= boolean
+ *
+ *  Set the display_constituents option to the specified value.
  */
 static VALUE
 rlink_parseopts_set_display_constituents( self, val )
@@ -834,9 +914,10 @@ rlink_parseopts_set_display_constituents( self, val )
 }
 
 /*
- * display_constituents
- * --
- * Get the value of the display_constituents option.
+ *  call-seq:
+ *     opts.display_constituents?   => true or false
+ *
+ *  Get the value of the display_constituents option.
  */
 static VALUE
 rlink_parseopts_get_display_constituents_p( self )
@@ -850,9 +931,10 @@ rlink_parseopts_get_display_constituents_p( self )
 }
 
 /*
- * display_bad=( val )
- * --
- * Set the display_bad option to the specified value.
+ *  call-seq:
+ *     opts.display_bad= boolean
+ *
+ *  Set the display_bad option to the specified value.
  */
 static VALUE
 rlink_parseopts_set_display_bad( self, val )
@@ -864,9 +946,10 @@ rlink_parseopts_set_display_bad( self, val )
 }
 
 /*
- * display_bad
- * --
- * Get the value of the display_bad option.
+ *  call-seq:
+ *     opts.display_bad?   => true or false
+ *
+ *  Get the value of the display_bad option.
  */
 static VALUE
 rlink_parseopts_get_display_bad_p( self )
@@ -880,9 +963,10 @@ rlink_parseopts_get_display_bad_p( self )
 }
 
 /*
- * display_links=( val )
- * --
- * Set the display_links option to the specified value.
+ *  call-seq:
+ *     opts.display_links= boolean
+ *
+ *  Set the display_links option to the specified value.
  */
 static VALUE
 rlink_parseopts_set_display_links( self, val )
@@ -894,9 +978,10 @@ rlink_parseopts_set_display_links( self, val )
 }
 
 /*
- * display_links
- * --
- * Get the value of the display_links option.
+ *  call-seq:
+ *     opts.display_links?   => true or false
+ *
+ *  Get the value of the display_links option.
  */
 static VALUE
 rlink_parseopts_get_display_links_p( self )
@@ -910,9 +995,10 @@ rlink_parseopts_get_display_links_p( self )
 }
 
 /*
- * display_union=( val )
- * --
- * Set the display_union option to the specified value.
+ *  call-seq:
+ *     opts.display_union= boolean
+ *
+ *  Set the display_union option to the specified value.
  */
 static VALUE
 rlink_parseopts_set_display_union( self, val )
@@ -924,9 +1010,10 @@ rlink_parseopts_set_display_union( self, val )
 }
 
 /*
- * display_union
- * --
- * Get the value of the display_union option.
+ *  call-seq:
+ *     opts.display_union?   => true or false
+ *
+ *  Get the value of the display_union option.
  */
 static VALUE
 rlink_parseopts_get_display_union_p( self )
@@ -940,9 +1027,10 @@ rlink_parseopts_get_display_union_p( self )
 }
 
 /*
- * echo_on=( val )
- * --
- * Set the echo_on option to the specified value.
+ *  call-seq:
+ *     opts.echo_on= boolean
+ *
+ *  Set the echo_on option to the specified value.
  */
 static VALUE
 rlink_parseopts_set_echo_on( self, val )
@@ -954,9 +1042,10 @@ rlink_parseopts_set_echo_on( self, val )
 }
 
 /*
- * echo_on
- * --
- * Get the value of the echo_on option.
+ *  call-seq:
+ *     opts.echo_on?   => true or false
+ *
+ *  Get the value of the echo_on option.
  */
 static VALUE
 rlink_parseopts_get_echo_on_p( self )
@@ -993,7 +1082,6 @@ rlink_init_parseoptions(void)
 
 	rb_define_alloc_func( rlink_cParseOptions, rlink_parseopts_s_alloc );
 	rb_define_method( rlink_cParseOptions, "initialize", rlink_parseopts_init, -1 );
-
 /*
 	rb_define_method( rlink_cParseOptions, "merge", rlink_parseopts_merge, 1 );
 	rb_define_method( rlink_cParseOptions, "merge!", rlink_parseopts_merge_bang, 1 );
@@ -1102,6 +1190,8 @@ rlink_init_parseoptions(void)
 		rlink_parseopts_set_echo_on, 1 );
 	rb_define_method( rlink_cParseOptions, "echo_on?", 
 		rlink_parseopts_get_echo_on_p, 0 );
+
+
 
 /*
 	rlink_parseopts_timer_expired

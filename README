@@ -1,0 +1,58 @@
+
+= Ruby-LinkParser
+
+== Authors
+
+ * Michael Granger <ged@FaerieMUD.org>
+ * Martin Chase <stillflame@FaerieMUD.org>
+
+
+== Requirements
+
+ * Ruby >= 1.8.5
+ * link-grammar-4.2.4 from the AbiWord project 
+   (http://www.abisource.com/projects/link-grammar/) with the included
+   patch applied.
+
+== General Information
+
+This module is a Ruby binding for the link-grammar library, a syntactic parser
+of English. 
+
+
+=== Example Usage
+
+  require 'linkparser'
+
+  dict = LinkParser::Dictionary.new
+  sent = dict.parse( "Ruby is a dynamic, open source programming language." )
+                
+  sent.verb			# => "is.v"
+  sent.subject		# => 
+  sent.object		# => 
+
+  puts sent.constituent_tree_string
+  # >> (S Ruby
+  # >>    (VP is
+  # >>        (NP (NP a dynamic)
+  # >>            ,
+  # >>            (NP open source programming language .))))
+    
+== Legal
+
+This module is Open Source Software which is Copyright (c) 2006 by The
+FaerieMUD Consortium. All rights reserved.
+
+This work is licensed under the Creative Commons Attribution 2.5 License. To
+view a copy of this license, visit http://creativecommons.org/licenses/by/2.5/
+or send a letter to Creative Commons, 543 Howard Street, 5th Floor, San
+Francisco, California, 94105, USA.
+
+THIS PACKAGE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED
+WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF
+MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+
+ $Id: README,v 1.6 2003/10/09 13:21:48 deveiant Exp $
+
+
