@@ -17,6 +17,7 @@ BEGIN {
 		Dir::chdir( basedir ) 
 	end
 	$LOAD_PATH.unshift basedir
+	$LOAD_PATH.unshift basedir + '/docs'
 }
 
 # Load modules
@@ -38,7 +39,7 @@ def makeDocs( docsdir, template='html', diagrams=false, upload=nil, ridocs=false
 	flags = [
 		'--all',
 		'--inline-source',
-		'--fmt', 'html',
+		'--fmt', 'darkfish',
 		'--include', 'docs',
 		'--template', template,
 		'--op', docsdir,

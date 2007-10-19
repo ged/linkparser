@@ -49,6 +49,7 @@ class LinkParser::Linkage
 	# SVN Id
 	SVNId = %q$Id$
 
+	# Descriptions of the linkage types, keyed by linkage symbol
 	LinkTypes = {
 		:A  => %{connects pre-noun ("attributive") adjectives to following nouns: "The BIG DOG chased me", "The BIG BLACK UGLY DOG chased me".},
 		:AA => %{is used in the construction "How [adj] a [noun] was it?". It connects the adjective to the following "a".},
