@@ -164,7 +164,7 @@ rlink_get_sentence( self )
 
 /*
  *  call-seq:
- *     LinkParser::Sentence.allocate   => sentence
+ *     LinkParser::Sentence.allocate   -> sentence
  *
  *  Allocate a new LinkParser::Sentence object.
  *
@@ -184,7 +184,7 @@ rlink_sentence_s_alloc( klass )
 
 /*
  *  call-seq:
- *     LinkParser::Sentence.new( str, dict )   => sentence
+ *     LinkParser::Sentence.new( str, dict )   -> sentence
  *
  *  Create a new LinkParser::Sentence object from the given input string
  #  using the specified LinkParser::Dictionary.
@@ -221,7 +221,7 @@ rlink_sentence_init( self, input_string, dictionary )
 
 /*
  *  call-seq:
- *     sentence.parse( options={} )   => fixnum
+ *     sentence.parse( options={} )   -> fixnum
  *
  *  Attach a parse set to this sentence and return the number of linkages
  *  found. If any +options+ are specified, they override those set in the 
@@ -266,13 +266,13 @@ rlink_sentence_parse( argc, argv, self )
 
 /*
  *  call-seq:
- *     sentence.parsed?   => true or false
+ *     sentence.parsed?   -> true or false
  *
  *  Returns +true+ if the sentence has been parsed.
  *
- *     sentence.parsed?   #=> false
- *     sentence.parse     #=> 6
- *     sentence.parsed?   #=> true
+ *     sentence.parsed?   #-> false
+ *     sentence.parse     #-> 6
+ *     sentence.parsed?   #-> true
  */
 static VALUE
 rlink_sentence_parsed_p( self )
@@ -285,12 +285,12 @@ rlink_sentence_parsed_p( self )
 
 /*
  *  call-seq:
- *     sentence.options   => parseoptions
+ *     sentence.options   -> parseoptions
  *
  *  Returns a ParseOptions object for the receiving sentence.
  *
  *     sentence.options.verbosity = 3
- *     sentence.options.islands_ok?  # => true
+ *     sentence.options.islands_ok?  # -> true
  */
 static VALUE
 rlink_sentence_options( self )
@@ -305,7 +305,7 @@ rlink_sentence_options( self )
 
 /*
  *  call-seq:
- *     sentence.linkages   => array
+ *     sentence.linkages   -> array
  *
  *  Returns an Array of LinkParser::Linkage objects which represent the
  *  parts parsed from the sentence for the current linkage.
@@ -342,7 +342,7 @@ rlink_sentence_linkages( self )
 
 /*
  *  call-seq:
- *     sentence.length   => fixnum
+ *     sentence.length   -> fixnum
  *
  *  Returns the number of words in the tokenized sentence, including the 
  *  boundary words and punctuation.
@@ -360,7 +360,7 @@ rlink_sentence_length( self )
 
 /*
  *  call-seq:
- *     sentence.word( idx )   => str
+ *     sentence.word( idx )   -> str
  *
  *  Returns the spelling of the n-th word in the sentence as it appears after 
  *  tokenization.
@@ -379,12 +379,12 @@ rlink_sentence_word( self, n )
 
 /*
  *  call-seq:
- *     sentence.words   => array
+ *     sentence.words   -> array
  *
  *  Returns the words of the sentence as they appear after tokenization.
  *
  *     sentence = LinkParser::Dictionary.new.parse( "The dogs barks." )
- *     sentence.words  #=> 
+ *     sentence.words  #-> 
  */
 static VALUE
 rlink_sentence_words( self )
@@ -407,9 +407,9 @@ rlink_sentence_words( self )
 
 /*
  *  call-seq:
- *     sentence[index]   		 => str
- *     sentence[start, length]   => str
- *     sentence[range]   		 => str
+ *     sentence[index]   		 -> str
+ *     sentence[start, length]   -> str
+ *     sentence[range]   		 -> str
  *
  *  Element Reference---Returns the element at index, or returns a subarray 
  *  starting at start and continuing for length elements, or returns a subarray 
@@ -437,7 +437,7 @@ rlink_sentence_aref( argc, argv, self )
 
 /*
  *  call-seq:
- *     sentence.null_count   => int
+ *     sentence.null_count   -> int
  *
  *  Returns the number of null links that were used in parsing the sentence.
  */
@@ -455,7 +455,7 @@ rlink_sentence_null_count( self )
 
 /*
  *  call-seq:
- *     sentence.num_linkages_found   => fixnum
+ *     sentence.num_linkages_found   -> fixnum
  *
  *  Returns the number of linkages found when parsing the sentence. This will 
  *  cause the sentence to be parsed if it hasn't been already.
@@ -477,7 +477,7 @@ rlink_sentence_num_linkages_found( self )
 
 /*
  *  call-seq:
- *     sentence.num_valid_linkages   => fixnum
+ *     sentence.num_valid_linkages   -> fixnum
  *
  *  Return the number of linkages that had no post-processing violations.
  */
@@ -495,7 +495,7 @@ rlink_sentence_num_valid_linkages( self )
 
 /*
  *  call-seq:
- *     sentence.num_linkages_post_processed   => fixnum
+ *     sentence.num_linkages_post_processed   -> fixnum
  *
  *  Return the number of linkages that were actually post-processed (which may 
  *  be less than the number found because of the linkage_limit parameter).
@@ -514,7 +514,7 @@ rlink_sentence_num_linkages_post_processed( self )
 
 /*
  *  call-seq:
- *     sentence.num_violations( i )   => fixnum
+ *     sentence.num_violations( i )   -> fixnum
  *
  *  The number of post-processing violations that the i-th linkage had during 
  *  the last parse.
@@ -533,7 +533,7 @@ rlink_sentence_num_violations( self, i )
 
 /*
  *  call-seq:
- *     sentence.disjunct_cost( i )   => fixnum
+ *     sentence.disjunct_cost( i )   -> fixnum
  *
  *  The maximum cost of connectors used in the i-th linkage of the sentence.
  */
@@ -549,7 +549,15 @@ rlink_sentence_disjunct_cost( self, i )
 }
 	
 
-/* Class Initializer */
+/*
+ * Document-class: LinkParser::Sentence
+ * 
+ * A Sentence is the API's representation of an input string,
+ * tokenized and interpreted according to a specific Dictionary. After
+ * a Sentence is created and parsed, various attributes of the
+ * resulting set of linkages can be obtained.
+ * 
+ */
 void
 rlink_init_sentence( void )
 {

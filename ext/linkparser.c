@@ -104,7 +104,7 @@ rlink_make_parse_options( default_options, options )
 
 
 
-/* Library init function */
+/* Namespace module for the Ruby LinkParser library */
 void
 Init_linkparser_ext(void)
 {

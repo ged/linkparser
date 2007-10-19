@@ -302,12 +302,21 @@ rlink_parse( argc, argv, self )
 
 
 
-/* Initializer */
+/* 
+ * Document-class: LinkParser::Dictionary
+ * 
+ * A Dictionary is the programmer's handle on the set of word definitions that defines the
+ * grammar. A user creates a Dictionary from a grammar file and post-process knowledge
+ * file, and then creates all other objects through it.
+ */
+
 void
 rlink_init_dict(void)
 {
 #ifdef FOR_RDOC
 	rlink_mLinkParser = rb_define_module( "LinkParser" );
+	
+	/* An exception class for errors raised from the LinkParser library */
 	rlink_eLpError = rb_define_class_under( rlink_mLinkParser, "Error", rb_eRuntimeError );
 #endif
 

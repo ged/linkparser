@@ -1,6 +1,9 @@
 #!/usr/bin/ruby
 # 
-# Additional high-level functionality for LinkParser::Sentence objects.
+# A Sentence is the API's representation of an input string, tokenized
+# and interpreted according to a specific Dictionary. After a Sentence
+# is created and parsed, various attributes of the resulting set of
+# linkages can be obtained.
 # 
 # == Authors
 # 
@@ -36,7 +39,6 @@
 require 'linkparser'
 
 
-### Additional high-level functionality for LinkParser::Sentence objects.
 class LinkParser::Sentence
 
 	# SVN Revision

@@ -16,13 +16,16 @@ BEGIN {
 	basedir = Pathname.new( __FILE__ ).dirname
 	libdir = basedir + "lib"
 	extdir = basedir + "ext"
+	docsdir = basedir + "docs"
 	
 	$LOAD_PATH.unshift( libdir.to_s ) unless $LOAD_PATH.include?( libdir.to_s )
 	$LOAD_PATH.unshift( extdir.to_s ) unless $LOAD_PATH.include?( extdir.to_s )
+	$LOAD_PATH.unshift( docsdir.to_s ) unless $LOAD_PATH.include?( docsdir.to_s )
 }
 
 require 'linkparser'
 require 'fileutils'
+require 'pp'
 
 require 'rake'
 require 'rake/packagetask'
@@ -33,9 +36,10 @@ require 'spec/rake/spectask'
 require 'spec/rake/verify_rcov'
 
 TEXT_FILES = %w( Rakefile README MANIFEST )
-SPEC_FILES = Dir.glob( 'spec/*_spec.rb'  )
-LIB_FILES  = Dir.glob( 'lib/**/*'         )
-BIN_FILES  = Dir.glob( 'bin/*'            )
+SPEC_FILES = Dir.glob( 'spec/*_spec.rb' )
+LIB_FILES  = Dir.glob( 'lib/**/*.rb' )
+EXT_FILES  = Dir.glob( 'ext/*.c' ) + Dir.glob( 'ext/*.h' )
+BIN_FILES  = Dir.glob( 'bin/*' )
 
 RELEASE_FILES = TEXT_FILES +
 				SPEC_FILES +
@@ -50,11 +54,21 @@ task :default  => 'spec:normal'
 
 # Task: rdoc
 Rake::RDocTask.new { |rdoc|
-	rdoc.rdoc_dir = 'doc'
-	rdoc.title    = "LinkParser"
-	rdoc.options << '-SNmREADME'
-	rdoc.rdoc_files.include %w[README]
+	rdoc.rdoc_dir = 'docs/api'
+	rdoc.title    = "Ruby LinkParser library"
+
+	rdoc.options += [
+		'-w', '4',
+		'-SHN',
+		'-i', 'docs',
+		'-f', 'darkfish',
+		'-m', 'README',
+		'-W', 'http://deveiate.org/projects/Ruby-LinkParser/browser/trunk/'
+	  ]
+	
+	rdoc.rdoc_files.include 'README'
 	rdoc.rdoc_files.include LIB_FILES
+	rdoc.rdoc_files.include EXT_FILES
 }
 
 
