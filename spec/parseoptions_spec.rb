@@ -1,9 +1,9 @@
 #!/usr/bin/ruby -w
 #
-# Unit tests for the LinkParser::ParseOptions class
+# Specification for the LinkParser::ParseOptions class
 # $Id$
 #
-# Copyright (c) 2007 The FaerieMUD Consortium
+# Copyright (c) 2007, 2008 The FaerieMUD Consortium
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -27,53 +27,45 @@
 BEGIN {
 	require 'pathname'
 	basedir = Pathname.new( __FILE__ ).dirname.parent
-	require basedir + "linkparser-path.rb"
+	require basedir + 'linkparser-path.rb'
 }
 
-
-require 'test/unit'
+require 'spec/runner'
 require 'linkparser'
 
-class LinkParser::ParseOptions::TestCase < Test::Unit::TestCase
 
-	Defaults = {
-		:verbosity			 => 1,			# Docs say this is 0
-		:linkage_limit		 => 100,		# Docs say this is 10000
-		:min_null_count		 => 0,
-		:max_null_count		 => 0,
-		:null_block			 => 1,
-		:islands_ok?		 => false,
-		:short_length		 => 6,
-		#:all_short?			 => false,	# Not in the API
-		#:display_short?		 => true,	# Not in the API
-		:display_walls?		 => false,
-		:display_union?		 => false,
-		:allow_null?		 => true,
-		:echo_on?			 => false,
-		:batch_mode?		 => false,
-		:panic_mode?		 => false,
-		:screen_width		 => 79,
-		:display_on?		 => true,
-		:display_postscript? => false,
-		:display_bad?		 => false,
-		:display_links?		 => false,
-	}
+describe LinkParser::ParseOptions do
 
-	def setup
+	before( :each ) do
 		@opts = LinkParser::ParseOptions.new
 	end
+	
 
+	it "starts out with documented defaults" do
+		@opts.verbosity.should      == 1		# Docs say this is 0
+		@opts.linkage_limit.should  == 100		# Docs say this is 10000
+		@opts.min_null_count.should == 0
+		@opts.max_null_count.should == 0
+		@opts.null_block.should     == 1
+		@opts.islands_ok?.should    == false
+		@opts.short_length.should   == 6
+		@opts.display_walls?.should == false
+		@opts.display_union?.should == false
+		@opts.allow_null?.should    == true
+		@opts.echo_on?.should       == false
+		@opts.batch_mode?.should    == false
+		@opts.panic_mode?.should    == false
+		@opts.screen_width.should   == 79
+		@opts.display_on?.should    == true
+		@opts.display_postscript?   == false
+		@opts.display_bad?.should   == false
+		@opts.display_links?.should == false
+	end
 
-	def test_values_should_all_start_out_with_documented_defaults
-		Defaults.each do |key, default|
-			rval = nil
-
-			assert_nothing_raised do
-				rval = @opts.send( key )
-			end
-			
-			assert_equal default, rval, key
-		end
+	it "supports all the members mentioned in the documentation" do
+		pending "some of them aren't implemented in the link-grammar library"
+		@opts.all_short?.should     == false	# Not in the API
+		@opts.display_short?.should == true		# Not in the API
 	end
 
 end

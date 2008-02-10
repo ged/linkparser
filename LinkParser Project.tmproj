@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>spec/linkage_spec.rb</string>
+	<string>ext/extconf.rb</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -12,7 +12,7 @@
 			<key>name</key>
 			<string>LinkParser</string>
 			<key>regexFolderFilter</key>
-			<string>!.*/(\.[^/]*|CVS|_darcs|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<string>!.*/(\.[^/]*|docs/(html|rdoc)|CVS|_darcs|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
 			<key>sourceDirectory</key>
 			<string></string>
 		</dict>
@@ -21,7 +21,7 @@
 	<integer>281</integer>
 	<key>metaData</key>
 	<dict>
-		<key>ext/Makefile</key>
+		<key>ext/dictionary.c</key>
 		<dict>
 			<key>caret</key>
 			<dict>
@@ -33,7 +33,7 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>79</integer>
+			<integer>0</integer>
 		</dict>
 		<key>ext/extconf.rb</key>
 		<dict>
@@ -42,7 +42,7 @@
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>36</integer>
+				<integer>38</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -56,7 +56,7 @@
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>609</integer>
+				<integer>0</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -70,7 +70,7 @@
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>33</integer>
+				<integer>0</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -89,7 +89,7 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>21</integer>
+			<integer>0</integer>
 		</dict>
 		<key>lib/linkparser/linkage.rb</key>
 		<dict>
@@ -98,12 +98,26 @@
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>210</integer>
+				<integer>0</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>170</integer>
+		</dict>
+		<key>link-grammar-4.2.4.patch</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>23</integer>
+				<key>line</key>
+				<integer>13</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
 		</dict>
 		<key>spec/bugfixes_spec.rb</key>
 		<dict>
@@ -112,7 +126,7 @@
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>2</integer>
+				<integer>0</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -126,28 +140,12 @@
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>35</integer>
+				<integer>0</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>0</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>35</integer>
-			</dict>
 		</dict>
 		<key>spec/linkage_spec.rb</key>
 		<dict>
@@ -156,24 +154,56 @@
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>264</integer>
+				<integer>0</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>223</integer>
+			<integer>36</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>ext/linkage.c</string>
+		<string>ext/extconf.rb</string>
 		<string>spec/linkage_spec.rb</string>
-		<string>spec/dictionary_spec.rb</string>
-		<string>spec/bugfixes_spec.rb</string>
+		<string>link-grammar-4.2.4.patch</string>
+		<string>extconf.rb</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
+	<key>treeState</key>
+	<dict>
+		<key>LinkParser</key>
+		<dict>
+			<key>isExpanded</key>
+			<true/>
+			<key>subItems</key>
+			<dict>
+				<key>docs</key>
+				<dict>
+					<key>isExpanded</key>
+					<true/>
+					<key>subItems</key>
+					<dict/>
+				</dict>
+				<key>ext</key>
+				<dict>
+					<key>isExpanded</key>
+					<true/>
+					<key>subItems</key>
+					<dict/>
+				</dict>
+				<key>spec</key>
+				<dict>
+					<key>isExpanded</key>
+					<true/>
+					<key>subItems</key>
+					<dict/>
+				</dict>
+			</dict>
+		</dict>
+	</dict>
 	<key>windowFrame</key>
-	<string>{{589, 77}, {892, 1501}}</string>
+	<string>{{64, 75}, {1044, 1503}}</string>
 </dict>
 </plist>
