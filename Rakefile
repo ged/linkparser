@@ -4,7 +4,7 @@
 # including plist, Gruff, Rake, Linen, ThingFish, and
 # others.
 #
-# Copyright (c) 2007 The FaerieMUD Consortium
+# Copyright (c) 2007, 2008 The FaerieMUD Consortium
 #
 # Mistakes:
 #  * Michael Granger <ged@FaerieMUD.org>
@@ -23,7 +23,6 @@ BEGIN {
 	$LOAD_PATH.unshift( docsdir.to_s ) unless $LOAD_PATH.include?( docsdir.to_s )
 }
 
-require 'linkparser'
 require 'fileutils'
 require 'pp'
 

@@ -34,3 +34,5 @@ have_func( "linkage_get_current_sublinkage", "link-grammar/link-includes.h" ) or
 	warn "Link grammar library is unpatched."
 
 create_makefile( "linkparser_ext" )
+
+
