@@ -1,10 +1,11 @@
 These instructions assume a UNIX or UNIX-like environment. I'm not sure how to get 
 this to build under Windows. Suggestions welcomed.
 
-  $ tar -xvzf link-grammar-4.2.4.tar.gz
-  $ cd link-grammar-4.2.4
-  $ patch -p1 < ../link-grammar-4.2.4.patch
+  $ tar -xvzf link-grammar-4.3.5.tar.gz
+  $ cd link-grammar-4.3.5
+  $ patch -p1 < ../link-grammar-4.3.5.patch
   $ ./configure; make; sudo make install
   $ cd ..
-  $ sudo ./install.rb
+  $ rake
+  $ sudo rake install
 

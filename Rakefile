@@ -88,8 +88,14 @@ if Rake.application.options.dryrun
 	Rake.application.options.dryrun = false
 end
 
+
+#####################################################################
+###	T A S K S
+#####################################################################
+
 ### Default task
-task :default  => [:build, :spec, :verify, :package]
+task :default  => [:build, :spec, :package]
+task :all => :default
 
 
 ### Task: clean
@@ -116,15 +122,23 @@ task :docs => [ :coverage, :rdoc ]
 ### Task: build -- Build the C extension half
 
 file EXT_RAKEFILE.to_s => FileList[ 'Rakefile', EXTDIR + '*.c' ] do
+	require 'misc/monkeypatches' # Fix Mkrf's output
+	
+	log "Configuring linkparser C extension"
 	Dir.chdir( EXTDIR ) do
 		Mkrf::Generator.new( 'linkparser_ext', FileList['*.c'] ) do |gen|
+			trace "Setting CFLAGS"
 			gen.cflags << ' -Wall'
 			gen.cflags << ' -DDEBUG'
+			trace "Checking for dictionary_create()"
 			gen.include_library( "link-grammar", "dictionary_create" ) or
 				fail( "Could not find link-grammar library." )
+			trace "Checking for link-grammar/link-includes.h"
 			gen.include_header( "link-grammar/link-includes.h" ) or
 				fail( "Could not find link-includes.h" )
+			trace "Checking for link-grammar/utilities.h"
 			gen.include_header( "link-grammar/utilities.h" )
+			trace "Checking for patched link-grammar library via linkage_get_current_sublinkage()"
 			gen.has_function?( "linkage_get_current_sublinkage" ) or
 				fail "Link grammar library is unpatched."
 		end
