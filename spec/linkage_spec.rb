@@ -434,4 +434,14 @@ describe LinkParser::Linkage do
 	end
 
 
+	describe "bugfixes" do
+		
+		it "also strips off the '.p' from the subject and object when they are plural" do
+			sent = @dict.parse( 'People like goats.' )
+			sent.subject.should_not =~ /people\.p/i
+			sent.object.should_not =~ /goats\.p/i
+		end
+		
+	end
+
 end

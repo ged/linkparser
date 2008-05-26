@@ -22,22 +22,37 @@ of English.
 
 === Example Usage
 
-  require 'linkparser'
+require 'linkparser'
 
-  dict = LinkParser::Dictionary.new
-  sent = dict.parse( "Ruby is a dynamic, open source programming language." )
-                
-  sent.verb			# => "is.v"
-  sent.subject		# => 
-  sent.object		# => 
+dict = LinkParser::Dictionary.new( :screen_width => 100 )
+sent = dict.parse( "People use Ruby for all kinds of nifty things." )
+# => #<LinkParser::Sentence:0xcf8eb "LEFT-WALL people use Ruby for all kinds
+#      of nifty things . RIGHT-WALL"/2 linkages/0 nulls>
+              
+sent.subject		# => "people"
+sent.verb			# => "use"
+sent.object			# => "Ruby"
 
-  puts sent.constituent_tree_string
-  # >> (S Ruby
-  # >>    (VP is
-  # >>        (NP (NP a dynamic)
-  # >>            ,
-  # >>            (NP open source programming language .))))
+puts sent.constituent_tree_string
+# =>
+# (S (NP People)
+#    (VP use
+#        (NP Ruby)
+#        (PP for
+#            (NP (NP all kinds)
+#                (PP of
+#                    (NP nifty things)))))
+#    .)
+
+puts sent.diagram
+# =>
+#     +-------------------------------Xp------------------------------+
+#     |                +----MVp---+----Jp----+     +------Jp-----+    |
+#     +----Wd---+--Sp--+--Os-+    |    +-Dmc-+--Mp-+    +----A---+    |
+#     |         |      |     |    |    |     |     |    |        |    |
+# LEFT-WALL people.p use.v Ruby for.p all kinds.n of nifty.a things.n . 
     
+
 == Legal
 
 This module is Open Source Software which is Copyright (c) 2006 by The

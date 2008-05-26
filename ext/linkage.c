@@ -458,7 +458,7 @@ rlink_linkage_get_link_label( self, index )
 {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	int i = NUM2INT( index );
-	char *label;
+	const char *label;
 	
 	label = linkage_get_link_label( (Linkage)ptr->linkage, i );
 	if ( !label ) return Qnil;
@@ -478,7 +478,7 @@ rlink_linkage_get_link_llabel( self, index )
 {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	int i = NUM2INT( index );
-	char *label = NULL;
+	const char *label = NULL;
 	
 	label = linkage_get_link_llabel( (Linkage)ptr->linkage, i );
 	if ( !label ) return Qnil;
@@ -497,7 +497,7 @@ rlink_linkage_get_link_rlabel( self, index )
 {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	int i = NUM2INT( index );
-	char *label = NULL;
+	const char *label = NULL;
 	
 	label = linkage_get_link_rlabel( (Linkage)ptr->linkage, i );
 	if ( !label ) return Qnil;
@@ -569,7 +569,7 @@ rlink_linkage_get_words( self )
 	VALUE self;
 {
 	rlink_LINKAGE *ptr = get_linkage( self );
-	char **words;
+	const char **words;
 	int count, i;
 	VALUE words_ary;
 	
@@ -773,7 +773,7 @@ rlink_linkage_get_violation_name( self )
 	VALUE self;
 {
 	rlink_LINKAGE *ptr = get_linkage( self );
-	char *violation_name = NULL;
+	const char *violation_name = NULL;
 	
 	violation_name = linkage_get_violation_name( (Linkage)ptr->linkage );
 	

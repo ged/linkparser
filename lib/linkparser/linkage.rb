@@ -218,14 +218,14 @@ class LinkParser::Linkage
 	### Return the subject from the linkage.
 	def subject
 		link = self.links.find {|link| link.llabel[0] == ?S } or return nil
-		return link.lword.sub( /\.n$/, '' )
+		return link.lword.sub( /\.[np]$/, '' )
 	end
 	
 
 	### Return the object from the linkage.
 	def object
 		link = self.links.find {|link| link.rlabel[0] == ?O } or return nil
-		return link.rword.sub( /\.n$/, '' )
+		return link.rword.sub( /\.[np]$/, '' )
 	end
 
 
