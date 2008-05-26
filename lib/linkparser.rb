@@ -42,6 +42,9 @@ module LinkParser
 	require 'linkparser/sentence'
 	require 'linkparser/linkage'
 
+	# Release version
+	VERSION = '1.0.0'
+
 	# SVN Revision
 	SVNRev = %q$Rev$
 
