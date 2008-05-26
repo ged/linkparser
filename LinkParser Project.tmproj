@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>ext/extconf.rb</string>
+	<string>ext/Rakefile</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -21,7 +21,21 @@
 	<integer>281</integer>
 	<key>metaData</key>
 	<dict>
-		<key>ext/dictionary.c</key>
+		<key>Rakefile</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>124</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>98</integer>
+		</dict>
+		<key>ext/Rakefile</key>
 		<dict>
 			<key>caret</key>
 			<dict>
@@ -35,14 +49,14 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>ext/extconf.rb</key>
+		<key>ext/dictionary.c</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>38</integer>
+				<integer>0</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -77,14 +91,14 @@
 			<key>firstVisibleLine</key>
 			<integer>4</integer>
 		</dict>
-		<key>extconf.rb</key>
+		<key>lib/linkparser.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>44</integer>
+				<integer>45</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -105,34 +119,6 @@
 			<key>firstVisibleLine</key>
 			<integer>170</integer>
 		</dict>
-		<key>link-grammar-4.2.4.patch</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>23</integer>
-				<key>line</key>
-				<integer>13</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
-		<key>spec/bugfixes_spec.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>0</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
 		<key>spec/dictionary_spec.rb</key>
 		<dict>
 			<key>caret</key>
@@ -147,27 +133,12 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>spec/linkage_spec.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>0</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>36</integer>
-		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>ext/extconf.rb</string>
-		<string>spec/linkage_spec.rb</string>
-		<string>link-grammar-4.2.4.patch</string>
-		<string>extconf.rb</string>
+		<string>Rakefile</string>
+		<string>lib/linkparser.rb</string>
+		<string>ext/Rakefile</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
@@ -179,19 +150,34 @@
 			<true/>
 			<key>subItems</key>
 			<dict>
-				<key>docs</key>
-				<dict>
-					<key>isExpanded</key>
-					<true/>
-					<key>subItems</key>
-					<dict/>
-				</dict>
 				<key>ext</key>
 				<dict>
 					<key>isExpanded</key>
 					<true/>
 					<key>subItems</key>
 					<dict/>
+				</dict>
+				<key>lib</key>
+				<dict>
+					<key>isExpanded</key>
+					<true/>
+					<key>subItems</key>
+					<dict/>
+				</dict>
+				<key>misc</key>
+				<dict>
+					<key>isExpanded</key>
+					<true/>
+					<key>subItems</key>
+					<dict>
+						<key>rake</key>
+						<dict>
+							<key>isExpanded</key>
+							<true/>
+							<key>subItems</key>
+							<dict/>
+						</dict>
+					</dict>
 				</dict>
 				<key>spec</key>
 				<dict>
@@ -204,6 +190,6 @@
 		</dict>
 	</dict>
 	<key>windowFrame</key>
-	<string>{{64, 75}, {1044, 1503}}</string>
+	<string>{{1514, 75}, {1044, 1503}}</string>
 </dict>
 </plist>

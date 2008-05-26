@@ -270,199 +270,168 @@ describe LinkParser::Linkage do
 		@linkage.links[3].rword.should == 'was.v'
 		@linkage.links[3].label.should == 'Ss'
 	end
+
+
+	it "knows what word is the verb in the sentence" do
+		@linkage.verb.should == "was"
+	end
+
+
+	it "knows when the sentence doesn't have a direct object" do
+		@linkage.object.should be_nil()
+	end
 	
 
-end
+	MODE1_C_TREE_STRING = "(S (NP The flag)\n   (VP was\n       (ADJP wet))\n   .)\n"
+	MODE2_C_TREE_STRING = "[S [NP The flag NP] [VP was [ADJP wet ADJP] VP] . S] \n"
+	MODE3_C_TREE_STRING = "(S (NP The flag) (VP was (ADJP wet)) .)\n"
 
-
-class BlahDeBlah
-
-    #1         LEFT-WALL      Xp      <---Xp---->  Xp        .
-    #2   (m)   LEFT-WALL      Wd      <---Wd---->  Wd        flag.n
-    #3+4 (m)   the            D       <---Ds---->  Ds        flag.n
-    #5   (m)   flag.n         Ss      <---Ss---->  Ss        was.v
-    #6   (m)   was.v          Pa      <---Pa---->  Pa        wet.a
-	def test_linkage_links_should_contain_link_structs_describing_the_linkage
-		rval = nil
-		
-		assert_nothing_raised do
-			rval = @linkage.links
-		end
-		
-		assert_instance_of Array, rval
-		assert_kind_of Struct, rval.first
-		assert_equal 'LEFT-WALL', rval.first.lword, "left word of first link"
-		assert_equal 'Xp', rval.first.label, "label of first link"
-		assert_equal 'RIGHT-WALL', rval.last.rword, "right word of last link"
-		assert_equal 'RW', rval.last.label, "label of last link"
-		assert_equal 'flag.n', rval[3].lword, "left word of the fourth link"
-		assert_equal 'was.v', rval[3].rword, "right word of the fourth link"
-		assert_equal 'Ss', rval[3].label, "label of the fourth link"
+	it "returns an indented sexps for the constituent tree string by default (mode 1)" do
+		@linkage.constituent_tree_string.should == MODE1_C_TREE_STRING
 	end
-
-
-	def test_linkage_verb_should_return_sentence_verb
-		rval = nil
-		
-		assert_nothing_raised do
-			rval = @linkage.verb
-		end
-		
-		assert_equal "was", rval
-	end
-
-
-	# The ball rolled down the hill and bumped the curb.
-	def test_linkage_verb_should_return_vword_of_current_sublinkage_of_conjunction
-		rval = nil
-		linkage = @conjunct_sentence.linkages.first
-		
-		assert_nothing_raised do
-			rval = linkage.verb
-		end
-		
-		assert_equal 'rolled', rval
-		
-		assert_nothing_raised do
-			linkage.current_sublinkage = 1
-			rval = linkage.verb
-		end
-		
-		assert_equal 'bumped', rval
-	end
-
 	
+
+	it "returns indented sexps for the constituent tree string if fetched with explicit mode '1'" do
+		@linkage.constituent_tree_string( 1 ).should == MODE1_C_TREE_STRING
+	end
 	
-	Mode1CTreeString = "(S (NP The flag)\n   (VP was\n       (ADJP wet))\n   .)\n"
-	Mode2CTreeString = "[S [NP The flag NP] [VP was [ADJP wet ADJP] VP] . S] \n"
-	Mode3CTreeString = "(S (NP The flag) (VP was (ADJP wet)) .)\n"
+	it "returns bracketed constituents if constituent tree string is fetched in mode 2" do
+		@linkage.constituent_tree_string( 2 ).should == MODE2_C_TREE_STRING
+	end
 	
-	def test_constituent_tree_string_without_mode_should_return_mode1_string
-		rval = nil
-		
-		assert_nothing_raised do
-			rval = @linkage.constituent_tree_string
-		end
-		
-		assert_equal Mode1CTreeString, rval
+	it "returns unindented sexps for the constituent tree string if constituent tree string " +
+	   "is fetched in mode 3" do
+		@linkage.constituent_tree_string( 3 ).should == MODE3_C_TREE_STRING
 	end
-
-
-	def test_constituent_tree_string_with_mode1_should_return_mode1_string
-		rval = nil
-		
-		assert_nothing_raised do
-			rval = @linkage.constituent_tree_string( 1 )
-		end
-		
-		assert_equal Mode1CTreeString, rval
-	end
-
-	def test_constituent_tree_string_with_mode2_should_return_mode2_string
-		rval = nil
-		
-		assert_nothing_raised do
-			rval = @linkage.constituent_tree_string( 2 )
-		end
-		
-		assert_equal Mode2CTreeString, rval
-	end
-
-	def test_constituent_tree_string_with_mode3_should_return_mode3_string
-		rval = nil
-		
-		assert_nothing_raised do
-			rval = @linkage.constituent_tree_string( 3 )
-		end
-		
-		assert_equal Mode3CTreeString, rval
-	end
-
-	def test_constituent_tree_string_with_mode4_should_raise_exception
-		assert_raises( ArgumentError ) do
+	
+	it "raises an exception for any numeric constituent tree string mode greater than 3" do
+		lambda {
 			@linkage.constituent_tree_string( 4 )
-		end
-	end
-
-	def test_constituent_tree_string_with_nonnumeric_should_raise_exception
-		assert_raises( TypeError ) do
-			@linkage.constituent_tree_string( "Glah" )
-		end
-	end
-
-
-	def test_constituent_tree_should_return_array_of_CTree_structs
-		rval = nil
-		
-		assert_nothing_raised do 
-			rval = @linkage.constituent_tree
-		end
-		
-		assert_kind_of Array, rval
-		assert_kind_of Struct, rval.first
-		assert_equal "S", rval.first.label
-		assert_equal "NP", rval.first.children.first.label
-		assert_equal "The", rval.first.children.first.children.first.label
+		}.should raise_error( ArgumentError, /illegal mode 4/i )
 	end
 	
-	def test_linkage_current_sublinkage_should_return
-		rval = nil
-		assert_nothing_raised do
-			rval = @linkage.current_sublinkage
-		end
-		assert_kind_of(Fixnum, rval)
-	end
-
-end
-
-
-describe LinkParser::Linkage, " from a simple sentence" do
-
-	before( :all ) do
-		@dict = LinkParser::Dictionary.new( :verbosity => 0 )
-	end
-
-	before( :each ) do
-		@sentence = @dict.parse( "The dog ran home." )
-		@linkage = @sentence.linkages.first
-	end
-
-
-	it "doesn't have any sublinkages" do
-		@linkage.num_sublinkages.should == 1
-	end
-	
-	it "doesn't change after computing its union" do
+	it "raises an exception for any numeric constituent tree string mode less than 1" do
 		lambda {
-			@linkage.compute_union
-		}.should_not change( @linkage, :num_sublinkages )
-	end
-
-end
-
-
-describe LinkParser::Linkage, " with a conjunction" do
-	before( :all ) do
-		@dict = LinkParser::Dictionary.new( :verbosity => 0 )
-	end
-	
-	before( :each ) do
-		@sentence = 
-			@dict.parse( "The ball rolled down the hill and bumped the curb." )
-		@linkage = @sentence.linkages.first
+			@linkage.constituent_tree_string( 0 )
+		}.should raise_error( ArgumentError, /illegal mode 0/i )
 	end
 
 
-	it "has two sublinkages" do
-		@linkage.num_sublinkages.should == 2
-	end
-	
-
-	it "adds a sublinkage after computing its union" do
+	it "raises an exception when a non-numeric constituent tree string mode is given" do
 		lambda {
-			@linkage.compute_union
-		}.should change( @linkage, :num_sublinkages ).from(2).to(3)
+			@linkage.constituent_tree_string( 'glarg' )
+		}.should raise_error( TypeError )
 	end
+	
+	it "returns an Array of CTree structs for its constituent tree" do
+		rval = @linkage.constituent_tree
+		
+		rval.should be_an_instance_of( Array )
+		rval.should have(1).members
+		rval.first.should be_a_kind_of( Struct )
+		rval.first.label.should == 'S'
+		rval.first.children.should have(3).members
+		rval.first.children.collect {|n| n.label }.should include( 'NP', 'VP', '.' )
+	end
+	
+	it "returns 0 as the number of the current sublinkage since it has no conjunctions" do
+		@linkage.current_sublinkage.should == 0
+	end
+
+
+	it "returns an informational string when inspected" do
+		@linkage.inspect.should =~ /Linkage:0x[[:xdigit:]]+: sublinkage 0: \[\d+ links\]/
+	end
+	
+	
+	describe "from a simple sentence with a direct object" do
+		before( :each ) do
+			@sentence = @dict.parse( "The dog ran home." )
+			@linkage = @sentence.linkages.first
+		end
+
+
+		it "doesn't have any sublinkages" do
+			@linkage.num_sublinkages.should == 1
+		end
+	
+		it "doesn't change after computing its union" do
+			lambda {
+				@linkage.compute_union
+			}.should_not change( @linkage, :num_sublinkages )
+		end
+
+
+		it "knows what word is the object in the sentence" do
+			@linkage.object.should == 'home'
+		end
+	
+	end
+
+
+	it "knows that it doesn't have any conjunctions" do
+		@linkage.should_not have_conjunction()
+	end
+	
+
+	describe "from a sentence with a conjunction" do
+		before( :each ) do
+			@sentence = 
+				@dict.parse( "The ball rolled down the hill and bumped the curb." )
+			@linkage = @sentence.linkages.first
+		end
+
+
+		it "knows that it has a conjunction" do
+			@linkage.should have_conjunction()
+		end
+	
+		it "has two sublinkages" do
+			@linkage.num_sublinkages.should == 2
+		end
+	
+
+		it "adds a sublinkage after computing its union" do
+			lambda {
+				@linkage.compute_union
+			}.should change( @linkage, :num_sublinkages ).from(2).to(3)
+		end
+
+
+		it "knows what word is the verb in the current sublinkage" do
+			@linkage.verb.should == 'rolled'
+			@linkage.current_sublinkage = 1
+			@linkage.verb.should == 'bumped'
+		end
+	
+
+		it "knows what word is the object in the current sublinkage" do
+			@linkage.object.should == 'hill'
+			@linkage.current_sublinkage = 1
+			@linkage.object.should == 'curb'
+		end
+	
+	end
+
+
+	it "should know that it's not an imperative sentence" do
+		@linkage.imperative?.should be_false()
+	end
+	
+
+	describe "from an imperative sentence" do
+		before( :each ) do
+			@sentence = @dict.parse( "Go to the store!" )
+			@linkage = @sentence.linkages.first
+		end
+
+
+		it "knows that it's an imperative sentence" do
+			@linkage.imperative?.should be_true()
+		end
+		
+		
+	end
+
+
 end
-
-
