@@ -20,13 +20,22 @@ BEGIN {
 
 
 require 'rbconfig'
-require 'rubygems'
 require 'rake'
 require 'rake/rdoctask'
 require 'rake/packagetask'
 require 'rake/gempackagetask'
 require 'pathname'
-require 'mkrf'
+
+begin
+	require 'mkrf'
+rescue LoadError => err
+	unless Object.const_defined?( :Gem )
+		require 'rubygems'
+		retry
+	end
+	
+	fail "You need to have the mkrf library installed to build this."
+end
 
 
 include Config
