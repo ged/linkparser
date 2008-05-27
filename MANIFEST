@@ -1,23 +1,39 @@
 #
 # Distribution Manifest
-# Created: Tue Oct 10 16:14:57 -0700 2006
+# Created: Mon May 26 16:44:18 -0700 2008
 # 
 
 
 utils.rb
-tests/**/*.tests.rb
-test.rb
-MANIFEST
+spec
+spec/sentence_spec.rb
+spec/parseoptions_spec.rb
+spec/linkage_spec.rb
+spec/dictionary_spec.rb
+spec/bugfixes_spec.rb
+README
+Rakefile
+misc
+misc/readme-example.rb
+misc/rake
+misc/rake/verifytask.rb
+misc/rake/svn.rb
+misc/rake/helpers.rb
+misc/monkeypatches.rb
 linkparser-path.rb
-link-grammar-4.2.4.tar.gz
-link-grammar-4.2.4.patch
-lib/**/*.rb
-install.rb
-extconf.rb
+link-grammar-4.3.5.tar.gz
+link-grammar-4.3.5.patch
+lib
+lib/linkparser.rb
+lib/linkparser
+lib/linkparser/sentence.rb
+lib/linkparser/linkage.rb
+INSTALL
 ext
-ext/*.c
-ext/*.h
+ext/sentence.c
+ext/parseoptions.c
+ext/linkparser.h
+ext/linkparser.c
+ext/linkage.c
 ext/extconf.rb
-docs
-docs/makedocs.rb
-docs/CATALOG
+ext/dictionary.c

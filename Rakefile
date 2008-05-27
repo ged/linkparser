@@ -163,6 +163,8 @@ end
 
 ### Task: rdoc
 Rake::RDocTask.new do |rdoc|
+	require 'darkfish-rdoc'
+	
 	rdoc.rdoc_dir = 'docs/api'
 	rdoc.title    = "LinkParser - a natural language framework for Ruby"
 
@@ -175,6 +177,7 @@ Rake::RDocTask.new do |rdoc|
 		'-W', 'http://deveiate.org/projects/linkparser/trunk/'
 	  ]
 	
+	rdoc.rdoc_files.include EXT_FILES.collect {|f| f.relative_path_from(BASEDIR).to_s }
 	rdoc.rdoc_files.include TEXT_FILES.collect {|f| f.relative_path_from(BASEDIR).to_s }
 	rdoc.rdoc_files.include LIB_FILES.collect {|f| f.relative_path_from(BASEDIR).to_s }
 end

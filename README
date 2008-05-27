@@ -10,7 +10,7 @@
 == Requirements
 
  * Ruby >= 1.8.5
- * link-grammar-4.2.4 from the AbiWord project 
+ * link-grammar-4.3.5 from the AbiWord project 
    (http://www.abisource.com/projects/link-grammar/) with the included
    patch applied.
 
@@ -22,35 +22,35 @@ of English.
 
 === Example Usage
 
-require 'linkparser'
-
-dict = LinkParser::Dictionary.new( :screen_width => 100 )
-sent = dict.parse( "People use Ruby for all kinds of nifty things." )
-# => #<LinkParser::Sentence:0xcf8eb "LEFT-WALL people use Ruby for all kinds
-#      of nifty things . RIGHT-WALL"/2 linkages/0 nulls>
-              
-sent.subject		# => "people"
-sent.verb			# => "use"
-sent.object			# => "Ruby"
-
-puts sent.constituent_tree_string
-# =>
-# (S (NP People)
-#    (VP use
-#        (NP Ruby)
-#        (PP for
-#            (NP (NP all kinds)
-#                (PP of
-#                    (NP nifty things)))))
-#    .)
-
-puts sent.diagram
-# =>
-#     +-------------------------------Xp------------------------------+
-#     |                +----MVp---+----Jp----+     +------Jp-----+    |
-#     +----Wd---+--Sp--+--Os-+    |    +-Dmc-+--Mp-+    +----A---+    |
-#     |         |      |     |    |    |     |     |    |        |    |
-# LEFT-WALL people.p use.v Ruby for.p all kinds.n of nifty.a things.n . 
+  require 'linkparser'
+  
+  dict = LinkParser::Dictionary.new( :screen_width => 100 )
+  sent = dict.parse( "People use Ruby for all kinds of nifty things." )
+  # => #<LinkParser::Sentence:0xcf8eb "LEFT-WALL people use Ruby for all kinds
+  #      of nifty things . RIGHT-WALL"/2 linkages/0 nulls>
+                
+  sent.subject        # => "people"
+  sent.verb           # => "use"
+  sent.object         # => "Ruby"
+  
+  puts sent.constituent_tree_string
+  # =>
+  # (S (NP People)
+  #    (VP use
+  #        (NP Ruby)
+  #        (PP for
+  #            (NP (NP all kinds)
+  #                (PP of
+  #                    (NP nifty things)))))
+  #    .)
+  
+  puts sent.diagram
+  # =>
+  #     +-------------------------------Xp------------------------------+
+  #     |                +----MVp---+----Jp----+     +------Jp-----+    |
+  #     +----Wd---+--Sp--+--Os-+    |    +-Dmc-+--Mp-+    +----A---+    |
+  #     |         |      |     |    |    |     |     |    |        |    |
+  # LEFT-WALL people.p use.v Ruby for.p all kinds.n of nifty.a things.n . 
     
 
 == Legal
