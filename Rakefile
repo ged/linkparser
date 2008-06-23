@@ -163,7 +163,7 @@ end
 
 ### Task: rdoc
 Rake::RDocTask.new do |rdoc|
-	require 'darkfish-rdoc'
+	# require 'darkfish-rdoc'
 	
 	rdoc.rdoc_dir = 'docs/api'
 	rdoc.title    = "LinkParser - a natural language framework for Ruby"
@@ -172,7 +172,7 @@ Rake::RDocTask.new do |rdoc|
 		'-w', '4',
 		'-SHN',
 		'-i', 'docs',
-		'-f', 'darkfish',
+		# '-f', 'darkfish',
 		'-m', 'README',
 		'-W', 'http://deveiate.org/projects/linkparser/trunk/'
 	  ]
