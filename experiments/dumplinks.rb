@@ -4,7 +4,7 @@ BEGIN {
 	require 'pathname'
 	basedir = Pathname.new( __FILE__ ).expand_path.dirname.parent
 	
-	require basedir + 'linkparser-path.rb'
+	require basedir + 'loadpath.rb'
 	require basedir + 'utils.rb'
 }
 

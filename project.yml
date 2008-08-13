@@ -1,0 +1,25 @@
+--- 
+project_name: LinkParser
+project_summary: a Ruby binding for the link-grammar library
+project_description: |-
+    A Ruby binding for the link-grammar library, a syntactic parser
+    of English. See http://www.link.cs.cmu.edu/link/ for more
+    information about the Link Grammar, and
+    http://www.abisource.org/projects/link-grammar/ for information
+    about the link-grammar library.
+project_homepage: http://deveiate.org/projects/Ruby-LinkParser/
+
+author_name: Michael Granger
+author_email: ged@FaerieMUD.org
+
+project_requirements: 
+  link-grammar: = 4.3.5
+project_dependencies: {}
+
+additional_pkgfiles: 
+- link-grammar*.{patch,tar.gz}
+- misc/monkeypatches.rb
+- loadpath.rb
+
+rubyforge_group: deveiate
+rubyforge_project: linkparser
