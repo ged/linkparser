@@ -27,7 +27,7 @@
 BEGIN {
 	require 'pathname'
 	basedir = Pathname.new( __FILE__ ).dirname.parent
-	require basedir + "linkparser-path.rb"
+	require basedir + "loadpath.rb"
 }
 
 require 'spec/runner'

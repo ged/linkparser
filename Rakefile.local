@@ -1,0 +1,89 @@
+#!rake
+
+begin
+	require 'mkrf'
+rescue LoadError => err
+	unless Object.const_defined?( :Gem )
+		require 'rubygems'
+		retry
+	end
+	
+	fail "You need to have the mkrf library installed to build this."
+end
+
+
+# C extension constants
+EXT_RAKEFILE  = EXTDIR + 'Rakefile'
+EXT_SO        = EXTDIR + "redleaf_ext.#{CONFIG['DLEXT']}"
+
+ADDITIONAL_INCLUDE_DIRS = %w[
+	/usr/local/include
+	/opt/include
+	/opt/local/include
+]
+
+
+#####################################################################
+###	T A S K S
+#####################################################################
+
+# task :local => [ :build, :build_specs ]
+task :local => [ :build ]
+
+
+desc "Make the Rakefile for the C extension"
+file EXT_RAKEFILE.to_s => FileList[ 'Rakefile', EXTDIR + '*.c' ] do
+	require 'misc/monkeypatches' # Fix Mkrf's output
+	
+	log "Configuring redleaf C extension"
+	Dir.chdir( EXTDIR ) do
+		Mkrf::Generator.new( 'linkparser_ext', FileList['*.c'] ) do |gen|
+			trace "Setting CFLAGS"
+			gen.cflags << ' -Wall'
+			gen.cflags << ' -DDEBUG'
+
+			trace "Checking for dictionary_create()"
+			gen.include_library( "link-grammar", "dictionary_create" ) or
+				fail( "Could not find link-grammar library." )
+
+			trace "Checking for link-grammar/link-includes.h"
+			gen.include_header( "link-grammar/link-includes.h" ) or
+				fail( "Could not find link-includes.h" )
+
+			trace "Checking for link-grammar/utilities.h"
+			gen.include_header( "link-grammar/utilities.h" )
+
+			trace "Checking for patched link-grammar library via linkage_get_current_sublinkage()"
+			gen.has_function?( "linkage_get_current_sublinkage" ) or
+				fail "Link grammar library is unpatched."
+		end
+	end
+end
+CLOBBER.include( EXTDIR + 'mkrf.log' )
+
+
+desc "Build the C extension"
+task :build => EXT_RAKEFILE.to_s do
+	Dir.chdir( EXTDIR ) do
+		sh 'rake'
+	end
+end
+
+
+task :clean do
+	if EXT_RAKEFILE.exist?
+		Dir.chdir( EXTDIR ) do
+			sh 'rake', 'clean'
+		end
+	end
+end	
+
+task :clobber do
+	if EXT_RAKEFILE.exist?
+		Dir.chdir( EXTDIR ) do
+			sh 'rake', 'clobber'
+		end
+	end
+end	
+CLOBBER.include( EXT_RAKEFILE )
+

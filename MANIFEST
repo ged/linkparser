@@ -20,7 +20,7 @@ misc/rake/verifytask.rb
 misc/rake/svn.rb
 misc/rake/helpers.rb
 misc/monkeypatches.rb
-linkparser-path.rb
+loadpath.rb
 link-grammar-4.3.5.tar.gz
 link-grammar-4.3.5.patch
 lib
