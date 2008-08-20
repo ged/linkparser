@@ -14,7 +14,7 @@ end
 
 # C extension constants
 EXT_RAKEFILE  = EXTDIR + 'Rakefile'
-EXT_SO        = EXTDIR + "redleaf_ext.#{CONFIG['DLEXT']}"
+EXT_SO        = EXTDIR + "linkparser_ext.#{CONFIG['DLEXT']}"
 
 ADDITIONAL_INCLUDE_DIRS = %w[
 	/usr/local/include
@@ -27,9 +27,9 @@ ADDITIONAL_INCLUDE_DIRS = %w[
 ###	T A S K S
 #####################################################################
 
-# task :local => [ :build, :build_specs ]
-task :local => [ :build ]
-
+# Make both the default task and the spec task depend on building the extension
+task :local => :build
+task :spec => :build
 
 desc "Make the Rakefile for the C extension"
 file EXT_RAKEFILE.to_s => FileList[ 'Rakefile', EXTDIR + '*.c' ] do
@@ -59,7 +59,7 @@ file EXT_RAKEFILE.to_s => FileList[ 'Rakefile', EXTDIR + '*.c' ] do
 		end
 	end
 end
-CLOBBER.include( EXTDIR + 'mkrf.log' )
+CLOBBER.include( EXTDIR + 'mkrf.log', EXT_SO )
 
 
 desc "Build the C extension"
