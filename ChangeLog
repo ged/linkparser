@@ -1,3 +1,29 @@
+-- Wed, 20 Aug 2008 07:13:27 -0000 by deveiant (r33) -----
+   Changed: lib/linkparser.rb
+   Deleted: makedist.rb
+
+    * Removed the makedist.rb script.
+    * Bumped version to 1.0.2.
+
+
+-- Wed, 20 Aug 2008 07:04:09 -0000 by deveiant (r32) -----
+   Changed: README
+            LICENSE
+
+   Updated README and LICENSE files.
+
+
+-- Wed, 20 Aug 2008 06:51:27 -0000 by deveiant (r31) -----
+   Changed: README
+            Rakefile
+            INSTALL
+            project.yml
+            ChangeLog
+            Rakefile.local (and 1 other/s)
+
+   Updated the build system.
+
+
 -- Wed, 13 Aug 2008 05:23:33 -0000 by deveiant (r30) -----
    Added:   loadpath.rb
             -> renamed from /trunk/linkparser-path.rb@r29
