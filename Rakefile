@@ -126,7 +126,8 @@ SMTP_PORT = 465 # SMTP + SSL
 PROJECT_HOST = 'deveiate.org'
 PROJECT_PUBDIR = "/usr/local/www/public/code"
 PROJECT_DOCDIR = "#{PROJECT_PUBDIR}/#{PKG_NAME}"
-PROJECT_SCPURL = "#{PROJECT_HOST}:#{PROJECT_DOCDIR}"
+PROJECT_SCPPUBURL = "#{PROJECT_HOST}:#{PROJECT_PUBDIR}"
+PROJECT_SCPDOCURL = "#{PROJECT_HOST}:#{PROJECT_DOCDIR}"
 
 # Rubyforge stuff
 RUBYFORGE_GROUP = 'deveiate'
@@ -238,8 +239,11 @@ task :cruise => [:clean, :spec, :package] do |task|
 	artifact_dir = ARTIFACTS_DIR.cleanpath
 	artifact_dir.mkpath
 	
-	$stderr.puts "Copying coverage stats..."
-	FileUtils.cp_r( 'coverage', artifact_dir )
+	coverage = BASEDIR + 'coverage'
+	if coverage.exist? && coverage.directory?
+		$stderr.puts "Copying coverage stats..."
+		FileUtils.cp_r( 'coverage', artifact_dir )
+	end
 	
 	$stderr.puts "Copying packages..."
 	FileUtils.cp_r( FileList['pkg/*'].to_a, artifact_dir )

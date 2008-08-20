@@ -1,3 +1,25 @@
+-- Wed, 13 Aug 2008 05:23:33 -0000 by deveiant (r30) -----
+   Added:   loadpath.rb
+            -> renamed from /trunk/linkparser-path.rb@r29
+            project.yml (new)
+            Rakefile.local (new)
+            LICENSE (new)
+            ChangeLog (new)
+   Changed: /trunk
+            spec/TEMPLATE.rb.tpl
+            MANIFEST
+            experiments/pps.rb
+            spec/sentence_spec.rb
+            spec/dictionary_spec.rb (and 8 other/s)
+   Deleted: linkparser-path.rb
+            LinkParser Project.tmproj
+            misc/rake
+
+    * Updated to the latest build system.
+    * Updated to New BSD license
+    * Renamed 'linkparser-path.rb' to 'loadpath.rb'
+
+
 -- Mon, 23 Jun 2008 22:05:57 -0000 by deveiant (r29) -----
    Changed: Rakefile
 
