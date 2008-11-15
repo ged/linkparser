@@ -30,6 +30,12 @@ ADDITIONAL_INCLUDE_DIRS = %w[
 # Make both the default task and the spec task depend on building the extension
 task :local => :build
 task :spec => :build
+namespace :spec do
+	task :doc   => [ :build ]
+	task :quiet => [ :build ]
+	task :html  => [ :build ]
+	task :text  => [ :build ]
+end
 
 desc "Make the Rakefile for the C extension"
 file EXT_RAKEFILE.to_s => FileList[ 'Rakefile', EXTDIR + '*.c' ] do
@@ -54,34 +60,45 @@ file EXT_RAKEFILE.to_s => FileList[ 'Rakefile', EXTDIR + '*.c' ] do
 			gen.include_header( "link-grammar/utilities.h" )
 
 			trace "Checking for patched link-grammar library via linkage_get_current_sublinkage()"
-			gen.has_function?( "linkage_get_current_sublinkage" ) or
-				fail "Link grammar library is unpatched."
+			if gen.has_function?( "linkage_get_current_sublinkage" )
+				log "Link grammar library has linkage_get_current_sublinkage(). Okay, I'll use it."
+				gen.add_define( 'HAS_GET_CURRENT_SUBLINKAGE' )
+			else
+				log "Link grammar library is unpatched. Building without it."
+			end
 		end
 	end
 end
 CLOBBER.include( EXTDIR + 'mkrf.log', EXT_SO )
 
-
 desc "Build the C extension"
 task :build => EXT_RAKEFILE.to_s do
-	Dir.chdir( EXTDIR ) do
-		sh 'rake'
+	in_subdirectory( EXTDIR ) do
+		rake
+	end
+end
+
+
+desc "Rebuild the C extension"
+task :rebuild => EXT_RAKEFILE.to_s do
+	in_subdirectory( EXTDIR ) do
+		rake :clobber, :default
 	end
 end
 
 
 task :clean do
 	if EXT_RAKEFILE.exist?
-		Dir.chdir( EXTDIR ) do
-			sh 'rake', 'clean'
+		in_subdirectory( EXTDIR ) do
+			rake :clean
 		end
 	end
 end	
 
 task :clobber do
 	if EXT_RAKEFILE.exist?
-		Dir.chdir( EXTDIR ) do
-			sh 'rake', 'clobber'
+		in_subdirectory( EXTDIR ) do
+			rake :clobber
 		end
 	end
 end	

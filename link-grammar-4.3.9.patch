@@ -1,0 +1,37 @@
+diff -ubr link-grammar-4.3.9/link-grammar/api.c link-grammar-4.3.9.patched/link-grammar/api.c
+--- link-grammar-4.3.9/link-grammar/api.c	2008-10-08 13:24:31.000000000 -0700
++++ link-grammar-4.3.9.patched/link-grammar/api.c	2008-11-15 11:33:13.000000000 -0800
+@@ -947,6 +947,10 @@
+ 	return linkage;
+ }
+ 
++int linkage_get_current_sublinkage(Linkage linkage) {
++	return linkage->current;
++}
++
+ int linkage_set_current_sublinkage(Linkage linkage, int index)
+ {
+ 	if ((index < 0) ||
+diff -ubr link-grammar-4.3.9/link-grammar/link-grammar.def link-grammar-4.3.9.patched/link-grammar/link-grammar.def
+--- link-grammar-4.3.9/link-grammar/link-grammar.def	2008-10-08 13:24:31.000000000 -0700
++++ link-grammar-4.3.9.patched/link-grammar/link-grammar.def	2008-11-15 11:33:13.000000000 -0800
+@@ -75,6 +75,7 @@
+ sentence_get_nth_word
+ sentence_nth_word_has_disjunction
+ linkage_create
++linkage_get_current_sublinkage
+ linkage_set_current_sublinkage
+ linkage_delete
+ linkage_get_sentence
+diff -ubr link-grammar-4.3.9/link-grammar/link-includes.h link-grammar-4.3.9.patched/link-grammar/link-includes.h
+--- link-grammar-4.3.9/link-grammar/link-includes.h	2008-10-08 13:24:12.000000000 -0700
++++ link-grammar-4.3.9.patched/link-grammar/link-includes.h	2008-11-15 11:33:14.000000000 -0800
+@@ -232,6 +232,8 @@
+ link_public_api(Linkage)
+      linkage_create(int index, Sentence sent, Parse_Options opts);
+ link_public_api(int)
++     linkage_get_current_sublinkage(Linkage linkage);
++link_public_api(int)
+      linkage_set_current_sublinkage(Linkage linkage, int index);
+ link_public_api(void)
+      linkage_delete(Linkage linkage);
