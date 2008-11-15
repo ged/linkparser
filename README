@@ -10,9 +10,13 @@
 == Requirements
 
  * Ruby >= 1.8.5
- * link-grammar-4.3.5 from the AbiWord project 
-   (http://www.abisource.com/projects/link-grammar/) with the included
-   patch applied.
+ * link-grammar-4.3.9 from the AbiWord project 
+   (http://www.abisource.com/projects/link-grammar/) 
+
+Opitonally, if you want to be able to tell what sublinkage a linkage is currently
+set to, you'll need to apply the included patch to the link-grammar library before
+you build it. It's entirely optional, though.
+
 
 == General Information
 

@@ -20,4 +20,6 @@ additional_pkgfiles:
 - link-grammar*.{patch,tar.gz}
 - misc/monkeypatches.rb
 - loadpath.rb
+dev_dependencies: {}
+
 author_email: ged@FaerieMUD.org

@@ -169,10 +169,10 @@ class LinkParser::Linkage
 
 	### Return a human-readable representation of the Sentence object.
 	def inspect
-		%{#<%s:0x%x: sublinkage %d: [%d links]>} % [
+		return %{#<%s:0x%x: sublinkage %d: [%d links]>} % [
 			self.class.name,
 			self.object_id / 2,
-			self.current_sublinkage,
+			HAS_CURRENT_SUBLINKAGE ? self.current_sublinkage : 0,
 			self.num_links
 		]
 	end

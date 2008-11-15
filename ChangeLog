@@ -1,3 +1,13 @@
+-- Wed, 20 Aug 2008 07:22:59 -0000 by deveiant (r34) -----
+   Changed: ChangeLog
+            Rakefile.local
+   Deleted: ext/extconf.rb
+
+    * Removed the old extension config script
+    * Updated Rakefile.local with the right extension, and added the .so to the
+    CLOBBER files.
+
+
 -- Wed, 20 Aug 2008 07:13:27 -0000 by deveiant (r33) -----
    Changed: lib/linkparser.rb
    Deleted: makedist.rb

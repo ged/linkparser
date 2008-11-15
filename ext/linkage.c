@@ -241,7 +241,7 @@ rlink_linkage_diagram( self )
 	
 	diagram_cstr = linkage_print_diagram( (Linkage)ptr->linkage );
 	diagram = rb_str_new2( diagram_cstr );
-	string_delete( diagram_cstr );
+	linkage_free_diagram( diagram_cstr );
 	
 	return diagram;
 }
@@ -267,7 +267,7 @@ rlink_linkage_print_postscript( self, full_doc )
 	diagram_cstr = linkage_print_postscript( (Linkage)ptr->linkage,
 		RTEST(full_doc) ? 1 : 0 );
 	diagram = rb_str_new2( diagram_cstr );
-	string_delete( diagram_cstr );
+	linkage_free_postscript( diagram_cstr );
 	
 	return diagram;
 }
@@ -304,7 +304,7 @@ rlink_linkage_links_and_domains( self )
 	
 	diagram_cstr = linkage_print_links_and_domains( (Linkage)ptr->linkage );
 	diagram = rb_str_new2( diagram_cstr );
-	string_delete( diagram_cstr );
+	linkage_free_links_and_domains( diagram_cstr );
 	
 	return diagram;
 }
@@ -358,12 +358,16 @@ static VALUE
 rlink_linkage_current_sublinkage( self )
 	VALUE self;
 {
+#ifdef HAS_GET_CURRENT_SUBLINKAGE
 	rlink_LINKAGE *ptr = get_linkage( self );
 	int rval = 0;
 
 	rval = linkage_get_current_sublinkage( (Linkage)ptr->linkage );
 	
 	return INT2FIX( rval );
+#else
+	rb_notimplement();
+#endif
 }
 
 
@@ -885,7 +889,7 @@ rlink_linkage_constituent_tree_string( argc, argv, self )
 
 	if ( ctree_string ) {
 		rval = rb_str_new2( ctree_string );
-		string_delete( ctree_string );
+		linkage_free_constituent_tree_str( ctree_string );
 	} else {
 		rval = Qnil;
 	}
@@ -929,6 +933,12 @@ rlink_init_linkage(void)
 		rlink_linkage_current_sublinkage_eq, 1 );
 	rb_define_method( rlink_cLinkage, "current_sublinkage",
 		rlink_linkage_current_sublinkage, 0 );
+	
+#ifdef HAS_GET_CURRENT_SUBLINKAGE
+	rb_define_const( rlink_cLinkage, "HAS_CURRENT_SUBLINKAGE", Qtrue );
+#else
+	rb_define_const( rlink_cLinkage, "HAS_CURRENT_SUBLINKAGE", Qfalse );
+#endif
 	
 	rb_define_method( rlink_cLinkage, "num_words",
 	 	rlink_linkage_get_num_words, 0 );
