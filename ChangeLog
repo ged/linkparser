@@ -1,3 +1,26 @@
+-- Sat, 15 Nov 2008 19:44:37 -0000 by deveiant (r35) -----
+   Added:   link-grammar-4.3.9.tar.gz (new)
+            link-grammar-4.3.9.patch
+            -> renamed from /trunk/link-grammar-4.3.5.patch@r34
+   Changed: README
+            spec/linkage_spec.rb
+            Rakefile
+            project.yml
+            ChangeLog
+            misc/monkeypatches.rb (and 4 other/s)
+   Deleted: link-grammar-4.3.5.patch
+            link-grammar-4.3.5.tar.gz
+
+    * Updated the binding to build against 4.3.9.
+    * Removed the necessity of building against a patched link-grammar library. Removed the stuff
+    from the patch that was no longer necessary since 4.3.9 now include the necessary
+    memory-freeing functions, and no longer printf()s warnings without adhering to the warning
+    level.
+    * Updated the build system.
+    * Still needs more work before it can be gemmed up, but it's close.
+    * Thanks, as always, to Martin Chase for many useful suggestions and help.
+
+
 -- Wed, 20 Aug 2008 07:22:59 -0000 by deveiant (r34) -----
    Changed: ChangeLog
             Rakefile.local

@@ -5,6 +5,7 @@
 # == Authors
 # 
 # * Michael Granger <ged@FaerieMUD.org>
+# * Martin Chase <stillflame@FaerieMUD.org>
 # 
 # == License
 #
@@ -43,7 +44,7 @@ module LinkParser
 	require 'linkparser/linkage'
 
 	# Release version
-	VERSION = '1.0.2'
+	VERSION = '1.0.3'
 
 	# SVN Revision
 	SVNRev = %q$Rev$
