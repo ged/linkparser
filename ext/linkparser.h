@@ -31,6 +31,7 @@
 #ifndef _R_LINKPARSER_H
 #define _R_LINKPARSER_H
 
+#include <locale.h>
 #include <stdlib.h>
 #include <stdio.h>
 
