@@ -27,17 +27,7 @@
  *  
  */
 
-#include <stdlib.h>  /* for workaround_locale_bug() */
-
 #include "linkparser.h"
-
-
-
-
-/* --------------------------------------------------
- *  Forward declarations
- * -------------------------------------------------- */
-void workaround_locale_bug();
 
 
 /* --------------------------------------------------
@@ -209,7 +199,6 @@ rlink_dict_initialize( argc, argv, self )
 				SafeStringValue( lang );
 				dict = dictionary_create_lang( STR2CSTR(lang) );
 			} else {
-				workaround_locale_bug();
 				dict = dictionary_create_default_lang();
 			}
 		}
@@ -230,19 +219,6 @@ rlink_dict_initialize( argc, argv, self )
 	}
 
 	return Qnil;
-}
-
-
-
-/*
-  The link-grammar library segfaults when you call
-  dictionary_create_default_lang() with ENV['LANG'] unset, so just set it to
-  English if it isn't already set.
-*/
-void
-workaround_locale_bug()
-{
-	setenv( "LANG", "en", 0 );
 }
 
 

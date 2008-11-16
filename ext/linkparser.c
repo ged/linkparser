@@ -58,7 +58,7 @@ rlink_debug(fmt, va_alist)
 	 va_dcl
 #endif
 {
-	char		buf[BUFSIZ], buf2[BUFSIZ];
+	char buf[BUFSIZ], buf2[BUFSIZ];
 	va_list	args;
 
 	if (!RTEST(ruby_debug)) return;
@@ -111,6 +111,8 @@ Init_linkparser_ext(void)
 	rlink_mLinkParser = rb_define_module( "LinkParser" );
 	rlink_eLpError = rb_define_class_under( rlink_mLinkParser, "Error", rb_eRuntimeError );
 	
+	setlocale( LC_ALL, "" );
+
 	rlink_init_dict();
 	rlink_init_sentence();
 	rlink_init_linkage();
