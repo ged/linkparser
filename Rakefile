@@ -50,6 +50,8 @@ PKG_VERSION   = VERSION_FILE.read[ /VERSION\s*=\s*['"](\d+\.\d+\.\d+)['"]/, 1 ]
 PKG_FILE_NAME = "#{PKG_NAME.downcase}-#{PKG_VERSION}"
 GEM_FILE_NAME = "#{PKG_FILE_NAME}.gem"
 
+EXTCONF       = EXTDIR + 'extconf.rb'
+
 ARTIFACTS_DIR = Pathname.new( ENV['CC_BUILD_ARTIFACTS'] || 'artifacts' )
 
 TEXT_FILES    = %w( Rakefile ChangeLog README LICENSE ).collect {|filename| BASEDIR + filename }
@@ -193,8 +195,8 @@ GEMSPEC   = Gem::Specification.new do |gem|
 
 	gem.bindir            = BINDIR.relative_path_from(BASEDIR).to_s
 
-	if (EXTDIR + 'extconf.rb').exist?
-		gem.extensions << EXTDIR + 'extconf.rb'
+	if EXTCONF.exist?
+		gem.extensions << EXTCONF.relative_path_from( BASEDIR ).to_s
 	end
 
 	gem.files             = RELEASE_FILES.
