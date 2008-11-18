@@ -28,7 +28,7 @@ end
 
 desc "Make the Makefile for the C extension"
 file EXT_MAKEFILE.to_s => EXT_SOURCES do
-	log "Configuring redleaf C extension"
+	log "Configuring linkparser_ext C extension"
 	in_subdirectory( EXTDIR ) do
 		ruby 'extconf.rb'
 	end
