@@ -3,7 +3,7 @@
 # Specification for the LinkParser::Linkage class
 # $Id$
 #
-# Copyright (c) 2007, 2008 The FaerieMUD Consortium
+# Copyright (c) 2006-2008 The FaerieMUD Consortium
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -335,11 +335,7 @@ describe LinkParser::Linkage do
 	end
 	
 	it "returns 0 as the number of the current sublinkage since it has no conjunctions" do
-		begin
-			@linkage.current_sublinkage.should == 0
-		rescue NotImplementedError
-			pending "built against an unpatched link-grammar library"
-		end
+		@linkage.current_sublinkage.should == 0
 	end
 
 

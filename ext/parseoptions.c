@@ -5,26 +5,8 @@
  *  Authors:
  *    * Michael Granger <ged@FaerieMUD.org>
  *  
- *  Copyright (c) 2007, 2008 The FaerieMUD Consortium
- *  
- *  Permission is hereby granted, free of charge, to any person obtaining a copy
- *  of this software and associated documentation files (the "Software"), to deal
- *  in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the Software is
- *  furnished to do so, subject to the following conditions:
- *  
- *  The above copyright notice and this permission notice shall be included in
- *  all copies or substantial portions of the Software.
- *  
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- *  THE SOFTWARE.
- *  
+ *  Please see the LICENSE file at the top of the distribution for licensing 
+ *  information.
  */
 
 #include "linkparser.h"
@@ -50,9 +32,7 @@ static VALUE rlink_parseopts_each_opthash_i _(( VALUE, VALUE ));
  * Free function
  */
 static void
-rlink_parseopts_gc_free( parseopts )
-	Parse_Options parseopts;
-{
+rlink_parseopts_gc_free( Parse_Options parseopts ) {
 	if ( parseopts ) parse_options_delete( parseopts );
 }
 
@@ -61,9 +41,7 @@ rlink_parseopts_gc_free( parseopts )
  * Object validity checker. Returns the data pointer.
  */
 static Parse_Options
-check_parseopts( self )
-	 VALUE	self;
-{
+check_parseopts( VALUE self ) {
 	debugMsg(( "Checking a LinkParser::ParseOptions object (%d).", self ));
 	Check_Type( self, T_DATA );
 
@@ -80,9 +58,7 @@ check_parseopts( self )
  * Fetch the data pointer and check it for sanity.
  */
 static Parse_Options
-get_parseopts( self )
-	 VALUE self;
-{
+get_parseopts( VALUE self ) {
 	Parse_Options parseopts = check_parseopts( self );
 
 	debugMsg(( "Fetching a Parse_Options (%p).", parseopts ));
@@ -98,9 +74,7 @@ get_parseopts( self )
  * specified.
  */ 
 Parse_Options
-rlink_get_parseopts( obj )
-	VALUE obj;
-{
+rlink_get_parseopts( VALUE obj ) {
 	return get_parseopts( obj );
 }
 
@@ -116,9 +90,7 @@ rlink_get_parseopts( obj )
  *  Allocate a new LinkParser::ParseOptions object.
  */
 static VALUE
-rlink_parseopts_s_alloc( klass )
-	 VALUE klass;
-{
+rlink_parseopts_s_alloc( VALUE klass ) {
 	debugMsg(( "Wrapping an uninitialized ParseOptions pointer." ));
 	return Data_Wrap_Struct( klass, 0, rlink_parseopts_gc_free, 0 );
 }
@@ -140,11 +112,7 @@ rlink_parseopts_s_alloc( klass )
  *     
  */
 static VALUE
-rlink_parseopts_init( argc, argv, self )
-	int argc;
-	VALUE *argv;
-	VALUE self;
-{
+rlink_parseopts_init( int argc, VALUE *argv, VALUE self ) {
 	if ( ! check_parseopts(self) ) {
 		Parse_Options opts;
 		VALUE opthash = Qnil;
@@ -167,10 +135,12 @@ rlink_parseopts_init( argc, argv, self )
 }
 
 
+/* 
+ *  Iterator function for rlink_parseopts_init() -- for each element of the hash passed
+ *  to the constructor, call the corresponding accessor in the new object.
+ */
 static VALUE
-rlink_parseopts_each_opthash_i( pair, self )
-	VALUE pair, self;
-{
+rlink_parseopts_each_opthash_i( VALUE pair, VALUE self ) {
 	VALUE key, val, keystring;
 	char *method_name;
 	ID method;
@@ -199,9 +169,7 @@ rlink_parseopts_each_opthash_i( pair, self )
  *  be either another LinkParser::ParseOptions object or a Hash of options.
  */
 /*static VALUE
-rlink_parseopts_merge( self, other )
-	VALUE self, other;
-{
+rlink_parseopts_merge( VALUE self, other ) {
 	
 }
 */
@@ -215,9 +183,7 @@ rlink_parseopts_merge( self, other )
  *  parsing process.
  */
 static VALUE
-rlink_parseopts_set_verbosity( self, verbosity )
-	VALUE self, verbosity;
-{
+rlink_parseopts_set_verbosity( VALUE self, VALUE verbosity ) {
 	Parse_Options opts = get_parseopts( self );
 	parse_options_set_verbosity( opts, NUM2INT(verbosity) );
 	return verbosity;
@@ -232,15 +198,14 @@ rlink_parseopts_set_verbosity( self, verbosity )
  *  parsing process.
  */
 static VALUE
-rlink_parseopts_get_verbosity( self )
-	VALUE self;
-{
+rlink_parseopts_get_verbosity( VALUE self ) {
 	Parse_Options opts = get_parseopts( self );
 	int rval;
 
 	rval = parse_options_get_verbosity( opts );
 	return INT2FIX( rval );
 }
+
 
 /*
  *  call-seq:
@@ -252,13 +217,12 @@ rlink_parseopts_get_verbosity( self )
  *  this happen a warning is displayed at verbosity levels greater than 1.
  */
 static VALUE
-rlink_parseopts_set_linkage_limit( self, linkage_limit )
-	VALUE self, linkage_limit;
-{
+rlink_parseopts_set_linkage_limit( VALUE self, VALUE linkage_limit ) {
 	Parse_Options opts = get_parseopts( self );
 	parse_options_set_linkage_limit( opts, NUM2INT(linkage_limit) );
 	return linkage_limit;
 }
+
 
 /*
  *  call-seq:
@@ -270,15 +234,14 @@ rlink_parseopts_set_linkage_limit( self, linkage_limit )
  *  this happen a warning is displayed at verbosity levels greater than 1.
  */
 static VALUE
-rlink_parseopts_get_linkage_limit( self )
-	VALUE self;
-{
+rlink_parseopts_get_linkage_limit( VALUE self ) {
 	Parse_Options opts = get_parseopts( self );
 	int rval;
 
 	rval = parse_options_get_linkage_limit( opts );
 	return INT2FIX( rval );
 }
+
 
 /*
  *  call-seq:
@@ -289,13 +252,12 @@ rlink_parseopts_get_linkage_limit( self )
  * default is that all disjuncts, no matter what their cost, are considered.
  */
 static VALUE
-rlink_parseopts_set_disjunct_cost( self, disjunct_cost )
-	VALUE self, disjunct_cost;
-{
+rlink_parseopts_set_disjunct_cost( VALUE self, VALUE disjunct_cost ) {
 	Parse_Options opts = get_parseopts( self );
 	parse_options_set_disjunct_cost( opts, NUM2INT(disjunct_cost) );
 	return disjunct_cost;
 }
+
 
 /*
  *  call-seq:
@@ -304,15 +266,14 @@ rlink_parseopts_set_disjunct_cost( self, disjunct_cost )
  *  Get the maximum disjunct cost used during parsing.
  */
 static VALUE
-rlink_parseopts_get_disjunct_cost( self )
-	VALUE self;
-{
+rlink_parseopts_get_disjunct_cost( VALUE self ) {
 	Parse_Options opts = get_parseopts( self );
 	int rval;
 
 	rval = parse_options_get_disjunct_cost( opts );
 	return INT2FIX( rval );
 }
+
 
 /*
  *  call-seq:
@@ -323,13 +284,12 @@ rlink_parseopts_get_disjunct_cost( self )
  *  number of null links within the range specified by this parameter.
  */
 static VALUE
-rlink_parseopts_set_min_null_count( self, null_count )
-	VALUE self, null_count;
-{
+rlink_parseopts_set_min_null_count( VALUE self, VALUE null_count ) {
 	Parse_Options opts = get_parseopts( self );
 	parse_options_set_min_null_count( opts, NUM2INT(null_count) );
 	return null_count;
 }
+
 
 /*
  *  call-seq:
@@ -338,15 +298,14 @@ rlink_parseopts_set_min_null_count( self, null_count )
  *  Get the minimum of null links that a parse can have.
  */
 static VALUE
-rlink_parseopts_get_min_null_count( self )
-	VALUE self;
-{
+rlink_parseopts_get_min_null_count( VALUE self ) {
 	Parse_Options opts = get_parseopts( self );
 	int rval;
 
 	rval = parse_options_get_min_null_count( opts );
 	return INT2FIX( rval );
 }
+
 
 /*
  *  call-seq:
@@ -355,13 +314,12 @@ rlink_parseopts_get_min_null_count( self )
  *  Set the maximum number of null links allowed in a parse.
  */
 static VALUE
-rlink_parseopts_set_max_null_count( self, null_count )
-	VALUE self, null_count;
-{
+rlink_parseopts_set_max_null_count( VALUE self, VALUE null_count ) {
 	Parse_Options opts = get_parseopts( self );
 	parse_options_set_max_null_count( opts, NUM2INT(null_count) );
 	return null_count;
 }
+
 
 /*
  *  call-seq:
@@ -370,15 +328,14 @@ rlink_parseopts_set_max_null_count( self, null_count )
  *  Get the maximum number of null links allowed in a parse.
  */
 static VALUE
-rlink_parseopts_get_max_null_count( self )
-	VALUE self;
-{
+rlink_parseopts_get_max_null_count( VALUE self ) {
 	Parse_Options opts = get_parseopts( self );
 	int rval;
 
 	rval = parse_options_get_max_null_count( opts );
 	return INT2FIX( rval );
 }
+
 
 /*
  *  call-seq:
@@ -390,13 +347,12 @@ rlink_parseopts_get_max_null_count( self )
  *  linkage with 5,6,7 or 8 null links has a null cost of 2, etc.
  */
 static VALUE
-rlink_parseopts_set_null_block( self, null_block )
-	VALUE self, null_block;
-{
+rlink_parseopts_set_null_block( VALUE self, VALUE null_block ) {
 	Parse_Options opts = get_parseopts( self );
 	parse_options_set_null_block( opts, NUM2INT(null_block) );
 	return null_block;
 }
+
 
 /*
  *  call-seq:
@@ -405,15 +361,14 @@ rlink_parseopts_set_null_block( self, null_block )
  *  Get the value of the null_block option.
  */
 static VALUE
-rlink_parseopts_get_null_block( self )
-	VALUE self;
-{
+rlink_parseopts_get_null_block( VALUE self ) {
 	Parse_Options opts = get_parseopts( self );
 	int rval;
 
 	rval = parse_options_get_null_block( opts );
 	return INT2FIX( rval );
 }
+
 
 /*
  *  call-seq:
@@ -428,13 +383,12 @@ rlink_parseopts_get_null_block( self )
  *     ///// this sentence.n is.v false.a this sentence.n is.v true.a
  */
 static VALUE
-rlink_parseopts_set_islands_ok( self, islands_ok )
-	VALUE self, islands_ok;
-{
+rlink_parseopts_set_islands_ok( VALUE self, VALUE islands_ok ) {
 	Parse_Options opts = get_parseopts( self );
 	parse_options_set_islands_ok( opts, RTEST(islands_ok) );
 	return islands_ok;
 }
+
 
 /*
  *  call-seq:
@@ -443,15 +397,14 @@ rlink_parseopts_set_islands_ok( self, islands_ok )
  *  Get the value of the islands_ok option.
  */
 static VALUE
-rlink_parseopts_get_islands_ok_p( self )
-	VALUE self;
-{
+rlink_parseopts_get_islands_ok_p( VALUE self ) {
 	Parse_Options opts = get_parseopts( self );
 	int rval;
 
 	rval = parse_options_get_islands_ok( opts );
 	return rval ? Qtrue : Qfalse;
 }
+
 
 /*
  *  call-seq:
@@ -464,13 +417,12 @@ rlink_parseopts_get_islands_ok_p( self )
  *  specify which connectors are exempt from the length limit.
  */
 static VALUE
-rlink_parseopts_set_short_length( self, short_length )
-	VALUE self, short_length;
-{
+rlink_parseopts_set_short_length( VALUE self, VALUE short_length ) {
 	Parse_Options opts = get_parseopts( self );
 	parse_options_set_short_length( opts, NUM2INT(short_length) );
 	return short_length;
 }
+
 
 /*
  *  call-seq:
@@ -479,15 +431,14 @@ rlink_parseopts_set_short_length( self, short_length )
  *  Get the value of the short_length option.
  */
 static VALUE
-rlink_parseopts_get_short_length( self )
-	VALUE self;
-{
+rlink_parseopts_get_short_length( VALUE self ) {
 	Parse_Options opts = get_parseopts( self );
 	int rval;
 
 	rval = parse_options_get_short_length( opts );
 	return INT2FIX( rval );
 }
+
 
 /*
  *  call-seq:
@@ -499,13 +450,12 @@ rlink_parseopts_get_short_length( self )
  *  dictionaries, etc.) exceeds the maximum allowed.
  */
 static VALUE
-rlink_parseopts_set_max_memory( self, mem )
-	VALUE self, mem;
-{
+rlink_parseopts_set_max_memory( VALUE self, VALUE mem ) {
 	Parse_Options opts = get_parseopts( self );
 	parse_options_set_max_memory( opts, NUM2INT(mem) );
 	return mem;
 }
+
 
 /*
  *  call-seq:
@@ -514,15 +464,14 @@ rlink_parseopts_set_max_memory( self, mem )
  *  Get the value of the max_memory option.
  */
 static VALUE
-rlink_parseopts_get_max_memory( self )
-	VALUE self;
-{
+rlink_parseopts_get_max_memory( VALUE self ) {
 	Parse_Options opts = get_parseopts( self );
 	int rval;
 
 	rval = parse_options_get_max_memory( opts );
 	return INT2FIX( rval );
 }
+
 
 /*
  *  call-seq:
@@ -531,13 +480,12 @@ rlink_parseopts_get_max_memory( self )
  *  Determines the maximum length of a parsed sentence.
  */
 static VALUE
-rlink_parseopts_set_max_sentence_length( self, len )
-	VALUE self, len;
-{
+rlink_parseopts_set_max_sentence_length( VALUE self, VALUE len ) {
 	Parse_Options opts = get_parseopts( self );
 	parse_options_set_max_sentence_length( opts, NUM2INT(len) );
 	return len;
 }
+
 
 /*
  *  call-seq:
@@ -546,15 +494,14 @@ rlink_parseopts_set_max_sentence_length( self, len )
  *  Get the value of the max_sentence_length option.
  */
 static VALUE
-rlink_parseopts_get_max_sentence_length( self )
-	VALUE self;
-{
+rlink_parseopts_get_max_sentence_length( VALUE self ) {
 	Parse_Options opts = get_parseopts( self );
 	int rval;
 
 	rval = parse_options_get_max_sentence_length( opts );
 	return INT2FIX( rval );
 }
+
 
 /*
  *  call-seq:
@@ -567,13 +514,12 @@ rlink_parseopts_get_max_sentence_length( self )
  *  parsing time might be slightly longer.
  */
 static VALUE
-rlink_parseopts_set_max_parse_time( self, secs )
-	VALUE self, secs;
-{
+rlink_parseopts_set_max_parse_time( VALUE self, VALUE secs ) {
 	Parse_Options opts = get_parseopts( self );
 	parse_options_set_max_parse_time( opts, NUM2INT(secs) );
 	return secs;
 }
+
 
 /*
  *  call-seq:
@@ -582,15 +528,14 @@ rlink_parseopts_set_max_parse_time( self, secs )
  *  Get the number of seconds of the max_parse_time option.
  */
 static VALUE
-rlink_parseopts_get_max_parse_time( self )
-	VALUE self;
-{
+rlink_parseopts_get_max_parse_time( VALUE self ) {
 	Parse_Options opts = get_parseopts( self );
 	int rval;
 
 	rval = parse_options_get_max_parse_time( opts );
 	return INT2FIX( rval );
 }
+
 
 /*
  *  call-seq:
@@ -599,13 +544,12 @@ rlink_parseopts_get_max_parse_time( self )
  *  Set the screen width assumed by the diagramming functions.
  */
 static VALUE
-rlink_parseopts_set_screen_width( self, val )
-	VALUE self, val;
-{
+rlink_parseopts_set_screen_width( VALUE self, VALUE val ) {
 	Parse_Options opts = get_parseopts( self );
 	parse_options_set_screen_width( opts, NUM2INT(val) );
 	return val;
 }
+
 
 /*
  *  call-seq:
@@ -614,15 +558,14 @@ rlink_parseopts_set_screen_width( self, val )
  *  Get the screen width assumed by the diagramming functions.
  */
 static VALUE
-rlink_parseopts_get_screen_width( self )
-	VALUE self;
-{
+rlink_parseopts_get_screen_width( VALUE self ) {
 	Parse_Options opts = get_parseopts( self );
 	int rval;
 
 	rval = parse_options_get_screen_width( opts );
 	return INT2FIX( rval );
 }
+
 
 /*
  *  call-seq:
@@ -631,13 +574,12 @@ rlink_parseopts_get_screen_width( self )
  *  Indicates whether or not linkages are allowed to have null links.
  */
 static VALUE
-rlink_parseopts_set_allow_null( self, val )
-	VALUE self, val;
-{
+rlink_parseopts_set_allow_null( VALUE self, VALUE val ) {
 	Parse_Options opts = get_parseopts( self );
 	parse_options_set_allow_null( opts, RTEST(val) );
 	return val;
 }
+
 
 /*
  *  call-seq:
@@ -646,15 +588,14 @@ rlink_parseopts_set_allow_null( self, val )
  *  Get the value of the allow_null option.
  */
 static VALUE
-rlink_parseopts_get_allow_null_p( self )
-	VALUE self;
-{
+rlink_parseopts_get_allow_null_p( VALUE self ) {
 	Parse_Options opts = get_parseopts( self );
 	int rval;
 
 	rval = parse_options_get_allow_null( opts );
 	return rval ? Qtrue : Qfalse;
 }
+
 
 /*
  *  call-seq:
@@ -663,13 +604,12 @@ rlink_parseopts_get_allow_null_p( self )
  *  Whether or not to show the wall word(s) when a linkage diagram is printed.
  */
 static VALUE
-rlink_parseopts_set_display_walls( self, val )
-	VALUE self, val;
-{
+rlink_parseopts_set_display_walls( VALUE self, VALUE val ) {
 	Parse_Options opts = get_parseopts( self );
 	parse_options_set_display_walls( opts, RTEST(val) );
 	return val;
 }
+
 
 /*
  *  call-seq:
@@ -678,15 +618,14 @@ rlink_parseopts_set_display_walls( self, val )
  *  Whether or not to show the wall word(s) when a linkage diagram is printed.
  */
 static VALUE
-rlink_parseopts_get_display_walls_p( self )
-	VALUE self;
-{
+rlink_parseopts_get_display_walls_p( VALUE self ) {
 	Parse_Options opts = get_parseopts( self );
 	int rval;
 
 	rval = parse_options_get_display_walls( opts );
 	return rval ? Qtrue : Qfalse;
 }
+
 
 /*
  *  call-seq:
@@ -697,13 +636,12 @@ rlink_parseopts_get_display_walls_p( self )
  *  in "panic" mode, for example.
  */
 static VALUE
-rlink_parseopts_set_all_short_connectors( self, val )
-	VALUE self, val;
-{
+rlink_parseopts_set_all_short_connectors( VALUE self, VALUE val ) {
 	Parse_Options opts = get_parseopts( self );
 	parse_options_set_all_short_connectors( opts, RTEST(val) );
 	return val;
 }
+
 
 /*
  *  call-seq:
@@ -712,15 +650,14 @@ rlink_parseopts_set_all_short_connectors( self, val )
  *  Get the value of the all_short_connectors option.
  */
 static VALUE
-rlink_parseopts_get_all_short_connectors_p( self )
-	VALUE self;
-{
+rlink_parseopts_get_all_short_connectors_p( VALUE self ) {
 	Parse_Options opts = get_parseopts( self );
 	int rval;
 
 	rval = parse_options_get_all_short_connectors( opts );
 	return rval ? Qtrue : Qfalse;
 }
+
 
 /*
  *  call-seq:
@@ -731,13 +668,12 @@ rlink_parseopts_get_all_short_connectors_p( self )
  *  could easily be added.
  */
 static VALUE
-rlink_parseopts_set_cost_model_type( self, cm )
-	VALUE self, cm;
-{
+rlink_parseopts_set_cost_model_type( VALUE self, VALUE cm ) {
 	Parse_Options opts = get_parseopts( self );
 	parse_options_set_cost_model_type( opts, NUM2INT(cm) );
 	return cm;
 }
+
 
 /*
  *  call-seq:
@@ -751,9 +687,7 @@ There's no actual API function for getting the cost_model_type. I guess if
 there's ever more than one model type defined there will be.
 
 static VALUE
-rlink_parseopts_get_cost_model_type( self )
-	VALUE self;
-{
+rlink_parseopts_get_cost_model_type( VALUE self ) {
 	Parse_Options opts = get_parseopts( self );
 	int rval;
 
@@ -761,6 +695,7 @@ rlink_parseopts_get_cost_model_type( self )
 	return INT2FIX( rval );
 }
 */
+
 
 /*
  *  call-seq:
@@ -771,13 +706,12 @@ rlink_parseopts_get_cost_model_type( self )
  *  :TODO: Figure out what batch mode is.
  */
 static VALUE
-rlink_parseopts_set_batch_mode( self, val )
-	VALUE self, val;
-{
+rlink_parseopts_set_batch_mode( VALUE self, VALUE val ) {
 	Parse_Options opts = get_parseopts( self );
 	parse_options_set_batch_mode( opts, RTEST(val) );
 	return val;
 }
+
 
 /*
  *  call-seq:
@@ -786,9 +720,7 @@ rlink_parseopts_set_batch_mode( self, val )
  *  Returns +true+ if batch mode is enabled.
  */
 static VALUE
-rlink_parseopts_get_batch_mode_p( self )
-	VALUE self;
-{
+rlink_parseopts_get_batch_mode_p( VALUE self ) {
 	Parse_Options opts = get_parseopts( self );
 	int rval;
 
@@ -806,13 +738,12 @@ rlink_parseopts_get_batch_mode_p( self )
  *  mode in the parser -- does this allow/disallow the parser from entering it?
  */
 static VALUE
-rlink_parseopts_set_panic_mode( self, val )
-	VALUE self, val;
-{
+rlink_parseopts_set_panic_mode( VALUE self, VALUE val ) {
 	Parse_Options opts = get_parseopts( self );
 	parse_options_set_panic_mode( opts, RTEST(val) );
 	return val;
 }
+
 
 /*
  *  call-seq:
@@ -821,15 +752,14 @@ rlink_parseopts_set_panic_mode( self, val )
  *  Returns +true+ if panic mode is enabled.
  */
 static VALUE
-rlink_parseopts_get_panic_mode_p( self )
-	VALUE self;
-{
+rlink_parseopts_get_panic_mode_p( VALUE self ) {
 	Parse_Options opts = get_parseopts( self );
 	int rval;
 
 	rval = parse_options_get_panic_mode( opts );
 	return rval ? Qtrue : Qfalse;
 }
+
 
 /*
  *  call-seq:
@@ -841,13 +771,12 @@ rlink_parseopts_get_panic_mode_p( self )
  *  
  */
 static VALUE
-rlink_parseopts_set_display_on( self, val )
-	VALUE self, val;
-{
+rlink_parseopts_set_display_on( VALUE self, VALUE val ) {
 	Parse_Options opts = get_parseopts( self );
 	parse_options_set_display_on( opts, RTEST(val) );
 	return val;
 }
+
 
 /*
  *  call-seq:
@@ -856,15 +785,14 @@ rlink_parseopts_set_display_on( self, val )
  *  Returns +true+ if ...?
  */
 static VALUE
-rlink_parseopts_get_display_on_p( self )
-	VALUE self;
-{
+rlink_parseopts_get_display_on_p( VALUE self ) {
 	Parse_Options opts = get_parseopts( self );
 	int rval;
 
 	rval = parse_options_get_display_on( opts );
 	return rval ? Qtrue : Qfalse;
 }
+
 
 /*
  *  call-seq:
@@ -873,13 +801,12 @@ rlink_parseopts_get_display_on_p( self )
  *  Enable/disable display using Postscript.
  */
 static VALUE
-rlink_parseopts_set_display_postscript( self, val )
-	VALUE self, val;
-{
+rlink_parseopts_set_display_postscript( VALUE self, VALUE val ) {
 	Parse_Options opts = get_parseopts( self );
 	parse_options_set_display_postscript( opts, RTEST(val) );
 	return val;
 }
+
 
 /*
  *  call-seq:
@@ -888,15 +815,14 @@ rlink_parseopts_set_display_postscript( self, val )
  *  Returns +true+ if display should use Postscript instead of plain text.
  */
 static VALUE
-rlink_parseopts_get_display_postscript_p( self )
-	VALUE self;
-{
+rlink_parseopts_get_display_postscript_p( VALUE self ) {
 	Parse_Options opts = get_parseopts( self );
 	int rval;
 
 	rval = parse_options_get_display_postscript( opts );
 	return rval ? Qtrue : Qfalse;
 }
+
 
 /*
  *  call-seq:
@@ -905,13 +831,12 @@ rlink_parseopts_get_display_postscript_p( self )
  *  Set the display_constituents option to the specified value.
  */
 static VALUE
-rlink_parseopts_set_display_constituents( self, val )
-	VALUE self, val;
-{
+rlink_parseopts_set_display_constituents( VALUE self, VALUE val ) {
 	Parse_Options opts = get_parseopts( self );
 	parse_options_set_display_constituents( opts, RTEST(val) );
 	return val;
 }
+
 
 /*
  *  call-seq:
@@ -920,15 +845,14 @@ rlink_parseopts_set_display_constituents( self, val )
  *  Get the value of the display_constituents option.
  */
 static VALUE
-rlink_parseopts_get_display_constituents_p( self )
-	VALUE self;
-{
+rlink_parseopts_get_display_constituents_p( VALUE self ) {
 	Parse_Options opts = get_parseopts( self );
 	int rval;
 
 	rval = parse_options_get_display_constituents( opts );
 	return rval ? Qtrue : Qfalse;
 }
+
 
 /*
  *  call-seq:
@@ -937,13 +861,12 @@ rlink_parseopts_get_display_constituents_p( self )
  *  Set the display_bad option to the specified value.
  */
 static VALUE
-rlink_parseopts_set_display_bad( self, val )
-	VALUE self, val;
-{
+rlink_parseopts_set_display_bad( VALUE self, VALUE val ) {
 	Parse_Options opts = get_parseopts( self );
 	parse_options_set_display_bad( opts, RTEST(val) );
 	return val;
 }
+
 
 /*
  *  call-seq:
@@ -952,15 +875,14 @@ rlink_parseopts_set_display_bad( self, val )
  *  Get the value of the display_bad option.
  */
 static VALUE
-rlink_parseopts_get_display_bad_p( self )
-	VALUE self;
-{
+rlink_parseopts_get_display_bad_p( VALUE self ) {
 	Parse_Options opts = get_parseopts( self );
 	int rval;
 
 	rval = parse_options_get_display_bad( opts );
 	return rval ? Qtrue : Qfalse;
 }
+
 
 /*
  *  call-seq:
@@ -969,13 +891,12 @@ rlink_parseopts_get_display_bad_p( self )
  *  Set the display_links option to the specified value.
  */
 static VALUE
-rlink_parseopts_set_display_links( self, val )
-	VALUE self, val;
-{
+rlink_parseopts_set_display_links( VALUE self, VALUE val ) {
 	Parse_Options opts = get_parseopts( self );
 	parse_options_set_display_links( opts, RTEST(val) );
 	return val;
 }
+
 
 /*
  *  call-seq:
@@ -984,15 +905,14 @@ rlink_parseopts_set_display_links( self, val )
  *  Get the value of the display_links option.
  */
 static VALUE
-rlink_parseopts_get_display_links_p( self )
-	VALUE self;
-{
+rlink_parseopts_get_display_links_p( VALUE self ) {
 	Parse_Options opts = get_parseopts( self );
 	int rval;
 
 	rval = parse_options_get_display_links( opts );
 	return rval ? Qtrue : Qfalse;
 }
+
 
 /*
  *  call-seq:
@@ -1001,13 +921,12 @@ rlink_parseopts_get_display_links_p( self )
  *  Set the display_union option to the specified value.
  */
 static VALUE
-rlink_parseopts_set_display_union( self, val )
-	VALUE self, val;
-{
+rlink_parseopts_set_display_union( VALUE self, VALUE val ) {
 	Parse_Options opts = get_parseopts( self );
 	parse_options_set_display_union( opts, RTEST(val) );
 	return val;
 }
+
 
 /*
  *  call-seq:
@@ -1016,15 +935,14 @@ rlink_parseopts_set_display_union( self, val )
  *  Get the value of the display_union option.
  */
 static VALUE
-rlink_parseopts_get_display_union_p( self )
-	VALUE self;
-{
+rlink_parseopts_get_display_union_p( VALUE self ) {
 	Parse_Options opts = get_parseopts( self );
 	int rval;
 
 	rval = parse_options_get_display_union( opts );
 	return rval ? Qtrue : Qfalse;
 }
+
 
 /*
  *  call-seq:
@@ -1033,13 +951,12 @@ rlink_parseopts_get_display_union_p( self )
  *  Set the echo_on option to the specified value.
  */
 static VALUE
-rlink_parseopts_set_echo_on( self, val )
-	VALUE self, val;
-{
+rlink_parseopts_set_echo_on( VALUE self, VALUE val ) {
 	Parse_Options opts = get_parseopts( self );
 	parse_options_set_echo_on( opts, RTEST(val) );
 	return val;
 }
+
 
 /*
  *  call-seq:
@@ -1048,9 +965,7 @@ rlink_parseopts_set_echo_on( self, val )
  *  Get the value of the echo_on option.
  */
 static VALUE
-rlink_parseopts_get_echo_on_p( self )
-	VALUE self;
-{
+rlink_parseopts_get_echo_on_p( VALUE self ) {
 	Parse_Options opts = get_parseopts( self );
 	int rval;
 
@@ -1074,10 +989,8 @@ rlink_parseopts_reset_resources(Parse_Options opts);
  * the various parsing and printing routines along with the sentence.
  *
  */
-
 void
-rlink_init_parseoptions(void)
-{
+rlink_init_parseoptions() {
 #ifdef FOR_RDOC
 	rlink_mLinkParser = rb_define_module( "LinkParser" );
 	rlink_eLpError = rb_define_class_under( rlink_mLinkParser, "Error", rb_eRuntimeError );

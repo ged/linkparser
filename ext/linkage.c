@@ -5,26 +5,8 @@
  *  Authors:
  *    * Michael Granger <ged@FaerieMUD.org>
  *  
- *  Copyright (c) 2007, 2008 The FaerieMUD Consortium
- *  
- *  Permission is hereby granted, free of charge, to any person obtaining a copy
- *  of this software and associated documentation files (the "Software"), to deal
- *  in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the Software is
- *  furnished to do so, subject to the following conditions:
- *  
- *  The above copyright notice and this permission notice shall be included in
- *  all copies or substantial portions of the Software.
- *  
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- *  THE SOFTWARE.
- *  
+ *  Please see the LICENSE file at the top of the distribution for licensing 
+ *  information.
  */
 
 #include "linkparser.h"
@@ -49,8 +31,7 @@ static VALUE rlink_linkage_make_cnode_array( CNode * );
  * Allocation function
  */
 static rlink_LINKAGE *
-rlink_linkage_alloc()
-{
+rlink_linkage_alloc() {
 	rlink_LINKAGE *ptr = ALLOC( rlink_LINKAGE );
 	
 	ptr->linkage	= NULL;
@@ -65,9 +46,7 @@ rlink_linkage_alloc()
  * GC Mark function
  */
 static void
-rlink_linkage_gc_mark( ptr )
-	rlink_LINKAGE *ptr;
-{
+rlink_linkage_gc_mark( rlink_LINKAGE *ptr ) {
 	debugMsg(( "Marking LinkParser::Linkage %p", ptr ));
 	
 	if ( ptr ) {
@@ -84,9 +63,7 @@ rlink_linkage_gc_mark( ptr )
  * GC Free function
  */
 static void
-rlink_linkage_gc_free( ptr )
-	rlink_LINKAGE *ptr;
-{
+rlink_linkage_gc_free( rlink_LINKAGE *ptr ) {
 	if ( ptr ) {
 		linkage_delete( (Linkage)ptr->linkage );
 		ptr->linkage = NULL;
@@ -103,9 +80,7 @@ rlink_linkage_gc_free( ptr )
  * Object validity checker. Returns the data pointer.
  */
 static rlink_LINKAGE *
-check_linkage( self )
-	 VALUE	self;
-{
+check_linkage(  VALUE	self ) {
 	debugMsg(( "Checking a LinkParser::Linkage object (%d).", self ));
 	Check_Type( self, T_DATA );
 
@@ -122,9 +97,7 @@ check_linkage( self )
  * Fetch the data pointer and check it for sanity.
  */
 static rlink_LINKAGE *
-get_linkage( self )
-	 VALUE self;
-{
+get_linkage(  VALUE self ) {
 	rlink_LINKAGE *ptr = check_linkage( self );
 
 	debugMsg(( "Fetching a Linkage (%p).", ptr ));
@@ -139,8 +112,7 @@ get_linkage( self )
  * Publicly-usable linkage-fetcher
  */
 rlink_LINKAGE *
-rlink_get_linkage( self )
-{
+rlink_get_linkage( self ) {
 	return get_linkage( self );
 }
 
@@ -157,9 +129,7 @@ rlink_get_linkage( self )
  *  Allocate a new LinkParser::Linkage object.
  */
 static VALUE
-rlink_linkage_s_alloc( klass )
-	 VALUE klass;
-{
+rlink_linkage_s_alloc(  VALUE klass ) {
 	debugMsg(( "Wrapping an uninitialized Linkage pointer." ));
 	return Data_Wrap_Struct( klass, rlink_linkage_gc_mark, rlink_linkage_gc_free, 0 );
 }
@@ -232,9 +202,7 @@ rlink_linkage_init( argc, argv, self )
  *  Return a String containing a diagram of the linkage.
  */
 static VALUE
-rlink_linkage_diagram( self )
-	VALUE self;
-{
+rlink_linkage_diagram( VALUE self ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	char *diagram_cstr;
 	VALUE diagram;
@@ -257,9 +225,7 @@ rlink_linkage_diagram( self )
  *  is returned.
  */
 static VALUE
-rlink_linkage_print_postscript( self, full_doc )
-	VALUE self, full_doc;
-{
+rlink_linkage_print_postscript( VALUE self, VALUE full_doc ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	char *diagram_cstr;
 	VALUE diagram;
@@ -295,9 +261,7 @@ rlink_linkage_print_postscript( self, full_doc )
  * 
  */
 static VALUE
-rlink_linkage_links_and_domains( self )
-	VALUE self;
-{
+rlink_linkage_links_and_domains( VALUE self ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	char *diagram_cstr;
 	VALUE diagram;
@@ -319,9 +283,7 @@ rlink_linkage_links_and_domains( self )
  *  otherwise.
  */
 static VALUE
-rlink_linkage_num_sublinkages( self )
-	VALUE self;
-{
+rlink_linkage_num_sublinkages( VALUE self ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	return INT2FIX( linkage_get_num_sublinkages((Linkage)ptr->linkage) );
 }
@@ -336,9 +298,7 @@ rlink_linkage_num_sublinkages( self )
  *  effect.
  */
 static VALUE
-rlink_linkage_current_sublinkage_eq( self, index )
-	VALUE self, index;
-{
+rlink_linkage_current_sublinkage_eq( VALUE self, VALUE index ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	int rval = 0;
 	
@@ -355,10 +315,9 @@ rlink_linkage_current_sublinkage_eq( self, index )
  *  Get the index of the current sublinkage.
  */
 static VALUE
-rlink_linkage_current_sublinkage( self )
-	VALUE self;
-{
-#ifdef HAS_GET_CURRENT_SUBLINKAGE
+rlink_linkage_current_sublinkage( VALUE self ) {
+
+#ifdef HAVE_LINKAGE_GET_CURRENT_SUBLINKAGE
 	rlink_LINKAGE *ptr = get_linkage( self );
 	int rval = 0;
 
@@ -379,9 +338,7 @@ rlink_linkage_current_sublinkage( self )
  * sublinkage.
  */
 static VALUE
-rlink_linkage_get_num_words( self )
-	VALUE self;
-{
+rlink_linkage_get_num_words( VALUE self ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	return INT2FIX( linkage_get_num_words((Linkage)ptr->linkage) );
 }
@@ -393,9 +350,7 @@ rlink_linkage_get_num_words( self )
  * The number of links used in the current sublinkage.
  */
 static VALUE
-rlink_linkage_get_num_links( self )
-	VALUE self;
-{
+rlink_linkage_get_num_links( VALUE self ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	return INT2FIX( linkage_get_num_links((Linkage)ptr->linkage) );
 }
@@ -408,9 +363,7 @@ rlink_linkage_get_num_links( self )
  * current sublinkage.
  */
 static VALUE
-rlink_linkage_get_link_lword( self, index )
-	VALUE self, index;
-{
+rlink_linkage_get_link_lword( VALUE self, VALUE index ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	int i = NUM2INT( index );
 	
@@ -425,9 +378,7 @@ rlink_linkage_get_link_lword( self, index )
  * current sublinkage.
  */
 static VALUE
-rlink_linkage_get_link_rword( self, index )
-	VALUE self, index;
-{
+rlink_linkage_get_link_rword( VALUE self, VALUE index ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	int i = NUM2INT( index );
 	
@@ -441,9 +392,7 @@ rlink_linkage_get_link_rword( self, index )
  * The number of words spanned by the index-th link of the current sublinkage.
  */
 static VALUE
-rlink_linkage_get_link_length( self, index )
-	VALUE self, index;
-{
+rlink_linkage_get_link_length( VALUE self, VALUE index ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	int i = NUM2INT( index );
 	
@@ -457,9 +406,7 @@ rlink_linkage_get_link_length( self, index )
  * The "intersection" of the left and right connectors that comprise the link.
  */
 static VALUE
-rlink_linkage_get_link_label( self, index )
-	VALUE self, index;
-{
+rlink_linkage_get_link_label( VALUE self, VALUE index ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	int i = NUM2INT( index );
 	const char *label;
@@ -477,9 +424,7 @@ rlink_linkage_get_link_label( self, index )
  * The label on the left word of the index-th link of the current sublinkage.
  */
 static VALUE
-rlink_linkage_get_link_llabel( self, index )
-	VALUE self, index;
-{
+rlink_linkage_get_link_llabel( VALUE self, VALUE index ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	int i = NUM2INT( index );
 	const char *label = NULL;
@@ -496,9 +441,7 @@ rlink_linkage_get_link_llabel( self, index )
  * The label on the right word of the index-th link of the current sublinkage.
  */
 static VALUE
-rlink_linkage_get_link_rlabel( self, index )
-	VALUE self, index;
-{
+rlink_linkage_get_link_rlabel( VALUE self, VALUE index ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	int i = NUM2INT( index );
 	const char *label = NULL;
@@ -518,9 +461,7 @@ rlink_linkage_get_link_rlabel( self, index )
  *
  */
 static VALUE
-rlink_linkage_get_link_num_domains( self, index )
-	VALUE self, index;
-{
+rlink_linkage_get_link_num_domains( VALUE self, VALUE index ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	int i = NUM2INT( index );
 	int count = 0;
@@ -537,9 +478,7 @@ rlink_linkage_get_link_num_domains( self, index )
  *  Returns the names of the domains the index-th link belongs to.
  */
 static VALUE
-rlink_linkage_get_link_domain_names( self, index )
-	VALUE self, index;
-{
+rlink_linkage_get_link_domain_names( VALUE self, VALUE index ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	char **names;
 	int i = NUM2INT( index );
@@ -569,9 +508,7 @@ rlink_linkage_get_link_domain_names( self, index )
  *  The original spellings can be obtained by calls to Sentence#words.
  */
 static VALUE
-rlink_linkage_get_words( self )
-	VALUE self;
-{
+rlink_linkage_get_words( VALUE self ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	const char **words;
 	int count, i;
@@ -602,9 +539,7 @@ rlink_linkage_get_words( self )
  *  created.
  */
 static VALUE
-rlink_linkage_compute_union( self )
-	VALUE self;
-{
+rlink_linkage_compute_union( VALUE self ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	int before, after;
 	
@@ -625,9 +560,7 @@ rlink_linkage_compute_union( self )
  *     
  */
 static VALUE
-rlink_linkage_unused_word_cost( self )
-	VALUE self;
-{
+rlink_linkage_unused_word_cost( VALUE self ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	int rval;
 	
@@ -645,9 +578,7 @@ rlink_linkage_unused_word_cost( self )
  *
  */
 static VALUE
-rlink_linkage_disjunct_cost( self )
-	VALUE self;
-{
+rlink_linkage_disjunct_cost( VALUE self ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	int rval;
 	
@@ -666,9 +597,7 @@ rlink_linkage_disjunct_cost( self )
  *
  */
 static VALUE
-rlink_linkage_and_cost( self )
-	VALUE self;
-{
+rlink_linkage_and_cost( VALUE self ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	int rval;
 	
@@ -688,9 +617,7 @@ rlink_linkage_and_cost( self )
  *
  */
 static VALUE
-rlink_linkage_link_cost( self )
-	VALUE self;
-{
+rlink_linkage_link_cost( VALUE self ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	int rval;
 	
@@ -709,9 +636,7 @@ rlink_linkage_link_cost( self )
  *  in that position.
  */
 static VALUE
-rlink_linkage_canonical_p( self )
-	VALUE self;
-{
+rlink_linkage_canonical_p( VALUE self ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	int rval = 0;
 	
@@ -731,9 +656,7 @@ rlink_linkage_canonical_p( self )
  *
  */
 static VALUE
-rlink_linkage_improper_p( self )
-	VALUE self;
-{
+rlink_linkage_improper_p( VALUE self ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	int rval = 0;
 	
@@ -753,9 +676,7 @@ rlink_linkage_improper_p( self )
  *
  */
 static VALUE
-rlink_linkage_has_inconsistent_domains_p( self )
-	VALUE self;
-{
+rlink_linkage_has_inconsistent_domains_p( VALUE self ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	int rval = 0;
 	
@@ -773,9 +694,7 @@ rlink_linkage_has_inconsistent_domains_p( self )
  *  name of the violated rule in the post-process knowledge file. 
  */
 static VALUE
-rlink_linkage_get_violation_name( self )
-	VALUE self;
-{
+rlink_linkage_get_violation_name( VALUE self ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	const char *violation_name = NULL;
 	
@@ -802,9 +721,7 @@ rlink_linkage_get_violation_name( self )
  *     
  */
 static VALUE
-rlink_linkage_constituent_tree( self )
-	VALUE self;
-{
+rlink_linkage_constituent_tree( VALUE self ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	CNode *ctree = NULL;
 	VALUE rval = Qnil;
@@ -816,10 +733,13 @@ rlink_linkage_constituent_tree( self )
 	return rval;
 }
 
+
+/* 
+ * Make an Array of LinkParser::Linkage::CTree objects from the specified
+ * linked list of CNode *.
+ */
 static VALUE
-rlink_linkage_make_cnode_array( ctree )
-	CNode *ctree;
-{
+rlink_linkage_make_cnode_array( CNode *ctree ) {
 	VALUE nodes = rb_ary_new();
 	VALUE rnode;
 	CNode *cnode = ctree;
@@ -866,11 +786,7 @@ rlink_linkage_make_cnode_array( ctree )
  #  # ==> "(S (NP He)\n   (VP is\n       (NP a big dog))\n   .)\n"
  */
 static VALUE
-rlink_linkage_constituent_tree_string( argc, argv, self )
-	int argc;
-	VALUE *argv;
-	VALUE self;
-{
+rlink_linkage_constituent_tree_string( int argc, VALUE *argv, VALUE self ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
 	char *ctree_string = NULL;
 	VALUE rval = Qnil, modenum = Qnil;
@@ -909,8 +825,7 @@ rlink_linkage_constituent_tree_string( argc, argv, self )
  *
  */
 void
-rlink_init_linkage(void)
-{
+rlink_init_linkage() {
 #ifdef FOR_RDOC
 	rlink_mLinkParser = rb_define_module( "LinkParser" );
 	rlink_eLpError = rb_define_class_under( rlink_mLinkParser, "Error", rb_eRuntimeError );
@@ -934,7 +849,7 @@ rlink_init_linkage(void)
 	rb_define_method( rlink_cLinkage, "current_sublinkage",
 		rlink_linkage_current_sublinkage, 0 );
 	
-#ifdef HAS_GET_CURRENT_SUBLINKAGE
+#ifdef HAVE_LINKAGE_GET_CURRENT_SUBLINKAGE
 	rb_define_const( rlink_cLinkage, "HAS_CURRENT_SUBLINKAGE", Qtrue );
 #else
 	rb_define_const( rlink_cLinkage, "HAS_CURRENT_SUBLINKAGE", Qfalse );
