@@ -1,96 +1,22 @@
+= LinkParser
 
-= Ruby-LinkParser
+LinkParser is a Ruby binding for the link-grammar library. 
 
-== Authors
+A Ruby binding for the link-grammar library, a syntactic parser
+of English. See http://www.link.cs.cmu.edu/link/ for more
+information about the Link Grammar, and
+http://www.abisource.org/projects/link-grammar/ for information
+about the link-grammar library. 
 
- * Michael Granger <ged@FaerieMUD.org>
- * Martin Chase <stillflame@FaerieMUD.org>
+In the meantime, you can check out the current development source with Subversion from the 
+following URL:
 
+    svn://deveiate.org/LinkParser/trunk
 
-== Requirements
+The project page is also likely to have more details:
 
- * Ruby >= 1.8.5
- * link-grammar-4.3.9 from the AbiWord project 
-   (http://www.abisource.com/projects/link-grammar/) 
+    http://deveiate.org/projects/Ruby-LinkParser/
 
-Opitonally, if you want to be able to tell what sublinkage a linkage is currently
-set to, you'll need to apply the included patch to the link-grammar library before
-you build it. It's entirely optional, though.
+== License
 
-
-== General Information
-
-This module is a Ruby binding for the link-grammar library, a syntactic parser
-of English. 
-
-
-=== Example Usage
-
-  require 'linkparser'
-  
-  dict = LinkParser::Dictionary.new( :screen_width => 100 )
-  sent = dict.parse( "People use Ruby for all kinds of nifty things." )
-  # => #<LinkParser::Sentence:0xcf8eb "LEFT-WALL people use Ruby for all kinds
-  #      of nifty things . RIGHT-WALL"/2 linkages/0 nulls>
-                
-  sent.subject        # => "people"
-  sent.verb           # => "use"
-  sent.object         # => "Ruby"
-  
-  puts sent.constituent_tree_string
-  # =>
-  # (S (NP People)
-  #    (VP use
-  #        (NP Ruby)
-  #        (PP for
-  #            (NP (NP all kinds)
-  #                (PP of
-  #                    (NP nifty things)))))
-  #    .)
-  
-  puts sent.diagram
-  # =>
-  #     +-------------------------------Xp------------------------------+
-  #     |                +----MVp---+----Jp----+     +------Jp-----+    |
-  #     +----Wd---+--Sp--+--Os-+    |    +-Dmc-+--Mp-+    +----A---+    |
-  #     |         |      |     |    |    |     |     |    |        |    |
-  # LEFT-WALL people.p use.v Ruby for.p all kinds.n of nifty.a things.n . 
-    
-
-== Legal
-
-For copyright and licensing information for link-grammar itself, see the
-LICENSE file in that distribution.
-
-Copyright (c) 2006-2008, Michael Granger
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-* Redistributions of source code must retain the above copyright notice,
-  this list of conditions and the following disclaimer.
-
-* Redistributions in binary form must reproduce the above copyright notice,
-  this list of conditions and the following disclaimer in the documentation
-  and/or other materials provided with the distribution.
-
-* Neither the name of the author/s, nor the names of the project's
-  contributors may be used to endorse or promote products derived from this
-  software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-
- $Id$
-
-
+See the LICENSE file in the same directory for licensing details.

@@ -5,26 +5,8 @@
  *  Authors:
  *    * Michael Granger <ged@FaerieMUD.org>
  *  
- *  Copyright (c) 2007, 2008 The FaerieMUD Consortium
- *  
- *  Permission is hereby granted, free of charge, to any person obtaining a copy
- *  of this software and associated documentation files (the "Software"), to deal
- *  in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the Software is
- *  furnished to do so, subject to the following conditions:
- *  
- *  The above copyright notice and this permission notice shall be included in
- *  all copies or substantial portions of the Software.
- *  
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- *  THE SOFTWARE.
- *  
+ *  Please see the LICENSE file at the top of the distribution for licensing 
+ *  information.
  */
 
 #include "linkparser.h"
@@ -48,8 +30,7 @@
  * Allocation function
  */
 static rlink_SENTENCE *
-rlink_sentence_alloc()
-{
+rlink_sentence_alloc() {
 	rlink_SENTENCE *ptr = ALLOC( rlink_SENTENCE );
 	
 	ptr->sentence	= NULL;
@@ -66,9 +47,7 @@ rlink_sentence_alloc()
  * GC Mark function
  */
 static void
-rlink_sentence_gc_mark( ptr )
-	rlink_SENTENCE *ptr;
-{
+rlink_sentence_gc_mark( rlink_SENTENCE *ptr ) {
 	debugMsg(( "Marking LinkParser::Sentence %p", ptr ));
 	
 	if ( ptr ) {
@@ -86,9 +65,7 @@ rlink_sentence_gc_mark( ptr )
  * GC Free function
  */
 static void
-rlink_sentence_gc_free( ptr )
-	rlink_SENTENCE *ptr;
-{
+rlink_sentence_gc_free( rlink_SENTENCE *ptr ) {
 	if ( ptr ) {
 		debugMsg(( "In free function of Sentence <%p>", ptr ));
 		
@@ -114,9 +91,7 @@ rlink_sentence_gc_free( ptr )
  * Object validity checker. Returns the data pointer.
  */
 static rlink_SENTENCE *
-check_sentence( self )
-	 VALUE	self;
-{
+check_sentence(  VALUE	self ) {
 	debugMsg(( "Checking a LinkParser::Sentence object (%d).", self ));
 	Check_Type( self, T_DATA );
 
@@ -133,9 +108,7 @@ check_sentence( self )
  * Fetch the data pointer and check it for sanity.
  */
 static rlink_SENTENCE *
-get_sentence( self )
-	 VALUE self;
-{
+get_sentence(  VALUE self ) {
 	rlink_SENTENCE *ptr = check_sentence( self );
 
 	debugMsg(( "Fetching a Sentence (%p).", ptr ));
@@ -150,9 +123,7 @@ get_sentence( self )
  * Publicly-usable sentence-fetcher
  */
 rlink_SENTENCE *
-rlink_get_sentence( self )
-	VALUE self;
-{
+rlink_get_sentence( VALUE self ) {
 	return get_sentence( self );
 }
 
@@ -170,9 +141,7 @@ rlink_get_sentence( self )
  *
  */
 static VALUE
-rlink_sentence_s_alloc( klass )
-	 VALUE klass;
-{
+rlink_sentence_s_alloc(  VALUE klass ) {
 	debugMsg(( "Wrapping an uninitialized Sentence pointer." ));
 	return Data_Wrap_Struct( klass, rlink_sentence_gc_mark, rlink_sentence_gc_free, 0 );
 }
@@ -193,9 +162,7 @@ rlink_sentence_s_alloc( klass )
  *     LinkParser::Sentence.new( "The boy runs", dict )  #=> #<LinkParser::Sentence:0x5481ac>
  */
 static VALUE
-rlink_sentence_init( self, input_string, dictionary )
-	VALUE self, input_string, dictionary;
-{
+rlink_sentence_init( VALUE self, VALUE input_string, VALUE dictionary ) {
 	if ( !check_sentence(self) ) {
 		rlink_SENTENCE *ptr;
 		Sentence sent;
@@ -229,11 +196,7 @@ rlink_sentence_init( self, input_string, dictionary )
  * 
  */
 static VALUE
-rlink_sentence_parse( argc, argv, self )
-	int argc;
-	VALUE *argv;
-	VALUE self;
-{
+rlink_sentence_parse( int argc, VALUE *argv, VALUE self ) {
 	rlink_SENTENCE *ptr = get_sentence( self );
 	Parse_Options opts;
 	VALUE defopts = Qnil;
@@ -275,9 +238,7 @@ rlink_sentence_parse( argc, argv, self )
  *     sentence.parsed?   #-> true
  */
 static VALUE
-rlink_sentence_parsed_p( self )
-	VALUE self;
-{
+rlink_sentence_parsed_p( VALUE self ) {
 	rlink_SENTENCE *ptr = get_sentence( self );
 	return ptr->parsed_p;
 }
@@ -293,9 +254,7 @@ rlink_sentence_parsed_p( self )
  *     sentence.options.islands_ok?  # -> true
  */
 static VALUE
-rlink_sentence_options( self )
-	VALUE self;
-{
+rlink_sentence_options( VALUE self ) {
 	rlink_SENTENCE *ptr = get_sentence( self );
 	return ptr->options;
 }
@@ -312,9 +271,7 @@ rlink_sentence_options( self )
  *
  */
 static VALUE
-rlink_sentence_linkages( self )
-	VALUE self;
-{
+rlink_sentence_linkages( VALUE self ) {
 	rlink_SENTENCE *ptr = get_sentence( self );
 	int i, count = 0;
 	VALUE rary;
@@ -350,9 +307,7 @@ rlink_sentence_linkages( self )
  */
 
 static VALUE
-rlink_sentence_length( self )
-	VALUE self;
-{
+rlink_sentence_length( VALUE self ) {
 	rlink_SENTENCE *ptr = get_sentence( self );
 	return INT2FIX( sentence_length((Sentence)ptr->sentence) );
 }
@@ -366,9 +321,7 @@ rlink_sentence_length( self )
  *  tokenization.
  */
 static VALUE
-rlink_sentence_word( self, n )
-	VALUE self, n;
-{
+rlink_sentence_word( VALUE self, VALUE n ) {
 	rlink_SENTENCE *ptr = get_sentence( self );
 	char *word;
 	
@@ -387,9 +340,7 @@ rlink_sentence_word( self, n )
  *     sentence.words  #-> 
  */
 static VALUE
-rlink_sentence_words( self )
-	VALUE self;
-{
+rlink_sentence_words( VALUE self ) {
 	rlink_SENTENCE *ptr = get_sentence( self );
 	char *word;
 	int i, length;
@@ -442,9 +393,7 @@ rlink_sentence_aref( argc, argv, self )
  *  Returns the number of null links that were used in parsing the sentence.
  */
 static VALUE
-rlink_sentence_null_count( self )
-	VALUE self;
-{
+rlink_sentence_null_count( VALUE self ) {
 	rlink_SENTENCE *ptr = get_sentence( self );
 	int count;
 	
@@ -461,9 +410,7 @@ rlink_sentence_null_count( self )
  *  cause the sentence to be parsed if it hasn't been already.
  */
 static VALUE
-rlink_sentence_num_linkages_found( self )
-	VALUE self;
-{
+rlink_sentence_num_linkages_found( VALUE self ) {
 	rlink_SENTENCE *ptr = get_sentence( self );
 	int i = 0;
 	
@@ -482,9 +429,7 @@ rlink_sentence_num_linkages_found( self )
  *  Return the number of linkages that had no post-processing violations.
  */
 static VALUE
-rlink_sentence_num_valid_linkages( self )
-	VALUE self;
-{
+rlink_sentence_num_valid_linkages( VALUE self ) {
 	rlink_SENTENCE *ptr = get_sentence( self );
 	int count;
 	
@@ -501,9 +446,7 @@ rlink_sentence_num_valid_linkages( self )
  *  be less than the number found because of the linkage_limit parameter).
  */
 static VALUE
-rlink_sentence_num_linkages_post_processed( self )
-	VALUE self;
-{
+rlink_sentence_num_linkages_post_processed( VALUE self ) {
 	rlink_SENTENCE *ptr = get_sentence( self );
 	int count;
 	
@@ -520,9 +463,7 @@ rlink_sentence_num_linkages_post_processed( self )
  *  the last parse.
  */
 static VALUE
-rlink_sentence_num_violations( self, i )
-	VALUE self, i;
-{
+rlink_sentence_num_violations( VALUE self, VALUE i ) {
 	rlink_SENTENCE *ptr = get_sentence( self );
 	int count;
 	
@@ -538,9 +479,7 @@ rlink_sentence_num_violations( self, i )
  *  The maximum cost of connectors used in the i-th linkage of the sentence.
  */
 static VALUE
-rlink_sentence_disjunct_cost( self, i )
-	VALUE self, i;
-{
+rlink_sentence_disjunct_cost( VALUE self, VALUE i ) {
 	rlink_SENTENCE *ptr = get_sentence( self );
 	int count;
 	
@@ -559,8 +498,7 @@ rlink_sentence_disjunct_cost( self, i )
  * 
  */
 void
-rlink_init_sentence( void )
-{
+rlink_init_sentence() {
 #ifdef FOR_RDOC
 	rlink_mLinkParser = rb_define_module( "LinkParser" );
 	rlink_eLpError = rb_define_class_under( rlink_mLinkParser, "Error", rb_eRuntimeError );

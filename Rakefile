@@ -192,7 +192,10 @@ GEMSPEC   = Gem::Specification.new do |gem|
 	gem.rdoc_options      = RDOC_OPTIONS
 
 	gem.bindir            = BINDIR.relative_path_from(BASEDIR).to_s
-	
+
+	if (EXTDIR + 'extconf.rb').exist?
+		gem.extensions << EXTDIR + 'extconf.rb'
+	end
 
 	gem.files             = RELEASE_FILES.
 		collect {|f| f.relative_path_from(BASEDIR).to_s }

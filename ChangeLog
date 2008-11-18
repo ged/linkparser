@@ -1,3 +1,18 @@
+-- Mon, 17 Nov 2008 16:10:41 -0000 by deveiant (r38) -----
+   Changed: INSTALL
+
+   Updated build instructions.
+
+
+-- Sun, 16 Nov 2008 02:17:49 -0000 by deveiant (r37) -----
+   Changed: ext/linkparser.h
+            ext/dictionary.c
+            ChangeLog
+            ext/linkparser.c
+
+   Replaced my naive initialization of the locale system with the recommended code from the docs.
+
+
 -- Sat, 15 Nov 2008 19:54:11 -0000 by deveiant (r36) -----
    Changed: lib/linkparser.rb
             ChangeLog

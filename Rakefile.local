@@ -1,19 +1,8 @@
 #!rake
 
-begin
-	require 'mkrf'
-rescue LoadError => err
-	unless Object.const_defined?( :Gem )
-		require 'rubygems'
-		retry
-	end
-	
-	fail "You need to have the mkrf library installed to build this."
-end
-
-
 # C extension constants
-EXT_RAKEFILE  = EXTDIR + 'Rakefile'
+EXT_MAKEFILE  = EXTDIR + 'Makefile'
+EXT_SOURCES   = FileList[ EXTDIR + '*.c' ]
 EXT_SO        = EXTDIR + "linkparser_ext.#{CONFIG['DLEXT']}"
 
 ADDITIONAL_INCLUDE_DIRS = %w[
@@ -37,70 +26,41 @@ namespace :spec do
 	task :text  => [ :build ]
 end
 
-desc "Make the Rakefile for the C extension"
-file EXT_RAKEFILE.to_s => FileList[ 'Rakefile', EXTDIR + '*.c' ] do
-	require 'misc/monkeypatches' # Fix Mkrf's output
-	
+desc "Make the Makefile for the C extension"
+file EXT_MAKEFILE.to_s => EXT_SOURCES do
 	log "Configuring redleaf C extension"
-	Dir.chdir( EXTDIR ) do
-		Mkrf::Generator.new( 'linkparser_ext', FileList['*.c'] ) do |gen|
-			trace "Setting CFLAGS"
-			gen.cflags << ' -Wall'
-			gen.cflags << ' -DDEBUG'
-
-			trace "Checking for dictionary_create()"
-			gen.include_library( "link-grammar", "dictionary_create" ) or
-				fail( "Could not find link-grammar library." )
-
-			trace "Checking for link-grammar/link-includes.h"
-			gen.include_header( "link-grammar/link-includes.h" ) or
-				fail( "Could not find link-includes.h" )
-
-			trace "Checking for link-grammar/utilities.h"
-			gen.include_header( "link-grammar/utilities.h" )
-
-			trace "Checking for patched link-grammar library via linkage_get_current_sublinkage()"
-			if gen.has_function?( "linkage_get_current_sublinkage" )
-				log "Link grammar library has linkage_get_current_sublinkage(). Okay, I'll use it."
-				gen.add_define( 'HAS_GET_CURRENT_SUBLINKAGE' )
-			else
-				log "Link grammar library is unpatched. Building without it."
-			end
-		end
+	in_subdirectory( EXTDIR ) do
+		ruby 'extconf.rb'
 	end
 end
-CLOBBER.include( EXTDIR + 'mkrf.log', EXT_SO )
+CLOBBER.include( EXTDIR + 'mkmf.log', EXT_SO )
 
 desc "Build the C extension"
-task :build => EXT_RAKEFILE.to_s do
+task :build => [ EXT_MAKEFILE.to_s, *EXT_SOURCES ] do
 	in_subdirectory( EXTDIR ) do
-		rake
+		sh 'make'
 	end
 end
 
 
 desc "Rebuild the C extension"
-task :rebuild => EXT_RAKEFILE.to_s do
-	in_subdirectory( EXTDIR ) do
-		rake :clobber, :default
-	end
-end
+task :rebuild => [ :clean, :build ]
 
 
 task :clean do
-	if EXT_RAKEFILE.exist?
+	if EXT_MAKEFILE.exist?
 		in_subdirectory( EXTDIR ) do
-			rake :clean
+			sh 'make clean'
 		end
 	end
 end	
 
 task :clobber do
-	if EXT_RAKEFILE.exist?
+	if EXT_MAKEFILE.exist?
 		in_subdirectory( EXTDIR ) do
-			rake :clobber
+			sh 'make distclean'
 		end
 	end
 end	
-CLOBBER.include( EXT_RAKEFILE )
+CLOBBER.include( EXT_MAKEFILE )
 

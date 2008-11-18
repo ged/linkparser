@@ -5,26 +5,8 @@
  *  Authors:
  *    * Michael Granger <ged@FaerieMUD.org>
  *  
- *  Copyright (c) 2007, 2008 The FaerieMUD Consortium
- *  
- *  Permission is hereby granted, free of charge, to any person obtaining a copy
- *  of this software and associated documentation files (the "Software"), to deal
- *  in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the Software is
- *  furnished to do so, subject to the following conditions:
- *  
- *  The above copyright notice and this permission notice shall be included in
- *  all copies or substantial portions of the Software.
- *  
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- *  THE SOFTWARE.
- *  
+ *  Please see the LICENSE file at the top of the distribution for licensing 
+ *  information.
  */
 
 #include "linkparser.h"
@@ -38,9 +20,7 @@
  * Free function
  */
 static void
-rlink_dict_gc_free( dict )
-	Dictionary dict;
-{
+rlink_dict_gc_free( Dictionary dict ) {
 	if ( dict ) dictionary_delete( dict );
 }
 
@@ -49,9 +29,7 @@ rlink_dict_gc_free( dict )
  * Object validity checker. Returns the data pointer.
  */
 static Dictionary
-check_dict( self )
-	 VALUE	self;
-{
+check_dict( VALUE self ) {
 	debugMsg(( "Checking a LinkParser::Dictionary object (%d).", self ));
 	Check_Type( self, T_DATA );
 
@@ -68,9 +46,7 @@ check_dict( self )
  * Fetch the data pointer and check it for sanity.
  */
 static Dictionary
-get_dict( self )
-	 VALUE self;
-{
+get_dict( VALUE self ) {
 	Dictionary dict = check_dict( self );
 
 	debugMsg(( "Fetching a Dictionary (%p).", dict ));
@@ -85,9 +61,7 @@ get_dict( self )
  * Get the Dictionary behind the LinkParser::Dictionary +object+ specified.
  */ 
 Dictionary
-rlink_get_dict( obj )
-	VALUE obj;
-{
+rlink_get_dict( VALUE obj ) {
 	return get_dict( obj );
 }
 
@@ -97,24 +71,26 @@ rlink_get_dict( obj )
  * Class Methods
  * -------------------------------------------------- */
 
+
 /*
- * allocate()
- * --
- * Allocate a new LinkParser::Dictionary object.
+ *  call-seq:
+ *     LinkParser::Dictionary.allocate   -> dict
+ *
+ *  Allocate a new LinkParser::Dictionary object.
  */
 static VALUE
-rlink_dict_s_alloc( klass )
-	 VALUE klass;
-{
+rlink_dict_s_alloc( VALUE klass ) {
 	debugMsg(( "Wrapping an uninitialized Dictionary pointer." ));
 	return Data_Wrap_Struct( klass, 0, rlink_dict_gc_free, 0 );
 }
 
 
+/*
+ * Make a Dictionary with explicit datafile arguments. This is largely unnecessary, but
+ * can be useful for testing and stuff.
+ */
 static Dictionary
-rlink_make_oldstyle_dict( dict_file, pp_file, cons_file, affix_file )
-	VALUE dict_file, pp_file, cons_file, affix_file;
-{
+rlink_make_oldstyle_dict( VALUE dict_file, VALUE pp_file, VALUE cons_file, VALUE affix_file ) {
 	SafeStringValue( dict_file  );
 	SafeStringValue( pp_file    );
 	SafeStringValue( cons_file  );
@@ -138,15 +114,9 @@ rlink_make_oldstyle_dict( dict_file, pp_file, cons_file, affix_file )
  *  Create a new LinkParser::Dictionary with data files for the given +language+, or
  *  using the specified data files.
  *
- *
- *
  */
 static VALUE
-rlink_dict_initialize( argc, argv, self )
-	int argc;
-	VALUE *argv;
-	VALUE self;
-{
+rlink_dict_initialize( int argc, VALUE *argv, VALUE self ) {
 	if ( !check_dict(self) ) {
 		int i = 0;
 		Dictionary dict = NULL;
@@ -184,7 +154,8 @@ rlink_dict_initialize( argc, argv, self )
 		  case 4:
 		  case 5:
 			debugMsg(( "Four or five args: old-style explicit dict files." ));
-			dict = rlink_make_oldstyle_dict( arg1, arg2, arg3, arg4, arg5 );
+			dict = rlink_make_oldstyle_dict( arg1, arg2, arg3, arg4 );
+			opthash = arg5;
 			break;
 		
 		  /* Anything else is an error */	
@@ -223,16 +194,15 @@ rlink_dict_initialize( argc, argv, self )
 
 
 /*
- * max_cost()
- * --
- * Returns the maximum cost (number of brackets []) that is placed on any
- * connector in the dictionary. This is useful for designing a parsing
- * algorithm that progresses in stages, first trying the cheap connectors.
+ *  call-seq:
+ *     dictionary.max_cost   -> fixnum
+ *
+ *  Returns the maximum cost (number of brackets []) that is placed on any
+ *  connector in the dictionary. This is useful for designing a parsing
+ *  algorithm that progresses in stages, first trying the cheap connectors.
  */
 static VALUE 
-rlink_get_max_cost( self )
-	VALUE self;
-{
+rlink_get_max_cost( VALUE self ) {
 	Dictionary dict = get_dict( self );
 	int cost = dictionary_get_max_cost( dict );
 	
@@ -243,17 +213,13 @@ rlink_get_max_cost( self )
 
 
 /*
- * parse( sentence_string )
- * --
- * Parse the specified +sentence_string+ with the receiving Dictionary and
- * return a LinkParser::Sentence.
+ *  call-seq:
+ *     dictionary.parse( string )   -> sentence
+ *
+ *  Parse the specified sentence +string+ with the dictionary and return a LinkParser::Sentence.
  */
 static VALUE 
-rlink_parse( argc, argv, self )
-	int argc;
-	VALUE *argv;
-	VALUE self;
-{
+rlink_parse( int argc, VALUE *argv, VALUE self ) {
 	VALUE input_string, options, sentence;
 	VALUE args[2];
 	int i;
@@ -279,16 +245,14 @@ rlink_parse( argc, argv, self )
 
 
 /* 
- * Document-class: LinkParser::Dictionary
- * 
- * A Dictionary is the programmer's handle on the set of word definitions that defines the
- * grammar. A user creates a Dictionary from a grammar file and post-process knowledge
- * file, and then creates all other objects through it.
+ *  Document-class: LinkParser::Dictionary
+ *  
+ *  A Dictionary is the programmer's handle on the set of word definitions that defines the
+ *  grammar. A user creates a Dictionary from a grammar file and post-process knowledge
+ *  file, and then creates all other objects through it.
  */
-
 void
-rlink_init_dict(void)
-{
+rlink_init_dict() {
 #ifdef FOR_RDOC
 	rlink_mLinkParser = rb_define_module( "LinkParser" );
 	
