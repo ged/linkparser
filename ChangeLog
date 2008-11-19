@@ -1,3 +1,12 @@
+-- Wed, 19 Nov 2008 23:01:25 -0000 by deveiant (r43) -----
+   Changed: spec/linkage_spec.rb
+            ChangeLog
+            ext/extconf.rb
+
+    * Revert an accidentally-clobbered fix for linkage_spec.rb.
+    * Rearranged ext/extconf.rb to hopefully fix the build for FreeBSD.
+
+
 -- Wed, 19 Nov 2008 22:43:39 -0000 by deveiant (r42) -----
    Changed: README
             Rakefile.local
