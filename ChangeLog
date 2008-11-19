@@ -1,3 +1,18 @@
+-- Wed, 19 Nov 2008 22:43:39 -0000 by deveiant (r42) -----
+   Changed: README
+            Rakefile.local
+
+    * Reverted accidentally-overwritten README
+    * Cleaned up the local rakefile a bit
+
+
+-- Tue, 18 Nov 2008 17:00:35 -0000 by deveiant (r41) -----
+   Changed: ChangeLog
+            Rakefile.local
+
+   Fixed a build message.
+
+
 -- Tue, 18 Nov 2008 16:53:56 -0000 by deveiant (r40) -----
    Changed: Rakefile
             INSTALL
