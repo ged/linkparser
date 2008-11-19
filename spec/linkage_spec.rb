@@ -335,7 +335,9 @@ describe LinkParser::Linkage do
 	end
 	
 	it "returns 0 as the number of the current sublinkage since it has no conjunctions" do
-		@linkage.current_sublinkage.should == 0
+	    pending "built against an old, unpatched link-grammar library" unless
+			LinkParser::Linkage::HAS_CURRENT_SUBLINKAGE
+	    @linkage.current_sublinkage.should == 0 
 	end
 
 
