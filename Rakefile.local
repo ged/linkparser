@@ -5,12 +5,6 @@ EXT_MAKEFILE  = EXTDIR + 'Makefile'
 EXT_SOURCES   = FileList[ EXTDIR + '*.c' ]
 EXT_SO        = EXTDIR + "linkparser_ext.#{CONFIG['DLEXT']}"
 
-ADDITIONAL_INCLUDE_DIRS = %w[
-	/usr/local/include
-	/opt/include
-	/opt/local/include
-]
-
 
 #####################################################################
 ###	T A S K S
@@ -28,7 +22,7 @@ end
 
 desc "Make the Makefile for the C extension"
 file EXT_MAKEFILE.to_s => EXT_SOURCES do
-	log "Configuring linkparser_ext C extension"
+	log "Configuring linkparser C extension"
 	in_subdirectory( EXTDIR ) do
 		ruby 'extconf.rb'
 	end
