@@ -3,22 +3,17 @@ MacOS X, FreeBSD 7.x, and Ubuntu Linux. I'm not sure how to get this to build
 under Windows, as I don't have a Windows license with which to test it.
 Suggestions welcomed.
 
-First, you'll need the 'mkrf' library to build the C extension if you don't
-already have it installed. If you use Rubygems, it should be as simple as:
-
-    $ sudo gem install mkrf
-
-Once you have that installed, patch and install the Abiword link-grammar
-library that comes with this source (or download it yourself if you wish):
+First, you'll need to install the Abiword link-grammar library that comes with
+this source (or download it yourself if you wish):
 
     $ tar -xvzf link-grammar-4.3.9.tar.gz
     $ cd link-grammar-4.3.9
     
-    # If you want the LinkParser::Linkage#current_sublinkage method to work, you
-    # must apply the included patch. If you don't care about that method, you
-    # can skip the next step:
-    
+    # If you want the LinkParser::Linkage#current_sublinkage method to work, 
+    # you must apply the included patch. If you don't care about that method,
+    # you can safely skip this:
     $ patch -p1 < ../link-grammar-4.3.9.patch
+
     $ ./configure; make; sudo make install
     $ cd ..
 
@@ -26,6 +21,17 @@ Now build, test, and install the Ruby library:
 
     $ rake
     $ sudo rake install
+
+If you've installed the link-grammar library someplace that isn't in your
+regular include path, you might have to tell the build system where to look:
+
+    $ rake -- --with-link-grammar-dir=/usr/local
+
+Under MacOS X, unless you've taken extra steps to compile the link-grammar
+library as a universal binary, you'll probably also have to limit it to
+your machine's architecture:
+
+    $ ARCHFLAGS="-arch i386" rake -- --with-link-grammar-dir=/usr/local
 
 That's it!
 

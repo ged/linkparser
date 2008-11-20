@@ -176,7 +176,7 @@ DEVELOPMENT_DEPENDENCIES = {
 
 # Non-gem requirements: packagename => version
 REQUIREMENTS = {
-	'link-grammar' => '= 4.3.5',
+	'link-grammar' => '>= 4.3.9',
 }
 
 # RubyGem specification
