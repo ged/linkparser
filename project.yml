@@ -1,7 +1,8 @@
 --- 
 rubyforge_project: linkparser
 project_requirements: 
-  link-grammar: >= 4.3.9
+  link-grammar: ">= 4.3.9"
+project_pubdir: /usr/local/www/public/code
 project_description: |-
   A Ruby binding for the link-grammar library, a syntactic parser
   of English. See http://www.link.cs.cmu.edu/link/ for more
@@ -10,6 +11,7 @@ project_description: |-
   about the link-grammar library.
 rubyforge_group: deveiate
 author_name: Michael Granger
+project_pubhost: "deveiate.org"
 project_homepage: http://deveiate.org/projects/Ruby-LinkParser/
 project_dependencies: {}
 

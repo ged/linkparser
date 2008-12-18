@@ -42,7 +42,6 @@ rlink_parseopts_gc_free( Parse_Options parseopts ) {
  */
 static Parse_Options
 check_parseopts( VALUE self ) {
-	debugMsg(( "Checking a LinkParser::ParseOptions object (%d).", self ));
 	Check_Type( self, T_DATA );
 
     if ( !IsParseOptions(self) ) {
@@ -61,7 +60,6 @@ static Parse_Options
 get_parseopts( VALUE self ) {
 	Parse_Options parseopts = check_parseopts( self );
 
-	debugMsg(( "Fetching a Parse_Options (%p).", parseopts ));
 	if ( !parseopts )
 		rb_raise( rb_eRuntimeError, "uninitialized ParseOptions" );
 

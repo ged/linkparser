@@ -92,7 +92,6 @@ rlink_sentence_gc_free( rlink_SENTENCE *ptr ) {
  */
 static rlink_SENTENCE *
 check_sentence(  VALUE	self ) {
-	debugMsg(( "Checking a LinkParser::Sentence object (%d).", self ));
 	Check_Type( self, T_DATA );
 
     if ( !IsSentence(self) ) {
@@ -111,7 +110,6 @@ static rlink_SENTENCE *
 get_sentence(  VALUE self ) {
 	rlink_SENTENCE *ptr = check_sentence( self );
 
-	debugMsg(( "Fetching a Sentence (%p).", ptr ));
 	if ( !ptr )
 		rb_raise( rb_eRuntimeError, "uninitialized Sentence" );
 

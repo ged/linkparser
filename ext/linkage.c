@@ -81,7 +81,6 @@ rlink_linkage_gc_free( rlink_LINKAGE *ptr ) {
  */
 static rlink_LINKAGE *
 check_linkage(  VALUE	self ) {
-	debugMsg(( "Checking a LinkParser::Linkage object (%d).", self ));
 	Check_Type( self, T_DATA );
 
     if ( !IsLinkage(self) ) {
@@ -100,7 +99,6 @@ static rlink_LINKAGE *
 get_linkage(  VALUE self ) {
 	rlink_LINKAGE *ptr = check_linkage( self );
 
-	debugMsg(( "Fetching a Linkage (%p).", ptr ));
 	if ( !ptr )
 		rb_raise( rb_eRuntimeError, "uninitialized Linkage" );
 
