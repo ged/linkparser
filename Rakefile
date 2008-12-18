@@ -136,7 +136,8 @@ RDOC_OPTIONS = [
 	'-SHN',
 	'-i', '.',
 	'-m', 'README',
-	'-W', 'http://deveiate.org/projects/Ruby-LinkParser//browser/trunk/'
+	'-o', RDOCDIR.to_s,
+	'-W', 'http://deveiate.org/projects/Ruby-LinkParser/browser/trunk/'
   ]
 
 # Release constants
@@ -145,7 +146,7 @@ SMTP_PORT = 465 # SMTP + SSL
 
 # Project constants
 PROJECT_HOST = 'deveiate.org'
-PROJECT_PUBDIR = "/usr/local/www/public/code"
+PROJECT_PUBDIR = '/usr/local/www/public/code'
 PROJECT_DOCDIR = "#{PROJECT_PUBDIR}/#{PKG_NAME}"
 PROJECT_SCPPUBURL = "#{PROJECT_HOST}:#{PROJECT_PUBDIR}"
 PROJECT_SCPDOCURL = "#{PROJECT_HOST}:#{PROJECT_DOCDIR}"
@@ -185,13 +186,13 @@ GEMSPEC   = Gem::Specification.new do |gem|
 	gem.version           = PKG_VERSION
 
 	gem.summary           = PKG_SUMMARY
-	gem.description       = <<-EOD
-	A Ruby binding for the link-grammar library, a syntactic parser
-	of English. See http://www.link.cs.cmu.edu/link/ for more
-	information about the Link Grammar, and
-	http://www.abisource.org/projects/link-grammar/ for information
-	about the link-grammar library.
-	EOD
+	gem.description       = [
+		"A Ruby binding for the link-grammar library, a syntactic parser",
+		"of English. See http://www.link.cs.cmu.edu/link/ for more",
+		"information about the Link Grammar, and",
+		"http://www.abisource.org/projects/link-grammar/ for information",
+		"about the link-grammar library.",
+  	  ].join( "\n" )
 
 	gem.authors           = 'Michael Granger'
 	gem.email             = 'ged@FaerieMUD.org'
@@ -200,8 +201,11 @@ GEMSPEC   = Gem::Specification.new do |gem|
 
 	gem.has_rdoc          = true
 	gem.rdoc_options      = RDOC_OPTIONS
+	gem.extra_rdoc_files  = %w[ChangeLog README LICENSE]
 
 	gem.bindir            = BINDIR.relative_path_from(BASEDIR).to_s
+	gem.executables       = BIN_FILES.select {|pn| pn.executable? }.
+		collect {|pn| pn.relative_path_from(BINDIR).to_s }
 
 	if EXTCONF.exist?
 		gem.extensions << EXTCONF.relative_path_from( BASEDIR ).to_s

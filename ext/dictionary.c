@@ -30,7 +30,6 @@ rlink_dict_gc_free( Dictionary dict ) {
  */
 static Dictionary
 check_dict( VALUE self ) {
-	debugMsg(( "Checking a LinkParser::Dictionary object (%d).", self ));
 	Check_Type( self, T_DATA );
 
     if ( !IsDictionary(self) ) {
@@ -49,7 +48,6 @@ static Dictionary
 get_dict( VALUE self ) {
 	Dictionary dict = check_dict( self );
 
-	debugMsg(( "Fetching a Dictionary (%p).", dict ));
 	if ( !dict )
 		rb_raise( rb_eRuntimeError, "uninitialized Dictionary" );
 
@@ -214,9 +212,12 @@ rlink_get_max_cost( VALUE self ) {
 
 /*
  *  call-seq:
- *     dictionary.parse( string )   -> sentence
+ *     dictionary.parse( string )            -> sentence
+ *     dictionary.parse( string, options )   -> sentence
  *
- *  Parse the specified sentence +string+ with the dictionary and return a LinkParser::Sentence.
+ *  Parse the specified sentence +string+ with the dictionary and return a 
+ *  LinkParser::Sentence. If you specify an +options+ hash, its values will override
+ *  those of the Dictionary's for the resulting Sentence.
  */
 static VALUE 
 rlink_parse( int argc, VALUE *argv, VALUE self ) {
