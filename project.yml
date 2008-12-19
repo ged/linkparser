@@ -1,7 +1,7 @@
 --- 
 rubyforge_project: linkparser
 project_requirements: 
-  link-grammar: ">= 4.3.9"
+  link-grammar: ">= 4.4.1"
 project_pubdir: /usr/local/www/public/code
 project_description: |-
   A Ruby binding for the link-grammar library, a syntactic parser

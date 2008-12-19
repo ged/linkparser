@@ -489,19 +489,14 @@ rlink_sentence_disjunct_cost( VALUE self, VALUE i ) {
 /*
  * Document-class: LinkParser::Sentence
  * 
- * A Sentence is the API's representation of an input string,
- * tokenized and interpreted according to a specific Dictionary. After
- * a Sentence is created and parsed, various attributes of the
- * resulting set of linkages can be obtained.
+ *   A Sentence is the API's representation of an input string,
+ *   tokenized and interpreted according to a specific Dictionary. After
+ *   a Sentence is created and parsed, various attributes of the
+ *   resulting set of linkages can be obtained.
  * 
  */
 void
 rlink_init_sentence() {
-#ifdef FOR_RDOC
-	rlink_mLinkParser = rb_define_module( "LinkParser" );
-	rlink_eLpError = rb_define_class_under( rlink_mLinkParser, "Error", rb_eRuntimeError );
-#endif
-
 	rlink_cSentence = rb_define_class_under( rlink_mLinkParser, "Sentence",
 	 	rb_cObject );
 	

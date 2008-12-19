@@ -57,16 +57,14 @@ rlink_debug(fmt, va_alist)
 
 
 /*
- * Raise a LinkParser::Error, either with the message in lperrmsg if it's
- * set or a generic error if not.
+ * Raise a LinkParser::Error. The link-grammar library no longer supports fetching the actual
+ * error message, so this just raises an exception with "Unknown error" now. Hopefully the 
+ * library will have printed out the actual problem to stderr, and stderr is pointed
+ * somewhere useful. 
  */
 void
 rlink_raise_lp_error() {
-	if ( lperrno ) {
-		rb_raise( rlink_eLpError, lperrmsg );
-	} else {
-		rb_raise( rlink_eLpError, "Unknown error" );
-	}
+	rb_raise( rlink_eLpError, "Unknown error" );
 }
 
 
@@ -81,15 +79,36 @@ rlink_make_parse_options( VALUE default_options, VALUE options ) {
 }
 
 
+/*
+ *  call-seq:
+ *     LinkParser.link_grammar_version   -> string
+ *
+ *  Return the version of the link-grammar library the binding is linked against.
+ *
+ */
+static VALUE
+rlink_link_grammar_version( VALUE self ) {
+#ifdef HAVE_LINKGRAMMAR_GET_VERSION
+	const char *version = linkgrammar_get_version();
+	return rb_str_new2( version );
+#else
+	return rb_str_new2( "link-grammar-4.3.9-or-earlier" );
+#endif /* HAVE_LINKGRAMMAR_GET_VERSION */
+}
 
 
-/* 
- *  Namespace module for the Ruby LinkParser library
+/*
+ * LinkParser extension init function
  */
 void
 Init_linkparser_ext() {
 	rlink_mLinkParser = rb_define_module( "LinkParser" );
+
+	/* The exception class used for LinkParser errors */
 	rlink_eLpError = rb_define_class_under( rlink_mLinkParser, "Error", rb_eRuntimeError );
+
+	rb_define_singleton_method( rlink_mLinkParser, "link_grammar_version",
+		rlink_link_grammar_version, 0 );
 	
 	setlocale( LC_ALL, "" );
 

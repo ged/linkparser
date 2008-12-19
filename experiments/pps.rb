@@ -3,8 +3,10 @@
 BEGIN {
 	require 'pathname'
 	basedir = Pathname.new( __FILE__ ).dirname.parent
-	require basedir + 'loadpath.rb'
 	require basedir + 'utils.rb'
+
+	$LOAD_PATH.unshift( basedir + 'lib' )
+	$LOAD_PATH.unshift( basedir + 'ext' )
 
 	include UtilityFunctions
 }

@@ -116,10 +116,6 @@ rlink_get_linkage( self ) {
 
 
 
-/* --------------------------------------------------
- * Class Methods
- * -------------------------------------------------- */
-
 /*
  *  call-seq:
  *     LinkParser::Linkage.allocate   -> LinkParser::Linkage
@@ -132,10 +128,6 @@ rlink_linkage_s_alloc(  VALUE klass ) {
 	return Data_Wrap_Struct( klass, rlink_linkage_gc_mark, rlink_linkage_gc_free, 0 );
 }
 
-
-/* --------------------
- * Instance methods
- * -------------------- */
 
 /*
  *  call-seq:
@@ -824,11 +816,6 @@ rlink_linkage_constituent_tree_string( int argc, VALUE *argv, VALUE self ) {
  */
 void
 rlink_init_linkage() {
-#ifdef FOR_RDOC
-	rlink_mLinkParser = rb_define_module( "LinkParser" );
-	rlink_eLpError = rb_define_class_under( rlink_mLinkParser, "Error", rb_eRuntimeError );
-#endif
-
 	rlink_cLinkage = rb_define_class_under( rlink_mLinkParser, "Linkage", rb_cObject );
 	
 	rb_define_alloc_func( rlink_cLinkage, rlink_linkage_s_alloc );
@@ -846,13 +833,7 @@ rlink_init_linkage() {
 		rlink_linkage_current_sublinkage_eq, 1 );
 	rb_define_method( rlink_cLinkage, "current_sublinkage",
 		rlink_linkage_current_sublinkage, 0 );
-	
-#ifdef HAVE_LINKAGE_GET_CURRENT_SUBLINKAGE
-	rb_define_const( rlink_cLinkage, "HAS_CURRENT_SUBLINKAGE", Qtrue );
-#else
-	rb_define_const( rlink_cLinkage, "HAS_CURRENT_SUBLINKAGE", Qfalse );
-#endif
-	
+
 	rb_define_method( rlink_cLinkage, "num_words",
 	 	rlink_linkage_get_num_words, 0 );
 	rb_define_alias ( rlink_cLinkage, "word_count", "num_words" );
@@ -900,7 +881,7 @@ rlink_init_linkage() {
 	rb_define_method( rlink_cLinkage, "violation_name",
 	 	rlink_linkage_get_violation_name, 0 );
 
-	/* Struct that contains links of a constituent tree */
+	/* Struct that contains links of a constituent tree (:label, :children, :start, :end) */
 	rb_define_const( rlink_cLinkage, "CTree", rlink_sLinkageCTree );
 
 	rlink_sLinkageCTree = rb_struct_define( "LinkParserLinkageCTree", 

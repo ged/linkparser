@@ -50,7 +50,7 @@ class LinkParser::Linkage
 	SVNId = %q$Id$
 
 	# Descriptions of the linkage types, keyed by linkage symbol
-	LinkTypes = {
+	LINK_TYPES = {
 		:A  => %{connects pre-noun ("attributive") adjectives to following nouns: "The BIG DOG chased me", "The BIG BLACK UGLY DOG chased me".},
 		:AA => %{is used in the construction "How [adj] a [noun] was it?". It connects the adjective to the following "a".},
 		:AF => %{connects adjectives to verbs in cases where the adjective is fronted, such as questions and indirect questions: "How BIG IS it?"},
@@ -159,7 +159,7 @@ class LinkParser::Linkage
 		:Z  => %{connects the preposition "as" to certain verbs: "AS we EXPECTED, he was late".},
 	}
 
-	# Link struct types
+	# Link struct (:lword, :rword, :length, :label, :llabel, :rlabel, :desc)
 	Link = Struct.new( "LinkParserLink", :lword, :rword, :length, :label, :llabel, :rlabel, :desc )
 	
 
@@ -172,7 +172,7 @@ class LinkParser::Linkage
 		return %{#<%s:0x%x: sublinkage %d: [%d links]>} % [
 			self.class.name,
 			self.object_id / 2,
-			HAS_CURRENT_SUBLINKAGE ? self.current_sublinkage : 0,
+			self.current_sublinkage,
 			self.num_links
 		]
 	end
@@ -187,7 +187,7 @@ class LinkParser::Linkage
 			self.link_label(index),
 			self.link_llabel(index),
 			self.link_rlabel(index),
-			LinkTypes[ self.link_label(index).gsub(/[^A-Z]+/, '').to_sym ]
+			LINK_TYPES[ self.link_label(index).gsub(/[^A-Z]+/, '').to_sym ]
 		)
 	end
 	
