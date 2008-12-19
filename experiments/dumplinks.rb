@@ -2,13 +2,14 @@
 
 BEGIN {
 	require 'pathname'
-	basedir = Pathname.new( __FILE__ ).expand_path.dirname.parent
-	
-	require basedir + 'loadpath.rb'
+	basedir = Pathname.new( __FILE__ ).dirname.parent
 	require basedir + 'utils.rb'
-}
 
-include UtilityFunctions
+	$LOAD_PATH.unshift( basedir + 'lib' )
+	$LOAD_PATH.unshift( basedir + 'ext' )
+
+	include UtilityFunctions
+}
 
 require 'linkparser'
 require 'text/format'

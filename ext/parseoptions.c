@@ -973,11 +973,84 @@ rlink_parseopts_get_echo_on_p( VALUE self ) {
 
 
 /*
-rlink_parseopts_timer_expired(Parse_Options opts);
-rlink_parseopts_memory_exhausted(Parse_Options opts);
-rlink_parseopts_resources_exhausted(Parse_Options opts);
-rlink_parseopts_reset_resources(Parse_Options opts);
-*/
+ *  call-seq:
+ *     opts.timer_expired?   -> +true+ or +false+
+ *
+ *  Returns true if timer constraints were exceeded during parsing.
+ *
+ *     sentence.parse
+ *     if sentence.options.timer_expired?
+ *       $stderr.puts "Parsing sentence #{sentence} timed out."
+ *     end
+ */
+static VALUE
+rlink_parseopts_timer_expired_p( VALUE self ) {
+	Parse_Options opts = get_parseopts( self );
+	int rval;
+
+	rval = parse_options_timer_expired( opts );
+	return rval ? Qtrue : Qfalse;
+}
+
+
+/*
+ *  call-seq:
+ *     opts.memory_exhausted?   -> +true+ or +false+
+ *
+ *  Returns true if memory constraints were exceeded during parsing.
+ *
+ *     sentence.parse
+ *     if sentence.options.memory_exhausted?
+ *       $stderr.puts "Parsing sentence #{sentence} ran out of memory."
+ *     end
+ */
+static VALUE
+rlink_parseopts_memory_exhausted_p( VALUE self ) {
+	Parse_Options opts = get_parseopts( self );
+	int rval;
+
+	rval = parse_options_memory_exhausted( opts );
+	return rval ? Qtrue : Qfalse;
+}
+
+
+/*
+ *  call-seq:
+ *     opts.resources_exhausted?   -> +true+ or +false+
+ *
+ *  Returns true if the memory or timer constraints were exceeded during parsing.
+ *
+ *     sentence.parse
+ *     if sentence.options.resources_exhausted?
+ *       $stderr.puts "Parsing sentence #{sentence} ran out of resources."
+ *     end
+ */
+static VALUE
+rlink_parseopts_resources_exhausted_p( VALUE self ) {
+	Parse_Options opts = get_parseopts( self );
+	int rval;
+
+	rval = parse_options_resources_exhausted( opts );
+	return rval ? Qtrue : Qfalse;
+}
+
+
+/*
+ *  call-seq:
+ *     opts.reset_resources
+ *
+ *  Reset the timer- and memory-constraint flags.
+ *
+ */
+static VALUE
+rlink_parseopts_reset_resources( VALUE self ) {
+	Parse_Options opts = get_parseopts( self );
+
+	parse_options_reset_resources( opts );
+	return Qnil;
+}
+
+
 
 /*
  * LinkParser parse options class. Instances of this class are used to specify the different
@@ -989,11 +1062,6 @@ rlink_parseopts_reset_resources(Parse_Options opts);
  */
 void
 rlink_init_parseoptions() {
-#ifdef FOR_RDOC
-	rlink_mLinkParser = rb_define_module( "LinkParser" );
-	rlink_eLpError = rb_define_class_under( rlink_mLinkParser, "Error", rb_eRuntimeError );
-#endif
-	
 	rlink_cParseOptions = rb_define_class_under( rlink_mLinkParser, 
 		"ParseOptions", rb_cObject );
 
@@ -1108,13 +1176,13 @@ rlink_init_parseoptions() {
 	rb_define_method( rlink_cParseOptions, "echo_on?", 
 		rlink_parseopts_get_echo_on_p, 0 );
 
-
-
-/*
-	rlink_parseopts_timer_expired
-	rlink_parseopts_memory_exhausted
-	rlink_parseopts_resources_exhausted
-	rlink_parseopts_reset_resources
-*/
+	rb_define_method( rlink_cParseOptions, "timer_expired?",
+		rlink_parseopts_timer_expired_p, 0 );
+	rb_define_method( rlink_cParseOptions, "memory_exhausted?",
+		rlink_parseopts_memory_exhausted_p, 0 );
+	rb_define_method( rlink_cParseOptions, "resources_exhausted?",
+		rlink_parseopts_resources_exhausted_p, 0 );
+	rb_define_method( rlink_cParseOptions, "reset_resources",
+		rlink_parseopts_reset_resources, 0 );
 }
 

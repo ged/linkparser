@@ -5,19 +5,15 @@ of English.
 
 == Authors
 
- * Michael Granger <ged@FaerieMUD.org>
- * Martin Chase <stillflame@FaerieMUD.org>
+* Michael Granger <ged@FaerieMUD.org>
+* Martin Chase <stillflame@FaerieMUD.org>
 
 
 == Requirements
 
- * Ruby 1.8.6
- * link-grammar-4.3.9 from the AbiWord project 
-   (http://www.abisource.com/projects/link-grammar/) 
-
-Opitonally, if you want to be able to tell what sublinkage a linkage is currently
-set to, you'll need to apply the included patch to the link-grammar library before
-you build it. It's entirely optional, though.
+* Ruby 1.8.6
+* link-grammar (version 4.4.1 or later) from the AbiWord project 
+  (http://www.abisource.com/projects/link-grammar/) 
 
 
 === Example Usage

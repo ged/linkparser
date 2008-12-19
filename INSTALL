@@ -6,14 +6,8 @@ Suggestions welcomed.
 First, you'll need to install the Abiword link-grammar library that comes with
 this source (or download it yourself if you wish):
 
-    $ tar -xvzf link-grammar-4.3.9.tar.gz
-    $ cd link-grammar-4.3.9
-    
-    # If you want the LinkParser::Linkage#current_sublinkage method to work, 
-    # you must apply the included patch. If you don't care about that method,
-    # you can safely skip this:
-    $ patch -p1 < ../link-grammar-4.3.9.patch
-
+    $ tar -xvzf link-grammar-4.4.1.tar.gz
+    $ cd link-grammar-4.4.1
     $ ./configure; make; sudo make install
     $ cd ..
 

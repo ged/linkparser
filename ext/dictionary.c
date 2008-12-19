@@ -254,13 +254,6 @@ rlink_parse( int argc, VALUE *argv, VALUE self ) {
  */
 void
 rlink_init_dict() {
-#ifdef FOR_RDOC
-	rlink_mLinkParser = rb_define_module( "LinkParser" );
-	
-	/* An exception class for errors raised from the LinkParser library */
-	rlink_eLpError = rb_define_class_under( rlink_mLinkParser, "Error", rb_eRuntimeError );
-#endif
-
 	rlink_cDictionary = rb_define_class_under( rlink_mLinkParser, "Dictionary",
 	 	rb_cObject );
 	
@@ -270,6 +263,7 @@ rlink_init_dict() {
 	rb_define_method( rlink_cDictionary, "max_cost", rlink_get_max_cost, 0 );
 	rb_define_method( rlink_cDictionary, "parse", rlink_parse, -1 );
 
+	/* The LinkParser::ParseOptions object for the Dictionary */
 	rb_define_attr( rlink_cDictionary, "options", 1, 0 );
 }
 

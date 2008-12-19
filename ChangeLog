@@ -1,3 +1,39 @@
+-- Thu, 18 Dec 2008 17:03:32 -0000 by deveiant (r47) -----
+   Changed: Rakefile
+            ext/sentence.c
+            ext/dictionary.c
+            project.yml
+            ext/parseoptions.c
+            ext/linkage.c (and 1 other/s)
+
+    * Updated build system
+    * Removed some spammy debugging.
+
+
+-- Thu, 20 Nov 2008 19:34:55 -0000 by deveiant (r46) -----
+   Changed: Rakefile
+            INSTALL
+            project.yml
+
+   Updated the minimum version in the link-grammar gem requirement to 4.3.9.
+
+
+-- Wed, 19 Nov 2008 23:42:43 -0000 by deveiant (r45) -----
+   Changed: README
+
+   Ye gods. Re-re-undoing clobbered README, hopefully for the last time.
+
+
+-- Wed, 19 Nov 2008 23:34:01 -0000 by deveiant (r44) -----
+   Changed: README
+            /trunk
+            Rakefile
+            project.yml
+            ChangeLog
+
+   Updated build system.
+
+
 -- Wed, 19 Nov 2008 23:01:25 -0000 by deveiant (r43) -----
    Changed: spec/linkage_spec.rb
             ChangeLog

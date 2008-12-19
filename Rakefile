@@ -136,7 +136,7 @@ RDOC_OPTIONS = [
 	'-SHN',
 	'-i', '.',
 	'-m', 'README',
-	'-o', RDOCDIR.to_s,
+	'-t', PKG_NAME,
 	'-W', 'http://deveiate.org/projects/Ruby-LinkParser/browser/trunk/'
   ]
 
@@ -177,7 +177,7 @@ DEVELOPMENT_DEPENDENCIES = {
 
 # Non-gem requirements: packagename => version
 REQUIREMENTS = {
-	'link-grammar' => '>= 4.3.9',
+	'link-grammar' => '>= 4.4.1',
 }
 
 # RubyGem specification
