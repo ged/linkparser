@@ -82,9 +82,6 @@ RAKE_TASKLIBS = Pathname.glob( RAKE_TASKDIR + '*.rb' )
 LOCAL_RAKEFILE = BASEDIR + 'Rakefile.local'
 
 EXTRA_PKGFILES = []
-EXTRA_PKGFILES.concat Pathname.glob( BASEDIR + 'link-grammar*.{patch,tar.gz}' ).delete_if {|item| item =~ /\.svn/ } 
-EXTRA_PKGFILES.concat Pathname.glob( BASEDIR + 'misc/monkeypatches.rb' ).delete_if {|item| item =~ /\.svn/ } 
-EXTRA_PKGFILES.concat Pathname.glob( BASEDIR + 'loadpath.rb' ).delete_if {|item| item =~ /\.svn/ } 
 
 RELEASE_FILES = TEXT_FILES + 
 	SPEC_FILES + 

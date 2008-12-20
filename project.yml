@@ -18,10 +18,7 @@ project_dependencies: {}
 project_summary: a Ruby binding for the link-grammar library
 project_name: LinkParser
 version_file: linkparser.rb
-additional_pkgfiles: 
-- link-grammar*.{patch,tar.gz}
-- misc/monkeypatches.rb
-- loadpath.rb
+additional_pkgfiles: []
 dev_dependencies: {}
 
 author_email: ged@FaerieMUD.org

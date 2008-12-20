@@ -1,3 +1,39 @@
+-- Fri, 19 Dec 2008 18:30:33 -0000 by deveiant (r48) -----
+   Added:   link-grammar-4.4.1.tar.gz (new)
+            spec/linkparser (new)
+            spec/linkparser/parseoptions_spec.rb
+            -> renamed from /trunk/spec/parseoptions_spec.rb@r46
+            spec/linkparser_spec.rb (new)
+            spec/linkparser/sentence_spec.rb
+            -> renamed from /trunk/spec/sentence_spec.rb@r46
+            spec/linkparser/dictionary_spec.rb
+            -> renamed from /trunk/spec/dictionary_spec.rb@r46 (and 2 other/s)
+   Changed: README
+            spec/TEMPLATE.rb.tpl
+            project.yml
+            experiments/pps.rb
+            experiments/diagram_sentences.rb
+            spec/bugfixes_spec.rb (and 13 other/s)
+   Deleted: experiments/free_stuff.rb
+            link-grammar-4.3.9.tar.gz
+            spec/sentence_spec.rb
+            spec/dictionary_spec.rb
+            spec/linkage_spec.rb
+            loadpath.rb (and 6 other/s)
+
+    * Updated build system
+    * Updated for link-grammar 4.4.1
+    * Removed the (now-obsolete) patch to link-grammar
+    * Removed a bunch of other old cruft
+    * Reorganized the specs into the standard mirrored layout
+    * Added LinkParser.link_grammar_version
+    * LinkParser::ParseOptions
+    - Added spec coverage for #all_short_connectors?
+    - Added implementations for #timer_expired?, #memory_exhausted?, #resources_exhausted?, 
+    and #reset_resources.
+    * Documentation cleanup for the upcoming RDoc 2.3.x
+
+
 -- Thu, 18 Dec 2008 17:03:32 -0000 by deveiant (r47) -----
    Changed: Rakefile
             ext/sentence.c
