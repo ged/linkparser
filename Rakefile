@@ -4,7 +4,7 @@
 #
 # Based on various other Rakefiles, especially one by Ben Bleything
 #
-# Copyright (c) 2008 The FaerieMUD Consortium
+# Copyright (c) 2007-2009 The FaerieMUD Consortium
 #
 # Authors:
 #  * Michael Granger <ged@FaerieMUD.org>
@@ -21,15 +21,13 @@ BEGIN {
 	$LOAD_PATH.unshift( extdir.to_s ) unless $LOAD_PATH.include?( extdir.to_s )
 }
 
-require 'rubygems'
-gem 'rake', '>= 0.8.3'
-
 require 'rbconfig'
 require 'rake'
 require 'rake/rdoctask'
 require 'rake/testtask'
 require 'rake/packagetask'
 require 'rake/clean'
+require 'rake/191_compat.rb'
 
 $dryrun = false
 
@@ -174,7 +172,7 @@ DEVELOPMENT_DEPENDENCIES = {
 
 # Non-gem requirements: packagename => version
 REQUIREMENTS = {
-	'link-grammar' => '>= 4.4.1',
+	'link-grammar' => '>= 4.4.2',
 }
 
 # RubyGem specification
@@ -242,7 +240,8 @@ $dryrun = Rake.application.options.dryrun ? true : false
 RAKE_TASKLIBS.each do |tasklib|
 	next if tasklib =~ %r{/(helpers|svn|verifytask)\.rb$}
 	begin
-		require tasklib
+		trace "  loading tasklib %s" % [ tasklib ]
+		require tasklib.expand_path
 	rescue ScriptError => err
 		fail "Task library '%s' failed to load: %s: %s" %
 			[ tasklib, err.class.name, err.message ]
