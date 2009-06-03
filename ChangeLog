@@ -1,3 +1,11 @@
+-- Sat, 20 Dec 2008 19:51:24 -0000 by deveiant (r49) -----
+   Changed: Rakefile
+            project.yml
+            ChangeLog
+
+    * Removed some more unnecessary files from the gem distribution to reduce size.
+
+
 -- Fri, 19 Dec 2008 18:30:33 -0000 by deveiant (r48) -----
    Added:   link-grammar-4.4.1.tar.gz (new)
             spec/linkparser (new)

@@ -201,8 +201,11 @@ rlink_sentence_parse( int argc, VALUE *argv, VALUE self ) {
 	VALUE options = Qnil;
 	int link_count = 0;
 
+	/*
 	if ( RTEST(ptr->parsed_p) )
 		rb_raise( rlink_eLpError, "Can't reparse a sentence." );
+	*/
+	debugMsg(( "Parsing sentence <%p>", ptr ));
 
 	/* Merge the hash from this call with the one from the dict and build
 	   Parse_Options from it. */
@@ -307,6 +310,10 @@ rlink_sentence_linkages( VALUE self ) {
 static VALUE
 rlink_sentence_length( VALUE self ) {
 	rlink_SENTENCE *ptr = get_sentence( self );
+
+	if ( !RTEST(ptr->parsed_p) )
+		rlink_sentence_parse( 0, 0, self );
+
 	return INT2FIX( sentence_length((Sentence)ptr->sentence) );
 }
 	
@@ -321,8 +328,11 @@ rlink_sentence_length( VALUE self ) {
 static VALUE
 rlink_sentence_word( VALUE self, VALUE n ) {
 	rlink_SENTENCE *ptr = get_sentence( self );
-	char *word;
+	const char *word;
 	
+	if ( !RTEST(ptr->parsed_p) )
+		rlink_sentence_parse( 0, 0, self );
+
 	word = sentence_get_word( (Sentence)ptr->sentence, FIX2INT(n) );
 	return rb_str_new2( word );
 }
@@ -340,13 +350,17 @@ rlink_sentence_word( VALUE self, VALUE n ) {
 static VALUE
 rlink_sentence_words( VALUE self ) {
 	rlink_SENTENCE *ptr = get_sentence( self );
-	char *word;
+	const char *word;
 	int i, length;
 	VALUE words = rb_ary_new();
 	
+	if ( !RTEST(ptr->parsed_p) )
+		rlink_sentence_parse( 0, 0, self );
+
 	length = sentence_length( (Sentence)ptr->sentence );
 	for ( i = 0; i < length; i++ ) {
 		word = sentence_get_word( (Sentence)ptr->sentence, i );
+		debugMsg(( "Word %d: <%s>", i, word ));
 		rb_ary_push( words, rb_str_new2(word) );
 	}
 	
@@ -395,6 +409,9 @@ rlink_sentence_null_count( VALUE self ) {
 	rlink_SENTENCE *ptr = get_sentence( self );
 	int count;
 	
+	if ( !RTEST(ptr->parsed_p) )
+		rlink_sentence_parse( 0, 0, self );
+
 	count = sentence_null_count( (Sentence)ptr->sentence );
 	return INT2FIX( count );
 }
@@ -414,6 +431,7 @@ rlink_sentence_num_linkages_found( VALUE self ) {
 	
 	if ( !RTEST(ptr->parsed_p) )
 		rlink_sentence_parse( 0, 0, self );
+
 	i = sentence_num_linkages_found( (Sentence)ptr->sentence );
 	
 	return INT2FIX( i );
@@ -431,6 +449,9 @@ rlink_sentence_num_valid_linkages( VALUE self ) {
 	rlink_SENTENCE *ptr = get_sentence( self );
 	int count;
 	
+	if ( !RTEST(ptr->parsed_p) )
+		rlink_sentence_parse( 0, 0, self );
+
 	count = sentence_num_valid_linkages( (Sentence)ptr->sentence );
 	return INT2FIX( count );
 }
@@ -448,6 +469,9 @@ rlink_sentence_num_linkages_post_processed( VALUE self ) {
 	rlink_SENTENCE *ptr = get_sentence( self );
 	int count;
 	
+	if ( !RTEST(ptr->parsed_p) )
+		rlink_sentence_parse( 0, 0, self );
+
 	count = sentence_num_linkages_post_processed( (Sentence)ptr->sentence );
 	return INT2FIX( count );
 }
@@ -465,6 +489,9 @@ rlink_sentence_num_violations( VALUE self, VALUE i ) {
 	rlink_SENTENCE *ptr = get_sentence( self );
 	int count;
 	
+	if ( !RTEST(ptr->parsed_p) )
+		rlink_sentence_parse( 0, 0, self );
+
 	count = sentence_num_violations( (Sentence)ptr->sentence, FIX2INT(i) );
 	return INT2FIX( count );
 }
@@ -481,6 +508,9 @@ rlink_sentence_disjunct_cost( VALUE self, VALUE i ) {
 	rlink_SENTENCE *ptr = get_sentence( self );
 	int count;
 	
+	if ( !RTEST(ptr->parsed_p) )
+		rlink_sentence_parse( 0, 0, self );
+
 	count = sentence_disjunct_cost( (Sentence)ptr->sentence, FIX2INT(i) );
 	return INT2FIX( count );
 }
