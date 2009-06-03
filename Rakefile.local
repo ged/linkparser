@@ -58,3 +58,8 @@ task :clobber do
 end	
 CLOBBER.include( EXT_MAKEFILE )
 
+task :debug do
+	log "Setting $DEBUG to true"
+	$DEBUG = true
+end
+

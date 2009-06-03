@@ -48,31 +48,32 @@ class LinkParser::Sentence
 	SVNId = %q$Id$
 
 
+
 	######
 	public
 	######
 
 	### Return a human-readable representation of the Sentence object.
 	def inspect
-		%{#<%s:0x%x "%s"/%d linkages/%d nulls>} % [
+		contents = ''
+		if self.parsed?
+			contents = %{"%s"/%d linkages/%d nulls} % [
+				self.to_s,
+				self.num_linkages_found,
+				self.null_count,
+			]
+		else
+			contents = "(unparsed)"
+		end
+
+		return "#<%s:0x%x %s>" % [
 			self.class.name,
 			self.object_id / 2,
-			self.words.join(" "),
-			self.num_linkages_found,
-			self.null_count,
+			contents,
 		]
 	end
 
 
-	### Return the Array of words in the sentence as tokenized by the
-	### parser.
-	def words
-		(0...self.length).to_a.collect do |i|
-			self.word( i )
-		end
-	end
-	
-	
 	### Print out the sentence
 	def to_s
 		return self.words.join(" ")
@@ -91,8 +92,13 @@ class LinkParser::Sentence
 
 	### Proxy method -- auto-delegate calls to the first linkage.
 	def method_missing( sym, *args )
-		linkage = self.linkages.first
-		return super unless !linkage.nil? && linkage.respond_to?( sym )
+
+		# Check both symbol and string for forward-compatibility with 1.9.x
+		return super unless
+			LinkParser::Linkage.instance_methods.include?( sym.to_s ) ||
+			LinkParser::Linkage.instance_methods.include?( sym )
+
+		linkage = self.linkages.first or raise LinkParser::Error, "sentence has no linkages"
 		
 		meth = linkage.method( sym )
 		self.singleton_class.send( :define_method, sym, &meth )

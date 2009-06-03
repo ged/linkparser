@@ -73,6 +73,20 @@ describe LinkParser::ParseOptions do
 			@opts.reset_resources
 		}.should_not raise_error()
 	end
+
+
+	describe "in versions of link-grammar >= 4.5.0" do
+	
+		before( :each ) do
+			version_vec = LinkParser.link_grammar_version[/(\d+\.\d+\.\d+)/, 1].
+				split('.').collect {|v| v.to_i }.pack('n*')
+			pending "the underlying library is %s" unless version_vec >= [4,5,0].pack('n*')
+		end
+
+		it "knows whether spell_guessing is enabled or not" do
+			@opts.spell_guessing_enabled?.should == true
+		end
+	end
 	
 end
 

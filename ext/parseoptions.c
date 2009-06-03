@@ -972,6 +972,49 @@ rlink_parseopts_get_echo_on_p( VALUE self ) {
 }
 
 
+
+
+/*
+ *  call-seq:
+ *     opts.spell_guessing_enabled= boolean
+ *
+ *  Enable/disable spell-guessing if it's supported.
+ */
+static VALUE
+rlink_parseopts_set_spell_guess( VALUE self, VALUE val ) {
+#ifdef HAVE_PARSE_OPTIONS_GET_SPELL_GUESS
+	Parse_Options opts = get_parseopts( self );
+	parse_options_set_spell_guess( opts, RTEST(val) );
+	return val;
+#else
+	rb_notimplement();
+	return Qnil;
+#endif /* HAVE_PARSE_OPTIONS_GET_SPELL_GUESS */
+}
+
+
+/*
+ *  call-seq:
+ *     opts.spell_guessing_enabled?   -> true or false
+ *
+ *  Returns +true+ if spell-guessing is enabled. Note that a +true+ return value doesn't
+ *  mean that it's supported, only that it will be used if it is.
+ */
+static VALUE
+rlink_parseopts_get_spell_guess_p( VALUE self ) {
+#ifdef HAVE_PARSE_OPTIONS_GET_SPELL_GUESS
+	Parse_Options opts = get_parseopts( self );
+	int rval;
+
+	rval = parse_options_get_spell_guess( opts );
+	return rval ? Qtrue : Qfalse;
+#else
+	rb_notimplement();
+	return Qnil;
+#endif /* HAVE_PARSE_OPTIONS_GET_SPELL_GUESS */
+}
+
+
 /*
  *  call-seq:
  *     opts.timer_expired?   -> +true+ or +false+
@@ -1175,6 +1218,10 @@ rlink_init_parseoptions() {
 		rlink_parseopts_set_echo_on, 1 );
 	rb_define_method( rlink_cParseOptions, "echo_on?", 
 		rlink_parseopts_get_echo_on_p, 0 );
+	rb_define_method( rlink_cParseOptions, "spell_guessing_enabled=", 
+		rlink_parseopts_set_spell_guess, 1 );
+	rb_define_method( rlink_cParseOptions, "spell_guessing_enabled?", 
+		rlink_parseopts_get_spell_guess_p, 0 );
 
 	rb_define_method( rlink_cParseOptions, "timer_expired?",
 		rlink_parseopts_timer_expired_p, 0 );
@@ -1184,5 +1231,6 @@ rlink_init_parseoptions() {
 		rlink_parseopts_resources_exhausted_p, 0 );
 	rb_define_method( rlink_cParseOptions, "reset_resources",
 		rlink_parseopts_reset_resources, 0 );
+	
 }
 

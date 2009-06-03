@@ -470,7 +470,7 @@ rlink_linkage_get_link_num_domains( VALUE self, VALUE index ) {
 static VALUE
 rlink_linkage_get_link_domain_names( VALUE self, VALUE index ) {
 	rlink_LINKAGE *ptr = get_linkage( self );
-	char **names;
+	const char **names;
 	int i = NUM2INT( index );
 	int count;
 	VALUE names_ary;

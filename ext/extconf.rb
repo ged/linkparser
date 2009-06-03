@@ -50,4 +50,6 @@ unless have_func( "linkgrammar_get_version" )
 	message "Trying to build anyway.\n"
 end
 
+have_func( 'parse_options_get_spell_guess' )
+
 create_makefile( 'linkparser_ext' )

@@ -33,8 +33,18 @@ describe LinkParser::Sentence do
 		@sentence = LinkParser::Sentence.new( "The cat runs.", @dict )
 	end
 	
-	
-	it "returns an informational string when inspected" do
+	it "returns an informational string when inspected before it's been parsed" do
+		@sentence.inspect.should =~ %r{
+			<
+				LinkParser::Sentence:0x[[:xdigit:]]+
+				\s
+				\(unparsed\)
+			>
+		}x
+	end
+
+	it "returns an informational string when inspected after it's been parsed" do
+		@sentence.parse
 		@sentence.inspect.should =~ %r{
 			<
 				LinkParser::Sentence:0x[[:xdigit:]]+
@@ -69,12 +79,12 @@ describe LinkParser::Sentence do
 	it "delegates linkage methods to its first linkage" do
 		@sentence.num_links.should == 5
 	end
-
+	
 
 	it "knows whether or not it's been parsed" do
-		@sentence.parsed?.should be_false()
+		@sentence.should_not be_parsed()
 		@sentence.parse
-		@sentence.parsed?.should be_true()
+		@sentence.should be_parsed()
 	end
 
 
@@ -111,6 +121,21 @@ describe LinkParser::Sentence do
 		it "knows how many null links it has" do
 			@sentence.null_count == 1
 		end
+	end
+
+
+	describe "parsed from a sentence that yields no linkages" do
+	
+		before( :each ) do
+			@sentence = @dict.parse( "The event that he smiled at me gives me hope" )
+		end
+	
+		it "raises a descriptive exception if a delegated method is called" do
+			expect {
+				@sentence.constituent_tree_string
+			}.to raise_error( LinkParser::Error, /sentence has no linkages/i )
+		end
+
 	end
 
 end
