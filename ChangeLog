@@ -1,3 +1,42 @@
+-- Wed, 03 Jun 2009 14:29:26 -0000 by deveiant (r54) -----
+   Deleted: link-grammar-4.4.3.tar.gz
+
+   Removing old link-grammar library
+
+
+-- Wed, 03 Jun 2009 12:52:13 -0000 by deveiant (r53) -----
+   Added:   link-grammar-4.5.6.tar.gz
+            -> renamed from /trunk/link-grammar-4.4.1.tar.gz@r51
+   Changed: lib/linkparser.rb
+            spec/linkparser/sentence_spec.rb
+            ext/sentence.c
+            lib/linkparser/sentence.rb
+            spec/linkparser/parseoptions_spec.rb
+            ChangeLog (and 5 other/s)
+
+    * Updated to link-grammar-4.5.6.
+    * Added support for ParseOptions#spell_guessing_enabled
+    * Fixed buggy sentence behavior when the underlying Sentence hadn't yet been parsed.
+    * Made the exception raised when a delegated linkage method is called on a Sentence
+    that doesn't have any linkages. Thanks to Michael Bisignani <mbisignani@gmail.com> for
+    bringing this problem to my attention.
+    * Fixed some type-qualifier warnings.
+    * Bumped version to 1.0.4.
+
+
+-- Wed, 18 Mar 2009 21:51:03 -0000 by deveiant (r52) -----
+   Added:   link-grammar-4.4.3.tar.gz
+            -> renamed from /trunk/link-grammar-4.4.1.tar.gz@r51
+   Changed: README
+            LICENSE
+            Rakefile
+            project.yml
+   Deleted: link-grammar-4.4.1.tar.gz
+
+    * Update license year.
+    * Updated build.
+
+
 -- Sat, 20 Dec 2008 19:51:24 -0000 by deveiant (r49) -----
    Changed: Rakefile
             project.yml
