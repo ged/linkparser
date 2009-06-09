@@ -12,7 +12,7 @@ of English.
 == Requirements
 
 * Ruby 1.8.6
-* link-grammar (version 4.4.3 or later) from the AbiWord project 
+* link-grammar (version 4.5.6 or later) from the AbiWord project 
   (http://www.abisource.com/projects/link-grammar/) 
 
 

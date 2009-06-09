@@ -6,8 +6,8 @@ Suggestions welcomed.
 First, you'll need to install the Abiword link-grammar library that comes with
 this source (or download it yourself if you wish):
 
-    $ tar -xvzf link-grammar-4.4.1.tar.gz
-    $ cd link-grammar-4.4.1
+    $ tar -xvzf link-grammar-4.5.6.tar.gz
+    $ cd link-grammar-4.5.6
     $ ./configure; make; sudo make install
     $ cd ..
 
