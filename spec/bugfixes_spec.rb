@@ -9,10 +9,10 @@
 BEGIN {
 	require 'pathname'
 	basedir = Pathname.new( __FILE__ ).dirname.parent
-	
+
 	libdir = basedir + 'lib'
 	extdir = basedir + 'ext'
-	
+
 	$LOAD_PATH.unshift( libdir.to_s ) unless $LOAD_PATH.include?( libdir.to_s )
 	$LOAD_PATH.unshift( extdir.to_s ) unless $LOAD_PATH.include?( extdir.to_s )
 }
@@ -25,11 +25,11 @@ require 'linkparser'
 # puts s.linkages.first.verb  #  "cat.n" !?!?!
 describe %{bugfix for #3: The first linkage for "The cat runs."} do
 	before( :each ) do
-		@dict = LinkParser::Dictionary.new( :verbosity => 0 )
+		@dict = LinkParser::Dictionary.new( 'en', :verbosity => 0 )
 		@sentence = @dict.parse( "The cat runs." )
 		@linkage = @sentence.linkages.first
 	end
-	
+
 
 	it "thinks cat is the subject" do
 		@linkage.subject.should == "cat"

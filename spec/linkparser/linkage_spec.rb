@@ -24,7 +24,7 @@ require 'linkparser'
 describe LinkParser::Linkage do
 
 	before( :all ) do
-		@dict = LinkParser::Dictionary.new( :verbosity => 0 )
+		@dict = LinkParser::Dictionary.new( 'en', :verbosity => 0 )
 	end
 
 	before( :each ) do

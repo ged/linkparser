@@ -9,10 +9,10 @@
 BEGIN {
 	require 'pathname'
 	basedir = Pathname.new( __FILE__ ).dirname.parent.parent
-	
+
 	libdir = basedir + 'lib'
 	extdir = basedir + 'ext'
-	
+
 	$LOAD_PATH.unshift( libdir.to_s ) unless $LOAD_PATH.include?( libdir.to_s )
 	$LOAD_PATH.unshift( extdir.to_s ) unless $LOAD_PATH.include?( extdir.to_s )
 }
@@ -22,6 +22,18 @@ require 'linkparser'
 
 
 describe LinkParser::Dictionary do
+
+	### Work around current system's locale
+	before( :all ) do
+		$LANG = ENV['LANG']
+		ENV['LANG'] = 'en_US.UTF-8'
+	end
+
+	after( :all ) do
+		ENV['LANG'] = $LANG
+	end
+
+
 	it "can be instantiated using all default values" do
 		lambda { LinkParser::Dictionary.new }.should_not raise_error()
 	end
@@ -56,35 +68,36 @@ describe LinkParser::Dictionary do
 		}.should raise_error( LinkParser::Error )
 	end
 
+	describe "instance" do
+
+		TEST_SENTENCE = "The dog plays with the ball."
+
+		before( :each ) do
+			@dict = LinkParser::Dictionary.new( 
+				:verbosity => 0,
+				:max_null_count => 18,
+				:echo_on => true
+			  )
+		end
+
+
+		it "knows what the total cost of its linkages are" do
+			@dict.max_cost.should be_an_instance_of(Fixnum)
+		end
+
+		it "can parse a sentence" do
+			@dict.parse( TEST_SENTENCE ).
+				should be_an_instance_of( LinkParser::Sentence )
+		end
+
+		it "passes on its options to the sentences it parses" do
+			sentence = @dict.parse( TEST_SENTENCE )
+			sentence.options.max_null_count.should == 18
+			sentence.options.verbosity.should == 0
+			sentence.options.echo_on?.should == true
+		end
+	end
+
 end
 
-describe "An instance of LinkParser::Dictionary" do
-
-	TEST_SENTENCE = "The dog plays with the ball."
-
-	before( :each ) do
-		@dict = LinkParser::Dictionary.new( 
-			:verbosity => 0,
-			:max_null_count => 18,
-			:echo_on => true
-		  )
-	end
-	
-
-	it "knows what the total cost of its linkages are" do
-		@dict.max_cost.should be_an_instance_of(Fixnum)
-	end
-
-	it "can parse a sentence" do
-		@dict.parse( TEST_SENTENCE ).
-			should be_an_instance_of( LinkParser::Sentence )
-	end
-	
-	it "passes on its options to the sentences it parses" do
-		sentence = @dict.parse( TEST_SENTENCE )
-		sentence.options.max_null_count.should == 18
-		sentence.options.verbosity.should == 0
-		sentence.options.echo_on?.should == true
-	end
-end
 

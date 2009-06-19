@@ -9,10 +9,10 @@
 BEGIN {
 	require 'pathname'
 	basedir = Pathname.new( __FILE__ ).dirname.parent.parent
-	
+
 	libdir = basedir + 'lib'
 	extdir = basedir + 'ext'
-	
+
 	$LOAD_PATH.unshift( libdir.to_s ) unless $LOAD_PATH.include?( libdir.to_s )
 	$LOAD_PATH.unshift( extdir.to_s ) unless $LOAD_PATH.include?( extdir.to_s )
 }
@@ -26,7 +26,7 @@ describe LinkParser::ParseOptions do
 	before( :each ) do
 		@opts = LinkParser::ParseOptions.new
 	end
-	
+
 
 	it "starts out with documented defaults" do
 		@opts.verbosity.should              == 1		# Docs say this is 0
@@ -59,11 +59,11 @@ describe LinkParser::ParseOptions do
 	it "knows whether the timer constraints were exceeded or not" do
 		@opts.timer_expired?.should == false
 	end
-	
+
 	it "knows whether the memory constraints were exceeded or not" do
 		@opts.memory_exhausted?.should == false
 	end
-	
+
 	it "knows whether the timer constraints were exceeded or not" do
 		@opts.resources_exhausted?.should == false
 	end
@@ -76,7 +76,7 @@ describe LinkParser::ParseOptions do
 
 
 	describe "in versions of link-grammar >= 4.5.0" do
-	
+
 		before( :each ) do
 			version_vec = LinkParser.link_grammar_version[/(\d+\.\d+\.\d+)/, 1].
 				split('.').collect {|v| v.to_i }.pack('n*')
@@ -87,6 +87,6 @@ describe LinkParser::ParseOptions do
 			@opts.spell_guessing_enabled?.should == true
 		end
 	end
-	
+
 end
 
