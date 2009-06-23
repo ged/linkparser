@@ -1,3 +1,27 @@
+-- Fri, 19 Jun 2009 15:09:50 -0000 by deveiant (r58) -----
+   Changed: README
+            spec/bugfixes_spec.rb
+            spec/linkparser/sentence_spec.rb
+            spec/linkparser/dictionary_spec.rb
+            spec/linkparser/parseoptions_spec.rb
+            spec/linkparser/linkage_spec.rb (and 1 other/s)
+
+   Fixed problems with the specs run on systems with non-English locales (fixes #7).
+
+
+-- Fri, 19 Jun 2009 14:38:45 -0000 by deveiant (r57) -----
+   Added:   link-grammar-4.5.7.tar.gz
+            -> renamed from /trunk/link-grammar-4.5.6.tar.gz@r56
+   Changed: README
+            Rakefile
+            INSTALL
+            ChangeLog
+   Deleted: link-grammar-4.5.6.tar.gz
+
+    * Updated build system
+    * Updated included link-grammar library to latest (4.5.7)
+
+
 -- Tue, 09 Jun 2009 06:21:42 -0000 by deveiant (r55) -----
    Changed: README
             INSTALL
@@ -13,7 +37,7 @@
 
 
 -- Wed, 03 Jun 2009 12:52:13 -0000 by deveiant (r53) -----
-   Added:   link-grammar-4.5.7.tar.gz
+   Added:   link-grammar-4.5.6.tar.gz
             -> renamed from /trunk/link-grammar-4.4.1.tar.gz@r51
    Changed: lib/linkparser.rb
             spec/linkparser/sentence_spec.rb
@@ -22,7 +46,7 @@
             spec/linkparser/parseoptions_spec.rb
             ChangeLog (and 5 other/s)
 
-    * Updated to link-grammar-4.5.7.
+    * Updated to link-grammar-4.5.6.
     * Added support for ParseOptions#spell_guessing_enabled
     * Fixed buggy sentence behavior when the underlying Sentence hadn't yet been parsed.
     * Made the exception raised when a delegated linkage method is called on a Sentence
