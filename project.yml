@@ -1,4 +1,6 @@
 --- 
+excluded_pkgfiles: []
+
 rubyforge_project: linkparser
 project_requirements: 
   link-grammar: ">= 4.4.3"
@@ -10,7 +12,6 @@ project_description: |-
   http://www.abisource.org/projects/link-grammar/ for information
   about the link-grammar library.
 rubyforge_group: deveiate
-author_name: Michael Granger
 project_pubhost: deveiate.org
 project_homepage: http://deveiate.org/projects/Ruby-LinkParser/
 project_dependencies: {}
@@ -22,5 +23,7 @@ additional_pkgfiles: []
 
 dev_dependencies: {}
 
-author_email: ged@FaerieMUD.org
+authors: 
+  Martin Chase: stillflame@FaerieMUD.org
+  Michael Granger: ged@FaerieMUD.org
 post_install_message: ""
