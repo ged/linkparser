@@ -9,10 +9,10 @@
 BEGIN {
 	require 'pathname'
 	basedir = Pathname.new( __FILE__ ).dirname.parent.parent
-	
+
 	libdir = basedir + 'lib'
 	extdir = basedir + 'ext'
-	
+
 	$LOAD_PATH.unshift( libdir.to_s ) unless $LOAD_PATH.include?( libdir.to_s )
 	$LOAD_PATH.unshift( extdir.to_s ) unless $LOAD_PATH.include?( extdir.to_s )
 }
@@ -31,7 +31,7 @@ describe LinkParser::Linkage do
 		@sentence = @dict.parse( "The flag was wet." )
 		@linkage = @sentence.linkages.first
 	end
-	
+
 
 	#     +-------------Xp-------------+
 	#     +-----Wd-----+               |
@@ -44,14 +44,14 @@ describe LinkParser::Linkage do
 		@linkage.diagram.should =~ /flag\.n/
 		@linkage.diagram.should =~ /was\.v/
 		@linkage.diagram.should =~ /wet\.a/
-		
+
 		@linkage.diagram.should =~ /-Xp-/
 		@linkage.diagram.should =~ /-Wd-/
 		@linkage.diagram.should =~ /-Ds-/
 		@linkage.diagram.should =~ /-Ss-/
 		@linkage.diagram.should =~ /-Pa-/
 	end
-	
+
 
 	 #       LEFT-WALL      Xp      <---Xp---->  Xp        .
 	 # (m)   LEFT-WALL      Wd      <---Wd---->  Wd        flag.n
@@ -89,8 +89,8 @@ describe LinkParser::Linkage do
 		@linkage.words.should include(".")
 		@linkage.words.should include("RIGHT-WALL")
 	end
-	
-	
+
+
 	it "knows how many links are in the sentence" do
 		@linkage.num_links.should == 6
 	end
@@ -116,7 +116,7 @@ describe LinkParser::Linkage do
 		@linkage.link_lword( 5 ).should == @linkage.words.index('.')
 
 	end
-	
+
 	it "can return the right word for any of its links" do
 	 	#       LEFT-WALL      Xp      <---Xp---->  Xp        .
 		@linkage.link_rword( 0 ).should == @linkage.words.index('.')
@@ -150,8 +150,8 @@ describe LinkParser::Linkage do
 		# Out-of-bounds just returns -1
 		@linkage.link_length( 7 ).should == -1
 	end
-	
-	
+
+
 	it "can return labels for any of its links" do
 		@linkage.link_label( 0 ).should == "Xp"
 		@linkage.link_label( 1 ).should == "Wd"
@@ -162,7 +162,7 @@ describe LinkParser::Linkage do
 
 		@linkage.link_label( 7 ).should be_nil
 	end
-	
+
 
 	it "can return left labels for any of its links" do
 		@linkage.link_llabel( 0 ).should == "Xp"
@@ -174,7 +174,7 @@ describe LinkParser::Linkage do
 
 		@linkage.link_llabel( 7 ).should be_nil
 	end
-	
+
 
 	it "can return labels for any of its links" do
 		@linkage.link_rlabel( 0 ).should == "Xp"
@@ -186,8 +186,8 @@ describe LinkParser::Linkage do
 
 		@linkage.link_rlabel( 7 ).should be_nil
 	end
-	
-	
+
+
 	it "can return the number of domains for any link" do
 		@linkage.link_num_domains( 0 ).should == 0
 		1.upto(4) do |i|
@@ -197,25 +197,35 @@ describe LinkParser::Linkage do
 
 		@linkage.link_num_domains( 112 ).should == -1
 	end
-	
-	
+
+
 	it "can return the names of the domains of any of its links" do
 		@linkage.link_domain_names( 0 ).should be_an_instance_of( Array )
 		@linkage.link_domain_names( 0 ).should be_empty
-		
+
 		1.upto(4) do |i|
 			@linkage.link_domain_names( i ).should be_an_instance_of( Array )
 			@linkage.link_domain_names( i ).should == ["m"]
 		end
-		
+
 		@linkage.link_domain_names( 5 ).should be_an_instance_of( Array )
 		@linkage.link_domain_names( 5 ).should be_empty
-		
+
 		@linkage.link_domain_names( 12 ).should be_an_instance_of( Array )
 		@linkage.link_domain_names( 12 ).should be_empty
 	end
 
-	
+
+	it "can return the disjunct strings for any of its words" do
+		@linkage.disjunct_strings.should have( @linkage.num_words ).members
+	end
+
+
+	it "can return parsed disjuncts for any of its words" do
+		@linkage.disjuncts.should have( @linkage.num_words ).members
+	end
+
+
 	it "can report on the various cost metrics of the parse" do
 		@linkage.unused_word_cost.should be_an_instance_of( Fixnum )
 		@linkage.disjunct_cost.should be_an_instance_of( Fixnum )
@@ -244,7 +254,7 @@ describe LinkParser::Linkage do
 	it "contains link structs describing the linkage" do
 		@linkage.should have(6).links
 		@linkage.links.should be_an_instance_of( Array )
-		
+
 		@linkage.links.each do |link|
 			link.should be_a_kind_of( Struct )
 		end
@@ -267,7 +277,13 @@ describe LinkParser::Linkage do
 	it "knows when the sentence doesn't have a direct object" do
 		@linkage.object.should be_nil()
 	end
-	
+
+
+	it "knows which of its words are nouns" do
+		@linkage.nouns.should have(1).member
+		@linkage.nouns.should include( "flag" )
+	end
+
 
 	MODE1_C_TREE_STRING = "(S (NP The flag)\n   (VP was\n       (ADJP wet))\n   .)\n"
 	MODE2_C_TREE_STRING = "[S [NP The flag NP] [VP was [ADJP wet ADJP] VP] . S] \n"
@@ -276,27 +292,27 @@ describe LinkParser::Linkage do
 	it "returns an indented sexps for the constituent tree string by default (mode 1)" do
 		@linkage.constituent_tree_string.should == MODE1_C_TREE_STRING
 	end
-	
+
 
 	it "returns indented sexps for the constituent tree string if fetched with explicit mode '1'" do
 		@linkage.constituent_tree_string( 1 ).should == MODE1_C_TREE_STRING
 	end
-	
+
 	it "returns bracketed constituents if constituent tree string is fetched in mode 2" do
 		@linkage.constituent_tree_string( 2 ).should == MODE2_C_TREE_STRING
 	end
-	
+
 	it "returns unindented sexps for the constituent tree string if constituent tree string " +
 	   "is fetched in mode 3" do
 		@linkage.constituent_tree_string( 3 ).should == MODE3_C_TREE_STRING
 	end
-	
+
 	it "raises an exception for any numeric constituent tree string mode greater than 3" do
 		lambda {
 			@linkage.constituent_tree_string( 4 )
 		}.should raise_error( ArgumentError, /illegal mode 4/i )
 	end
-	
+
 	it "raises an exception for any numeric constituent tree string mode less than 1" do
 		lambda {
 			@linkage.constituent_tree_string( 0 )
@@ -309,10 +325,10 @@ describe LinkParser::Linkage do
 			@linkage.constituent_tree_string( 'glarg' )
 		}.should raise_error( TypeError )
 	end
-	
+
 	it "returns an Array of CTree structs for its constituent tree" do
 		rval = @linkage.constituent_tree
-		
+
 		rval.should be_an_instance_of( Array )
 		rval.should have(1).members
 		rval.first.should be_a_kind_of( Struct )
@@ -320,7 +336,7 @@ describe LinkParser::Linkage do
 		rval.first.children.should have(3).members
 		rval.first.children.collect {|n| n.label }.should include( 'NP', 'VP', '.' )
 	end
-	
+
 	it "returns 0 as the number of the current sublinkage since it has no conjunctions" do
 	    @linkage.current_sublinkage.should == 0 
 	end
@@ -329,8 +345,8 @@ describe LinkParser::Linkage do
 	it "returns an informational string when inspected" do
 		@linkage.inspect.should =~ /Linkage:0x[[:xdigit:]]+: sublinkage 0: \[\d+ links\]/
 	end
-	
-	
+
+
 	describe "from a simple sentence with a direct object" do
 		before( :each ) do
 			@sentence = @dict.parse( "The dog ran home." )
@@ -341,7 +357,7 @@ describe LinkParser::Linkage do
 		it "doesn't have any sublinkages" do
 			@linkage.num_sublinkages.should == 1
 		end
-	
+
 		it "doesn't change after computing its union" do
 			lambda {
 				@linkage.compute_union
@@ -352,14 +368,14 @@ describe LinkParser::Linkage do
 		it "knows what word is the object in the sentence" do
 			@linkage.object.should == 'home'
 		end
-	
+
 	end
 
 
 	it "knows that it doesn't have any conjunctions" do
 		@linkage.should_not have_conjunction()
 	end
-	
+
 
 	describe "from a sentence with a conjunction" do
 		before( :each ) do
@@ -372,11 +388,11 @@ describe LinkParser::Linkage do
 		it "knows that it has a conjunction" do
 			@linkage.should have_conjunction()
 		end
-	
+
 		it "has two sublinkages" do
 			@linkage.num_sublinkages.should == 2
 		end
-	
+
 
 		it "adds a sublinkage after computing its union" do
 			lambda {
@@ -390,21 +406,21 @@ describe LinkParser::Linkage do
 			@linkage.current_sublinkage = 1
 			@linkage.verb.should == 'bumped'
 		end
-	
+
 
 		it "knows what word is the object in the current sublinkage" do
 			@linkage.object.should == 'hill'
 			@linkage.current_sublinkage = 1
 			@linkage.object.should == 'curb'
 		end
-	
+
 	end
 
 
 	it "should know that it's not an imperative sentence" do
 		@linkage.imperative?.should be_false()
 	end
-	
+
 
 	describe "from an imperative sentence" do
 		before( :each ) do
@@ -416,19 +432,19 @@ describe LinkParser::Linkage do
 		it "knows that it's an imperative sentence" do
 			@linkage.imperative?.should be_true()
 		end
-		
-		
+
+
 	end
 
 
 	describe "bugfixes" do
-		
+
 		it "also strips off the '.p' from the subject and object when they are plural" do
 			sent = @dict.parse( 'People like goats.' )
 			sent.subject.should_not =~ /people\.p/i
 			sent.object.should_not =~ /goats\.p/i
 		end
-		
+
 	end
 
 end

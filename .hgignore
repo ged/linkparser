@@ -4,3 +4,4 @@
 ^ext/Makefile$
 link-grammar-[\d.]+/
 ^commit\-msg\.txt$
+docs
