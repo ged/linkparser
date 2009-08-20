@@ -1,0 +1,6 @@
+\.o$
+\.log$
+\.(bundle|so|dll)$
+^ext/Makefile$
+link-grammar-[\d.]+/
+^commit\-msg\.txt$
