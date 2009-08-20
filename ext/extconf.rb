@@ -50,6 +50,12 @@ unless have_func( "linkgrammar_get_version" )
 	message "Trying to build anyway.\n"
 end
 
+unless have_func( "linkage_free_links_and_domains" )
+	message "You are building with an older, unsupported version of the link-grammar\n"
+	message " library. If you encounter problems, please update it to 4.4.0 or later.\n"
+	message "Trying to build anyway.\n"
+end
+
 have_func( 'parse_options_get_spell_guess' )
 
 create_makefile( 'linkparser_ext' )

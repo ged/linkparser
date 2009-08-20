@@ -161,7 +161,7 @@ class LinkParser::Linkage
 
 	# Link struct (:lword, :rword, :length, :label, :llabel, :rlabel, :desc)
 	Link = Struct.new( "LinkParserLink", :lword, :rword, :length, :label, :llabel, :rlabel, :desc )
-	
+
 
 	######
 	public
@@ -190,7 +190,7 @@ class LinkParser::Linkage
 			LINK_TYPES[ self.link_label(index).gsub(/[^A-Z]+/, '').to_sym ]
 		)
 	end
-	
+
 
 	### Return the Array of words in the sentence as tokenized by the
 	### parser.
@@ -220,7 +220,7 @@ class LinkParser::Linkage
 		link = self.links.find {|link| link.llabel[0] == ?S } or return nil
 		return link.lword.sub( /\.[np]$/, '' )
 	end
-	
+
 
 	### Return the object from the linkage.
 	def object
@@ -235,14 +235,14 @@ class LinkParser::Linkage
 		return self.links.find {|link| link.label == 'Wi' && link.rword =~ /\.v$/ } ?
 			true : false
 	end
-	
-	
+
+
 	### Returns +true+ if the linkage has more than one sublinkage (i.e., the 
 	### sentence has a conjunction).
 	def has_conjunction?
 		return self.num_sublinkages > 1
 	end
-	
+
 
 end # class Sentence
 

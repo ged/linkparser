@@ -78,8 +78,8 @@ class LinkParser::Sentence
 	def to_s
 		return self.words.join(" ")
 	end
-	
-	
+
+
 	#########
 	protected
 	#########
@@ -88,7 +88,7 @@ class LinkParser::Sentence
 	def singleton_class
 		class << self; self; end
 	end
-	
+
 
 	### Proxy method -- auto-delegate calls to the first linkage.
 	def method_missing( sym, *args )
@@ -99,10 +99,10 @@ class LinkParser::Sentence
 			LinkParser::Linkage.instance_methods.include?( sym )
 
 		linkage = self.linkages.first or raise LinkParser::Error, "sentence has no linkages"
-		
+
 		meth = linkage.method( sym )
 		self.singleton_class.send( :define_method, sym, &meth )
-		
+
 		meth.call( *args )
 	rescue => err
 		raise err, err.message, err.backtrace[ 0..-2 ]
