@@ -444,6 +444,43 @@ rlink_linkage_get_link_rlabel( VALUE self, VALUE index ) {
 
 
 /*
+ *  disjunct_strings -> array
+ *
+ *  Return an Array of Strings showing the disjuncts that were actually used in association 
+ *  with each corresponding word in the current linkage. Each string shows the disjuncts 
+ *  in proper order; that is, left-to-right, in the order in which they link to other words. 
+ *  The returned strings can be thought of as a very precise part-of-speech-like label for
+ *  each word, indicating how it was used in the given sentence; this can be useful
+ *  for corpus statistics.
+ *  
+ *  For a parsed version of the disjunct strings, call #disjuncts instead.
+ *
+ */
+static VALUE
+rlink_linkage_get_disjunct_strings( VALUE self ) {
+	rlink_LINKAGE *ptr = get_linkage( self );
+	const char *disjunct;
+	int count, i;
+	VALUE disjuncts_ary;
+	
+	count = linkage_get_num_words( (Linkage)ptr->linkage );
+	disjuncts_ary = rb_ary_new2( count );
+	
+	for ( i = 0; i < count; i++ ) {
+		disjunct = linkage_get_disjunct( (Linkage)ptr->linkage, i );
+		if ( disjunct ) {
+			rb_ary_store( disjuncts_ary, i, rb_str_new2(disjunct) );
+			
+		} else {
+			rb_ary_store( disjuncts_ary, i, Qnil );
+		}
+	}
+	
+	return disjuncts_ary;
+}
+
+
+/*
  *  call-seq:
  *     link_num_domains( index )   -> fixnum
  *
@@ -702,12 +739,14 @@ rlink_linkage_get_violation_name( VALUE self ) {
  *  call-seq:
  *     linkage.constituent_tree   -> hash
  *
- *  Return the Linkage's constituent tree as a hash of hashes.
+ *  Return the Linkage's constituent tree as a Array of hierarchical "CTree" structs.
  *
  *     sent = dict.parse( "He is a big dog." )
  *     link = sent.linkages.first
  *     ctree = link.constituent_tree
- *     #=> {}
+ *     # => [#<struct Struct::LinkParserLinkageCTree label="S", 
+ *               children=[#<struct Struct::LinkParserLinkageCTree label="NP">, ...],
+ *               start=0, end=5>]
  *     
  */
 static VALUE
@@ -772,8 +811,8 @@ rlink_linkage_make_cnode_array( CNode *ctree ) {
  *     sent = dict.parse( "He is a big dog." )
  *     link = sent.linkages.first
  *     link.constituent_tree_string
- #  
- #  # ==> "(S (NP He)\n   (VP is\n       (NP a big dog))\n   .)\n"
+ *     
+ *     # ==> "(S (NP He)\n   (VP is\n       (NP a big dog))\n   .)\n"
  */
 static VALUE
 rlink_linkage_constituent_tree_string( int argc, VALUE *argv, VALUE self ) {
@@ -859,8 +898,8 @@ rlink_init_linkage() {
 	rb_define_method( rlink_cLinkage, "link_domain_names",
 	 	rlink_linkage_get_link_domain_names, 1 );
 	
-	rb_define_method( rlink_cLinkage, "words",
-	 	rlink_linkage_get_words, 0 );
+	rb_define_method( rlink_cLinkage, "words", rlink_linkage_get_words, 0 );
+	rb_define_method( rlink_cLinkage, "disjunct_strings", rlink_linkage_get_disjunct_strings, 0 );
 
 	rb_define_method( rlink_cLinkage, "compute_union",
 	 	rlink_linkage_compute_union, 0 );
@@ -883,9 +922,9 @@ rlink_init_linkage() {
 
 	/* Struct that contains links of a constituent tree (:label, :children, :start, :end) */
 	rb_define_const( rlink_cLinkage, "CTree", rlink_sLinkageCTree );
-
 	rlink_sLinkageCTree = rb_struct_define( "LinkParserLinkageCTree", 
 		"label", "children", "start", "end", NULL );
+
 	rb_define_method( rlink_cLinkage, "constituent_tree",
 		rlink_linkage_constituent_tree, 0 );
 	rb_define_method( rlink_cLinkage, "constituent_tree_string",

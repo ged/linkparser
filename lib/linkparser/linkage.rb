@@ -43,12 +43,6 @@ require 'linkparser'
 ### Additional high-level functionality for LinkParser::Sentence objects.
 class LinkParser::Linkage
 
-	# SVN Revision
-	SVNRev = %q$Rev$
-
-	# SVN Id
-	SVNId = %q$Id$
-
 	# Descriptions of the linkage types, keyed by linkage symbol
 	LINK_TYPES = {
 		:A  => %{connects pre-noun ("attributive") adjectives to following nouns: "The BIG DOG chased me", "The BIG BLACK UGLY DOG chased me".},
@@ -163,6 +157,7 @@ class LinkParser::Linkage
 	Link = Struct.new( "LinkParserLink", :lword, :rword, :length, :label, :llabel, :rlabel, :desc )
 
 
+
 	######
 	public
 	######
@@ -195,8 +190,21 @@ class LinkParser::Linkage
 	### Return the Array of words in the sentence as tokenized by the
 	### parser.
 	def links
-		( 0...self.link_count ).collect do |i|
+		return ( 0...self.link_count ).collect do |i|
 			self.link( i )
+		end
+	end
+
+
+	### Return an Array of parsed (well, just split on whitespace for now) disjunct strings 
+	### for the linkage.
+	def disjuncts
+		return self.disjunct_strings.collect do |dstr|
+			if dstr.nil?
+				nil
+			else
+				dstr.split
+			end
 		end
 	end
 
@@ -226,6 +234,18 @@ class LinkParser::Linkage
 	def object
 		link = self.links.find {|link| link.rlabel[0] == ?O } or return nil
 		return link.rword.sub( /\.[np]$/, '' )
+	end
+
+
+	### Return an Array of all the nouns in the linkage.
+	def nouns
+		nouns = []
+		self.links.each do |link|
+			nouns << $1 if link.lword =~ /^(.*)\.n$/
+			nouns << $1 if link.rword =~ /^(.*)\.n$/
+		end
+
+		return nouns.uniq
 	end
 
 
