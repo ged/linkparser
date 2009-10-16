@@ -467,7 +467,11 @@ rlink_linkage_get_disjunct_strings( VALUE self ) {
 	disjuncts_ary = rb_ary_new2( count );
 	
 	for ( i = 0; i < count; i++ ) {
+#ifdef HAVE_LINKAGE_GET_DISJUNCT_STR
+		disjunct = linkage_get_disjunct_str( (Linkage)ptr->linkage, i );
+#else
 		disjunct = linkage_get_disjunct( (Linkage)ptr->linkage, i );
+#endif
 		if ( disjunct ) {
 			rb_ary_store( disjuncts_ary, i, rb_str_new2(disjunct) );
 			
