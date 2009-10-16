@@ -57,5 +57,6 @@ unless have_func( "linkage_free_links_and_domains" )
 end
 
 have_func( 'parse_options_get_spell_guess' )
+have_func( 'linkage_get_disjunct_str' )
 
 create_makefile( 'linkparser_ext' )

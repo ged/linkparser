@@ -5,3 +5,4 @@
 link-grammar-[\d.]+/
 ^commit\-msg\.txt$
 docs
+^ext/conftest\.dSYM
