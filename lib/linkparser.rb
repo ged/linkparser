@@ -3,36 +3,30 @@
 require 'linkparser_ext'
 
 
-#  The LinkParser top-level namespace.
+# The LinkParser top-level namespace.
 #  
-#  == Authors
+# == Authors
 #  
 #  * Michael Granger <ged@FaerieMUD.org>
 #  * Martin Chase <stillflame@FaerieMUD.org>
 #  
-#  == Version
+# == Version
 # 
 #   $Id$
 #  
-#  == License
+# == License
 # 
-#  :include: LICENSE
+# :include: LICENSE
 #--
 #  
-#  See the LICENSE file for copyright/licensing information.
+# See the LICENSE file for copyright/licensing information.
 module LinkParser
 
 	require 'linkparser/sentence'
 	require 'linkparser/linkage'
 
 	# Release version
-	VERSION = '1.0.5'
-
-	# SVN Revision
-	SVNRev = %q$Rev$
-
-	# SVN Id
-	SVNId = %q$Id$
+	VERSION = '1.0.6'
 
 end # class LinkParser
 

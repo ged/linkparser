@@ -1,5 +1,7 @@
 #!rake
 
+require 'rake/extensiontask'
+
 # C extension constants
 EXT_MAKEFILE  = EXTDIR + 'Makefile'
 EXT_SOURCES   = FileList[ EXTDIR + '*.c' ]
@@ -11,55 +13,21 @@ EXT_SO        = EXTDIR + "linkparser_ext.#{CONFIG['DLEXT']}"
 #####################################################################
 
 # Make both the default task and the spec task depend on building the extension
-task :local => :build
-task :spec => :build
+task :local => :compile
+task :spec => :compile
 namespace :spec do
-	task :doc   => [ :build ]
-	task :quiet => [ :build ]
-	task :html  => [ :build ]
-	task :text  => [ :build ]
+	task :doc   => [ :compile ]
+	task :quiet => [ :compile ]
+	task :html  => [ :compile ]
+	task :text  => [ :compile ]
 end
 
-desc "Make the Makefile for the C extension"
-file EXT_MAKEFILE.to_s => EXT_SOURCES do
-	log "Configuring linkparser C extension"
-	in_subdirectory( EXTDIR ) do
-		ruby 'extconf.rb'
-	end
-end
-CLOBBER.include( EXTDIR + 'mkmf.log', EXT_SO )
-
-desc "Build the C extension"
-task :build => [ EXT_MAKEFILE.to_s, *EXT_SOURCES ] do
-	in_subdirectory( EXTDIR ) do
-		sh 'make'
-	end
+Rake::ExtensionTask.new( 'linkparser_ext', GEMSPEC ) do |ext|
+	ext.ext_dir = 'ext'
+	ext.lib_dir = 'ext'
+	ext.source_pattern = "*.{c,h}"
+	ext.cross_compile = true
+	ext.cross_platform = 'i386-mswin32'
 end
 
-
-desc "Rebuild the C extension"
-task :rebuild => [ :clean, :build ]
-
-
-task :clean do
-	if EXT_MAKEFILE.exist?
-		in_subdirectory( EXTDIR ) do
-			sh 'make clean'
-		end
-	end
-end	
-
-task :clobber do
-	if EXT_MAKEFILE.exist?
-		in_subdirectory( EXTDIR ) do
-			sh 'make distclean'
-		end
-	end
-end	
-CLOBBER.include( EXT_MAKEFILE )
-
-task :debug do
-	log "Setting $DEBUG to true"
-	$DEBUG = true
-end
 
