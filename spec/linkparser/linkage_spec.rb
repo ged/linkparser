@@ -84,7 +84,7 @@ describe LinkParser::Linkage do
 		@linkage.words.should include("LEFT-WALL")
 		@linkage.words.should include("the")
 		@linkage.words.should include("flag.n")
-		@linkage.words.should include("was.v")
+		@linkage.words.should include("was.v-d")
 		@linkage.words.should include("wet.a")
 		@linkage.words.should include(".")
 		@linkage.words.should include("RIGHT-WALL")
@@ -110,7 +110,7 @@ describe LinkParser::Linkage do
 		@linkage.link_lword( 3 ).should == @linkage.words.index('flag.n')
 
 		# (m)   was.v          Pa      <---Pa---->  Pa        wet.a
-		@linkage.link_lword( 4 ).should == @linkage.words.index('was.v')
+		@linkage.link_lword( 4 ).should == @linkage.words.index('was.v-d')
 
 		#       .              RW      <---RW---->  RW        RIGHT-WALL
 		@linkage.link_lword( 5 ).should == @linkage.words.index('.')
@@ -128,7 +128,7 @@ describe LinkParser::Linkage do
 		@linkage.link_rword( 2 ).should == @linkage.words.index('flag.n')
 
 		# (m)   flag.n         Ss      <---Ss---->  Ss        was.v
-		@linkage.link_rword( 3 ).should == @linkage.words.index('was.v')
+		@linkage.link_rword( 3 ).should == @linkage.words.index('was.v-d')
 
 		# (m)   was.v          Pa      <---Pa---->  Pa        wet.a
 		@linkage.link_rword( 4 ).should == @linkage.words.index('wet.a')
@@ -264,7 +264,7 @@ describe LinkParser::Linkage do
 		@linkage.links.last.rword.should == 'RIGHT-WALL'
 		@linkage.links.last.label.should == 'RW'
 		@linkage.links[3].lword.should == 'flag.n'
-		@linkage.links[3].rword.should == 'was.v'
+		@linkage.links[3].rword.should == 'was.v-d'
 		@linkage.links[3].label.should == 'Ss'
 	end
 
@@ -366,7 +366,15 @@ describe LinkParser::Linkage do
 
 
 		it "knows what word is the object in the sentence" do
-			@linkage.object.should == 'home'
+			# This depends on the linkage:
+			#       +---------------Xp---------------+
+			#       +-----Wd----+                    |
+			#       |      +-Ds-+--Ss--+---Ou---+    |
+			#       |      |    |      |        |    |
+			#   LEFT-WALL the dog.n ran.v-d home.n-u . 
+			# ...but it might not be the first one, so check them all.
+			@sentence.linkages.find {|linkage| linkage.object == 'home' }
+
 		end
 
 	end

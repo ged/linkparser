@@ -1,23 +1,22 @@
 --- 
 excluded_pkgfiles: []
 
-rubyforge_project: linkparser
+project_pubdir: /usr/local/www/public/code
+project_pubhost: deveiate.org
+project_homepage: http://deveiate.org/projects/Ruby-LinkParser/
 project_requirements: 
   link-grammar: ">= 4.4.3"
-project_pubdir: /usr/local/www/public/code
+release_smtphost: mail.faeriemud.org
 project_description: |-
   A Ruby binding for the link-grammar library, a syntactic parser
   of English. See http://www.link.cs.cmu.edu/link/ for more
   information about the Link Grammar, and
   http://www.abisource.org/projects/link-grammar/ for information
   about the link-grammar library.
-rubyforge_group: deveiate
-project_pubhost: deveiate.org
-project_homepage: http://deveiate.org/projects/Ruby-LinkParser/
+release_mailto: Ruby-Talk List <ruby-talk@ruby-lang.org>
 project_dependencies: {}
 
 project_summary: a Ruby binding for the link-grammar library
-project_name: LinkParser
 version_file: linkparser.rb
 additional_pkgfiles: []
 
@@ -27,3 +26,4 @@ authors:
   Martin Chase: stillflame@FaerieMUD.org
   Michael Granger: ged@FaerieMUD.org
 post_install_message: ""
+project_name: LinkParser

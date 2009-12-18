@@ -105,13 +105,44 @@ rlink_make_oldstyle_dict( VALUE dict_file, VALUE pp_file, VALUE cons_file, VALUE
 
 /*
  *  call-seq:
- *    LinkParser::Dictionary.new( options={} )
- *    LinkParser::Dictionary.new( language, options={} )
- *    LinkParser::Dictionary.new( dict, pp, ck, affix, option={} )
- * 
- *  Create a new LinkParser::Dictionary with data files for the given +language+, or
- *  using the specified data files.
+ *      LinkParser::Dictionary.new( *args )                        -> dict
  *
+ * Create a new LinkParser::Dictionary.
+ * 
+ * The preferred way to set up the dictionary is to call it with no
+ * arguments, which will look for a dictionary with the same language
+ * as the current environment. Alternatively, a fixed language can be
+ * specified by specifying an ISO639 language code, for example,
+ * <tt>LinkParser::Dictionary.new( :en )</tt>.
+ * 
+ * Explicit dictionary file names can be also specified, like so:
+ *     
+ *     Dictionary.new( dict_file,
+ *                     post_process_file,
+ *                     constituent_knowledge_file,
+ *                     affix_file )
+ *     
+ * This mode of dictionary construction is not recommended for new 
+ * development, and is intended for advanced users only. To create the 
+ * dictionary, the Dictionary looks in the current directory and the data 
+ * directory for the files +dict_file+, +post_process_file+,
+ * +constituent_knowledge_file+, and +affix_file+. The last three entries
+ * may be omitted. If +dict_file+ is a fully specified path name, then
+ * the other file names, which need not be fully specified, will be
+ * prefixed by the directory specified by +dict_file+.
+ * 
+ * In any case, a Hash of options can be specified which will be used
+ * as default ParseOption attributes for any sentences created from
+ * it.
+ *
+ *  Examples:
+ *      dict = LinkParser::Dictionary.new
+ *      
+ *      dict = LinkParser::Dictionary.new( :de )
+ *      
+ *      dict = LinkParser::Dictionary.new( '/var/data/custom_dicts/4.2.dict' )
+ *      
+ * 
  */
 static VALUE
 rlink_dict_initialize( int argc, VALUE *argv, VALUE self ) {
@@ -254,6 +285,10 @@ rlink_parse( int argc, VALUE *argv, VALUE self ) {
  */
 void
 rlink_init_dict() {
+#ifdef FOR_RDOC
+	rlink_mLinkParser = rb_define_module( "LinkParser" );
+#endif
+
 	rlink_cDictionary = rb_define_class_under( rlink_mLinkParser, "Dictionary",
 	 	rb_cObject );
 	
