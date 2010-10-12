@@ -157,7 +157,7 @@ class LinkParser::Linkage
 
 	### Return the +index+th link.
 	def link( index )
-		Link.new( 
+		Link.new(
 			self.words[ self.link_lword(index) ],
 			self.words[ self.link_rword(index) ],
 			self.link_length(index),

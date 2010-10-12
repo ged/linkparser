@@ -29,16 +29,16 @@
 /*
  * Allocation function
  */
-static rlink_SENTENCE *
+static struct rlink_sentence *
 rlink_sentence_alloc() {
-	rlink_SENTENCE *ptr = ALLOC( rlink_SENTENCE );
-	
+	struct rlink_sentence *ptr = ALLOC( struct rlink_sentence );
+
 	ptr->sentence	= NULL;
 	ptr->dictionary	= Qnil;
 	ptr->parsed_p	= Qfalse;
 	ptr->options	= Qnil;
-	
-	debugMsg(( "Initialized an rlink_SENTENCE <%p>", ptr ));
+
+	debugMsg(( "Initialized an rlink_sentence <%p>", ptr ));
 	return ptr;
 }
 
@@ -47,16 +47,16 @@ rlink_sentence_alloc() {
  * GC Mark function
  */
 static void
-rlink_sentence_gc_mark( rlink_SENTENCE *ptr ) {
+rlink_sentence_gc_mark( struct rlink_sentence *ptr ) {
 	debugMsg(( "Marking LinkParser::Sentence %p", ptr ));
-	
+
 	if ( ptr ) {
 		rb_gc_mark( ptr->dictionary );
 		rb_gc_mark( ptr->options );
 	}
-	
+
 	else {
-		debugMsg(( "Not marking uninitialized rlink_SENTENCE" ));
+		debugMsg(( "Not marking uninitialized rlink_sentence struct" ));
 	}
 }
 
@@ -65,24 +65,35 @@ rlink_sentence_gc_mark( rlink_SENTENCE *ptr ) {
  * GC Free function
  */
 static void
-rlink_sentence_gc_free( rlink_SENTENCE *ptr ) {
+rlink_sentence_gc_free( struct rlink_sentence *ptr ) {
 	if ( ptr ) {
 		debugMsg(( "In free function of Sentence <%p>", ptr ));
-		
-		if ( rlink_get_dict(ptr->dictionary) ) {
-			debugMsg(( "Freeing Sentence <%p>", ptr->sentence ));
-			sentence_delete( (Sentence)ptr->sentence );
+
+		if ( ptr->dictionary && TYPE(ptr->dictionary) == T_DATA ) {
+			struct rlink_dictionary *dictionary = rlink_get_dict( ptr->dictionary );
+			debugMsg(( "  sentence's dictionary is: <%p>", dictionary ));
+
+			/* Freeing the dictionary automatically frees the sentences it belongs to, so
+			   don't double-free if the dictionary struct or its pointer is done. */
+			if ( dictionary->dict ) {
+				debugMsg(( "  deleting Sentence <%p>", ptr->sentence ));
+				sentence_delete( (Sentence)ptr->sentence );
+			}
 		} else {
-			debugMsg(( "Not freeing a Sentence belonging to an already-freed dictionary." ));
+			debugMsg(( "  not deleting a Sentence belonging to an already-freed dictionary." ));
 		}
 
 		ptr->sentence = NULL;
 		ptr->options = Qnil;
 		ptr->dictionary = Qnil;
+
+		debugMsg(( "  freeing rlink_sentence <%p>", ptr ));
+		xfree( ptr );
+		ptr = NULL;
 	}
-	
+
 	else {
-		debugMsg(( "Not freeing an uninitialized rlink_SENTENCE" ));
+		debugMsg(( "Not freeing an uninitialized rlink_sentence struct" ));
 	}
 }
 
@@ -90,7 +101,7 @@ rlink_sentence_gc_free( rlink_SENTENCE *ptr ) {
 /*
  * Object validity checker. Returns the data pointer.
  */
-static rlink_SENTENCE *
+static struct rlink_sentence *
 check_sentence(  VALUE	self ) {
 	Check_Type( self, T_DATA );
 
@@ -98,7 +109,7 @@ check_sentence(  VALUE	self ) {
 		rb_raise( rb_eTypeError, "wrong argument type %s (expected LinkParser::Sentence)",
 				  rb_class2name(CLASS_OF( self )) );
     }
-	
+
 	return DATA_PTR( self );
 }
 
@@ -106,9 +117,9 @@ check_sentence(  VALUE	self ) {
 /*
  * Fetch the data pointer and check it for sanity.
  */
-static rlink_SENTENCE *
+static struct rlink_sentence *
 get_sentence(  VALUE self ) {
-	rlink_SENTENCE *ptr = check_sentence( self );
+	struct rlink_sentence *ptr = check_sentence( self );
 
 	if ( !ptr )
 		rb_raise( rb_eRuntimeError, "uninitialized Sentence" );
@@ -120,7 +131,7 @@ get_sentence(  VALUE self ) {
 /*
  * Publicly-usable sentence-fetcher
  */
-rlink_SENTENCE *
+struct rlink_sentence *
 rlink_get_sentence( VALUE self ) {
 	return get_sentence( self );
 }
@@ -162,19 +173,19 @@ rlink_sentence_s_alloc(  VALUE klass ) {
 static VALUE
 rlink_sentence_init( VALUE self, VALUE input_string, VALUE dictionary ) {
 	if ( !check_sentence(self) ) {
-		rlink_SENTENCE *ptr;
+		struct rlink_sentence *ptr;
 		Sentence sent;
-		Dictionary dict = rlink_get_dict( dictionary );
-	
-		if ( !(sent = sentence_create( StringValueCStr(input_string), dict )) )
+		struct rlink_dictionary *dictptr = rlink_get_dict( dictionary );
+
+		if ( !(sent = sentence_create( StringValueCStr(input_string), dictptr->dict )) )
 			rlink_raise_lp_error();
 
 		DATA_PTR( self ) = ptr = rlink_sentence_alloc();
-		
+
 		ptr->sentence = sent;
 		ptr->dictionary = dictionary;
 		ptr->options = Qnil;
-		
+
 	} else {
 		rb_raise( rb_eRuntimeError,
 				  "Cannot re-initialize a sentence once it's been created." );
@@ -195,7 +206,7 @@ rlink_sentence_init( VALUE self, VALUE input_string, VALUE dictionary ) {
  */
 static VALUE
 rlink_sentence_parse( int argc, VALUE *argv, VALUE self ) {
-	rlink_SENTENCE *ptr = get_sentence( self );
+	struct rlink_sentence *ptr = get_sentence( self );
 	Parse_Options opts;
 	VALUE defopts = Qnil;
 	VALUE options = Qnil;
@@ -223,7 +234,7 @@ rlink_sentence_parse( int argc, VALUE *argv, VALUE self ) {
 
 	ptr->options = options;
 	ptr->parsed_p = Qtrue;
-	
+
 	return INT2FIX( link_count );
 }
 
@@ -240,7 +251,7 @@ rlink_sentence_parse( int argc, VALUE *argv, VALUE self ) {
  */
 static VALUE
 rlink_sentence_parsed_p( VALUE self ) {
-	rlink_SENTENCE *ptr = get_sentence( self );
+	struct rlink_sentence *ptr = get_sentence( self );
 	return ptr->parsed_p;
 }
 
@@ -256,7 +267,7 @@ rlink_sentence_parsed_p( VALUE self ) {
  */
 static VALUE
 rlink_sentence_options( VALUE self ) {
-	rlink_SENTENCE *ptr = get_sentence( self );
+	struct rlink_sentence *ptr = get_sentence( self );
 	return ptr->options;
 }
 
@@ -273,7 +284,7 @@ rlink_sentence_options( VALUE self ) {
  */
 static VALUE
 rlink_sentence_linkages( VALUE self ) {
-	rlink_SENTENCE *ptr = get_sentence( self );
+	struct rlink_sentence *ptr = get_sentence( self );
 	int i, count = 0;
 	VALUE rary;
 
@@ -282,18 +293,18 @@ rlink_sentence_linkages( VALUE self ) {
 
 	count = sentence_num_valid_linkages( (Sentence)ptr->sentence );
 	rary = rb_ary_new2( count );
-	
+
 	for ( i = 0; i < count; i++ ) {
 		VALUE linkage;
 		VALUE args[2];
-		
+
 		args[0] = INT2FIX( i );
 		args[1] = self;
-		
+
 		linkage = rb_class_new_instance( 2, args, rlink_cLinkage );
 		rb_ary_store( rary, i, linkage );
 	}
-	
+
 	return rary;
 }
 
@@ -309,14 +320,14 @@ rlink_sentence_linkages( VALUE self ) {
 
 static VALUE
 rlink_sentence_length( VALUE self ) {
-	rlink_SENTENCE *ptr = get_sentence( self );
+	struct rlink_sentence *ptr = get_sentence( self );
 
 	if ( !RTEST(ptr->parsed_p) )
 		rlink_sentence_parse( 0, 0, self );
 
 	return INT2FIX( sentence_length((Sentence)ptr->sentence) );
 }
-	
+
 
 /*
  *  call-seq:
@@ -327,9 +338,9 @@ rlink_sentence_length( VALUE self ) {
  */
 static VALUE
 rlink_sentence_word( VALUE self, VALUE n ) {
-	rlink_SENTENCE *ptr = get_sentence( self );
+	struct rlink_sentence *ptr = get_sentence( self );
 	const char *word;
-	
+
 	if ( !RTEST(ptr->parsed_p) )
 		rlink_sentence_parse( 0, 0, self );
 
@@ -349,11 +360,11 @@ rlink_sentence_word( VALUE self, VALUE n ) {
  */
 static VALUE
 rlink_sentence_words( VALUE self ) {
-	rlink_SENTENCE *ptr = get_sentence( self );
+	struct rlink_sentence *ptr = get_sentence( self );
 	const char *word;
 	int i, length;
 	VALUE words = rb_ary_new();
-	
+
 	if ( !RTEST(ptr->parsed_p) )
 		rlink_sentence_parse( 0, 0, self );
 
@@ -363,7 +374,7 @@ rlink_sentence_words( VALUE self ) {
 		debugMsg(( "Word %d: <%s>", i, word ));
 		rb_ary_push( words, rb_str_new2(word) );
 	}
-	
+
 	return words;
 }
 
@@ -406,16 +417,16 @@ rlink_sentence_aref( argc, argv, self )
  */
 static VALUE
 rlink_sentence_null_count( VALUE self ) {
-	rlink_SENTENCE *ptr = get_sentence( self );
+	struct rlink_sentence *ptr = get_sentence( self );
 	int count;
-	
+
 	if ( !RTEST(ptr->parsed_p) )
 		rlink_sentence_parse( 0, 0, self );
 
 	count = sentence_null_count( (Sentence)ptr->sentence );
 	return INT2FIX( count );
 }
-	
+
 
 /*
  *  call-seq:
@@ -426,14 +437,14 @@ rlink_sentence_null_count( VALUE self ) {
  */
 static VALUE
 rlink_sentence_num_linkages_found( VALUE self ) {
-	rlink_SENTENCE *ptr = get_sentence( self );
+	struct rlink_sentence *ptr = get_sentence( self );
 	int i = 0;
-	
+
 	if ( !RTEST(ptr->parsed_p) )
 		rlink_sentence_parse( 0, 0, self );
 
 	i = sentence_num_linkages_found( (Sentence)ptr->sentence );
-	
+
 	return INT2FIX( i );
 }
 
@@ -446,16 +457,16 @@ rlink_sentence_num_linkages_found( VALUE self ) {
  */
 static VALUE
 rlink_sentence_num_valid_linkages( VALUE self ) {
-	rlink_SENTENCE *ptr = get_sentence( self );
+	struct rlink_sentence *ptr = get_sentence( self );
 	int count;
-	
+
 	if ( !RTEST(ptr->parsed_p) )
 		rlink_sentence_parse( 0, 0, self );
 
 	count = sentence_num_valid_linkages( (Sentence)ptr->sentence );
 	return INT2FIX( count );
 }
-	
+
 
 /*
  *  call-seq:
@@ -466,16 +477,16 @@ rlink_sentence_num_valid_linkages( VALUE self ) {
  */
 static VALUE
 rlink_sentence_num_linkages_post_processed( VALUE self ) {
-	rlink_SENTENCE *ptr = get_sentence( self );
+	struct rlink_sentence *ptr = get_sentence( self );
 	int count;
-	
+
 	if ( !RTEST(ptr->parsed_p) )
 		rlink_sentence_parse( 0, 0, self );
 
 	count = sentence_num_linkages_post_processed( (Sentence)ptr->sentence );
 	return INT2FIX( count );
 }
-	
+
 
 /*
  *  call-seq:
@@ -486,16 +497,16 @@ rlink_sentence_num_linkages_post_processed( VALUE self ) {
  */
 static VALUE
 rlink_sentence_num_violations( VALUE self, VALUE i ) {
-	rlink_SENTENCE *ptr = get_sentence( self );
+	struct rlink_sentence *ptr = get_sentence( self );
 	int count;
-	
+
 	if ( !RTEST(ptr->parsed_p) )
 		rlink_sentence_parse( 0, 0, self );
 
 	count = sentence_num_violations( (Sentence)ptr->sentence, FIX2INT(i) );
 	return INT2FIX( count );
 }
-	
+
 
 /*
  *  call-seq:
@@ -505,16 +516,16 @@ rlink_sentence_num_violations( VALUE self, VALUE i ) {
  */
 static VALUE
 rlink_sentence_disjunct_cost( VALUE self, VALUE i ) {
-	rlink_SENTENCE *ptr = get_sentence( self );
+	struct rlink_sentence *ptr = get_sentence( self );
 	int count;
-	
+
 	if ( !RTEST(ptr->parsed_p) )
 		rlink_sentence_parse( 0, 0, self );
 
 	count = sentence_disjunct_cost( (Sentence)ptr->sentence, FIX2INT(i) );
 	return INT2FIX( count );
 }
-	
+
 
 /*
  * Document-class: LinkParser::Sentence
@@ -529,7 +540,7 @@ void
 rlink_init_sentence() {
 	rlink_cSentence = rb_define_class_under( rlink_mLinkParser, "Sentence",
 	 	rb_cObject );
-	
+
 	rb_define_alloc_func( rlink_cSentence, rlink_sentence_s_alloc );
 
 	rb_define_method( rlink_cSentence, "initialize", rlink_sentence_init, 2 );

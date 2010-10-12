@@ -30,13 +30,13 @@ static VALUE rlink_linkage_make_cnode_array( CNode * );
 /*
  * Allocation function
  */
-static rlink_LINKAGE *
+static struct rlink_linkage *
 rlink_linkage_alloc() {
-	rlink_LINKAGE *ptr = ALLOC( rlink_LINKAGE );
-	
+	struct rlink_linkage *ptr = ALLOC( struct rlink_linkage );
+
 	ptr->linkage	= NULL;
 	ptr->sentence	= Qnil;
-	
+
 	debugMsg(( "Initialized an rlink_LINKAGE <%p>", ptr ));
 	return ptr;
 }
@@ -46,13 +46,13 @@ rlink_linkage_alloc() {
  * GC Mark function
  */
 static void
-rlink_linkage_gc_mark( rlink_LINKAGE *ptr ) {
+rlink_linkage_gc_mark( struct rlink_linkage *ptr ) {
 	debugMsg(( "Marking LinkParser::Linkage %p", ptr ));
-	
+
 	if ( ptr ) {
 		rb_gc_mark( ptr->sentence );
 	}
-	
+
 	else {
 		debugMsg(( "Not marking uninitialized rlink_LINKAGE" ));
 	}
@@ -63,13 +63,16 @@ rlink_linkage_gc_mark( rlink_LINKAGE *ptr ) {
  * GC Free function
  */
 static void
-rlink_linkage_gc_free( rlink_LINKAGE *ptr ) {
+rlink_linkage_gc_free( struct rlink_linkage *ptr ) {
 	if ( ptr ) {
 		linkage_delete( (Linkage)ptr->linkage );
 		ptr->linkage = NULL;
 		ptr->sentence = Qnil;
+
+		xfree( ptr );
+		ptr = NULL;
 	}
-	
+
 	else {
 		debugMsg(( "Not freeing an uninitialized rlink_LINKAGE" ));
 	}
@@ -79,7 +82,7 @@ rlink_linkage_gc_free( rlink_LINKAGE *ptr ) {
 /*
  * Object validity checker. Returns the data pointer.
  */
-static rlink_LINKAGE *
+static struct rlink_linkage *
 check_linkage(  VALUE	self ) {
 	Check_Type( self, T_DATA );
 
@@ -87,7 +90,7 @@ check_linkage(  VALUE	self ) {
 		rb_raise( rb_eTypeError, "wrong argument type %s (expected LinkParser::Linkage)",
 				  rb_class2name(CLASS_OF( self )) );
     }
-	
+
 	return DATA_PTR( self );
 }
 
@@ -95,9 +98,9 @@ check_linkage(  VALUE	self ) {
 /*
  * Fetch the data pointer and check it for sanity.
  */
-static rlink_LINKAGE *
+static struct rlink_linkage *
 get_linkage(  VALUE self ) {
-	rlink_LINKAGE *ptr = check_linkage( self );
+	struct rlink_linkage *ptr = check_linkage( self );
 
 	if ( !ptr )
 		rb_raise( rb_eRuntimeError, "uninitialized Linkage" );
@@ -109,8 +112,8 @@ get_linkage(  VALUE self ) {
 /*
  * Publicly-usable linkage-fetcher
  */
-rlink_LINKAGE *
-rlink_get_linkage( self ) {
+struct rlink_linkage *
+rlink_get_linkage( VALUE self ) {
 	return get_linkage( self );
 }
 
@@ -147,18 +150,18 @@ rlink_linkage_init( argc, argv, self )
 	if ( !check_linkage(self) ) {
 		int i, link_index, max_index;
 		VALUE index, sentence, options, defopts;
-		rlink_SENTENCE *sent_ptr;
+		struct rlink_sentence *sent_ptr;
 		Linkage linkage;
 		Parse_Options opts;
-		rlink_LINKAGE *ptr;
-		
+		struct rlink_linkage *ptr;
+
 		i = rb_scan_args( argc, argv, "21", &index, &sentence, &options );
 
 		defopts = rb_hash_new(); /*rb_funcall( sentence, rb_intern("options"), 0 );*/
 		options = rlink_make_parse_options( defopts, options );
 		opts = rlink_get_parseopts( options );
 
-		sent_ptr = (rlink_SENTENCE *)rlink_get_sentence( sentence );
+		sent_ptr = (struct rlink_sentence *)rlink_get_sentence( sentence );
 
 		link_index = NUM2INT(index);
 		max_index = sentence_num_valid_linkages((Sentence)sent_ptr->sentence) - 1;
@@ -170,16 +173,16 @@ rlink_linkage_init( argc, argv, self )
 		if ( !linkage ) rlink_raise_lp_error();
 
 		DATA_PTR( self ) = ptr = rlink_linkage_alloc();
-		
+
 		ptr->linkage = linkage;
 		ptr->sentence = sentence;
 	}
-	
+
 	else {
 		rb_raise( rb_eRuntimeError,
 				  "Cannot re-initialize a linkage once it's been created." );
 	}
-	
+
 	return Qnil;
 }
 
@@ -193,14 +196,14 @@ rlink_linkage_init( argc, argv, self )
  */
 static VALUE
 rlink_linkage_diagram( VALUE self ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	char *diagram_cstr;
 	VALUE diagram;
-	
+
 	diagram_cstr = linkage_print_diagram( (Linkage)ptr->linkage );
 	diagram = rb_str_new2( diagram_cstr );
 	linkage_free_diagram( diagram_cstr );
-	
+
 	return diagram;
 }
 
@@ -216,15 +219,15 @@ rlink_linkage_diagram( VALUE self ) {
  */
 static VALUE
 rlink_linkage_print_postscript( VALUE self, VALUE full_doc ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	char *diagram_cstr;
 	VALUE diagram;
-	
+
 	diagram_cstr = linkage_print_postscript( (Linkage)ptr->linkage,
 		RTEST(full_doc) ? 1 : 0 );
 	diagram = rb_str_new2( diagram_cstr );
 	linkage_free_postscript( diagram_cstr );
-	
+
 	return diagram;
 }
 
@@ -252,14 +255,14 @@ rlink_linkage_print_postscript( VALUE self, VALUE full_doc ) {
  */
 static VALUE
 rlink_linkage_links_and_domains( VALUE self ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	char *diagram_cstr;
 	VALUE diagram;
-	
+
 	diagram_cstr = linkage_print_links_and_domains( (Linkage)ptr->linkage );
 	diagram = rb_str_new2( diagram_cstr );
 	linkage_free_links_and_domains( diagram_cstr );
-	
+
 	return diagram;
 }
 
@@ -274,7 +277,7 @@ rlink_linkage_links_and_domains( VALUE self ) {
  */
 static VALUE
 rlink_linkage_num_sublinkages( VALUE self ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	return INT2FIX( linkage_get_num_sublinkages((Linkage)ptr->linkage) );
 }
 
@@ -289,11 +292,11 @@ rlink_linkage_num_sublinkages( VALUE self ) {
  */
 static VALUE
 rlink_linkage_current_sublinkage_eq( VALUE self, VALUE index ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	int rval = 0;
-	
+
 	rval = linkage_set_current_sublinkage( (Linkage)ptr->linkage, NUM2INT(index) );
-	
+
 	return INT2FIX( rval );
 }
 
@@ -308,11 +311,11 @@ static VALUE
 rlink_linkage_current_sublinkage( VALUE self ) {
 
 #ifdef HAVE_LINKAGE_GET_CURRENT_SUBLINKAGE
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	int rval = 0;
 
 	rval = linkage_get_current_sublinkage( (Linkage)ptr->linkage );
-	
+
 	return INT2FIX( rval );
 #else
 	rb_notimplement();
@@ -329,7 +332,7 @@ rlink_linkage_current_sublinkage( VALUE self ) {
  */
 static VALUE
 rlink_linkage_get_num_words( VALUE self ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	return INT2FIX( linkage_get_num_words((Linkage)ptr->linkage) );
 }
 
@@ -341,7 +344,7 @@ rlink_linkage_get_num_words( VALUE self ) {
  */
 static VALUE
 rlink_linkage_get_num_links( VALUE self ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	return INT2FIX( linkage_get_num_links((Linkage)ptr->linkage) );
 }
 
@@ -354,9 +357,9 @@ rlink_linkage_get_num_links( VALUE self ) {
  */
 static VALUE
 rlink_linkage_get_link_lword( VALUE self, VALUE index ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	int i = NUM2INT( index );
-	
+
 	return INT2FIX( linkage_get_link_lword((Linkage)ptr->linkage, i) );
 }
 
@@ -369,9 +372,9 @@ rlink_linkage_get_link_lword( VALUE self, VALUE index ) {
  */
 static VALUE
 rlink_linkage_get_link_rword( VALUE self, VALUE index ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	int i = NUM2INT( index );
-	
+
 	return INT2FIX( linkage_get_link_rword((Linkage)ptr->linkage, i) );
 }
 
@@ -383,9 +386,9 @@ rlink_linkage_get_link_rword( VALUE self, VALUE index ) {
  */
 static VALUE
 rlink_linkage_get_link_length( VALUE self, VALUE index ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	int i = NUM2INT( index );
-	
+
 	return INT2FIX( linkage_get_link_length((Linkage)ptr->linkage, i) );
 }
 
@@ -397,13 +400,13 @@ rlink_linkage_get_link_length( VALUE self, VALUE index ) {
  */
 static VALUE
 rlink_linkage_get_link_label( VALUE self, VALUE index ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	int i = NUM2INT( index );
 	const char *label;
-	
+
 	label = linkage_get_link_label( (Linkage)ptr->linkage, i );
 	if ( !label ) return Qnil;
-	
+
 	return rb_str_new2( label );
 }
 
@@ -415,13 +418,13 @@ rlink_linkage_get_link_label( VALUE self, VALUE index ) {
  */
 static VALUE
 rlink_linkage_get_link_llabel( VALUE self, VALUE index ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	int i = NUM2INT( index );
 	const char *label = NULL;
-	
+
 	label = linkage_get_link_llabel( (Linkage)ptr->linkage, i );
 	if ( !label ) return Qnil;
-	
+
 	return rb_str_new2( label );
 }
 
@@ -432,13 +435,13 @@ rlink_linkage_get_link_llabel( VALUE self, VALUE index ) {
  */
 static VALUE
 rlink_linkage_get_link_rlabel( VALUE self, VALUE index ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	int i = NUM2INT( index );
 	const char *label = NULL;
-	
+
 	label = linkage_get_link_rlabel( (Linkage)ptr->linkage, i );
 	if ( !label ) return Qnil;
-	
+
 	return rb_str_new2( label );
 }
 
@@ -458,14 +461,14 @@ rlink_linkage_get_link_rlabel( VALUE self, VALUE index ) {
  */
 static VALUE
 rlink_linkage_get_disjunct_strings( VALUE self ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	const char *disjunct;
 	int count, i;
 	VALUE disjuncts_ary;
-	
+
 	count = linkage_get_num_words( (Linkage)ptr->linkage );
 	disjuncts_ary = rb_ary_new2( count );
-	
+
 	for ( i = 0; i < count; i++ ) {
 #ifdef HAVE_LINKAGE_GET_DISJUNCT_STR
 		disjunct = linkage_get_disjunct_str( (Linkage)ptr->linkage, i );
@@ -474,12 +477,12 @@ rlink_linkage_get_disjunct_strings( VALUE self ) {
 #endif
 		if ( disjunct ) {
 			rb_ary_store( disjuncts_ary, i, rb_str_new2(disjunct) );
-			
+
 		} else {
 			rb_ary_store( disjuncts_ary, i, Qnil );
 		}
 	}
-	
+
 	return disjuncts_ary;
 }
 
@@ -493,10 +496,10 @@ rlink_linkage_get_disjunct_strings( VALUE self ) {
  */
 static VALUE
 rlink_linkage_get_link_num_domains( VALUE self, VALUE index ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	int i = NUM2INT( index );
 	int count = 0;
-	
+
 	count = linkage_get_link_num_domains( (Linkage)ptr->linkage, i );
 	return INT2FIX( count );
 }
@@ -510,22 +513,22 @@ rlink_linkage_get_link_num_domains( VALUE self, VALUE index ) {
  */
 static VALUE
 rlink_linkage_get_link_domain_names( VALUE self, VALUE index ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	const char **names;
 	int i = NUM2INT( index );
 	int count;
 	VALUE names_ary;
-	
+
 	names = linkage_get_link_domain_names( (Linkage)ptr->linkage, i );
 	count = linkage_get_link_num_domains( (Linkage)ptr->linkage, i );
 	if ( count < 0 ) return rb_ary_new();
-	
+
 	names_ary = rb_ary_new2( count );
-	
+
 	for ( i = 0; i < count; i++ ) {
 		rb_ary_store( names_ary, i, rb_str_new2(names[i]) );
 	}
-	
+
 	return names_ary;
 }
 
@@ -540,19 +543,19 @@ rlink_linkage_get_link_domain_names( VALUE self, VALUE index ) {
  */
 static VALUE
 rlink_linkage_get_words( VALUE self ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	const char **words;
 	int count, i;
 	VALUE words_ary;
-	
+
 	count = linkage_get_num_words( (Linkage)ptr->linkage );
 	words = linkage_get_words( (Linkage)ptr->linkage );
 	words_ary = rb_ary_new2( count );
-	
+
 	for ( i = 0; i < count; i++ ) {
 		rb_ary_store( words_ary, i, rb_str_new2(words[i]) );
 	}
-	
+
 	return words_ary;
 }
 
@@ -571,13 +574,13 @@ rlink_linkage_get_words( VALUE self ) {
  */
 static VALUE
 rlink_linkage_compute_union( VALUE self ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	int before, after;
-	
+
 	before = linkage_get_num_sublinkages( (Linkage)ptr->linkage );
 	linkage_compute_union( (Linkage)ptr->linkage );
 	after = linkage_get_num_sublinkages( (Linkage)ptr->linkage );
-	
+
 	return (after > before) ? Qtrue : Qfalse;
 }
 
@@ -592,11 +595,11 @@ rlink_linkage_compute_union( VALUE self ) {
  */
 static VALUE
 rlink_linkage_unused_word_cost( VALUE self ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	int rval;
-	
+
 	rval = linkage_unused_word_cost( (Linkage)ptr->linkage );
-	
+
 	return INT2FIX( rval );
 }
 
@@ -610,11 +613,11 @@ rlink_linkage_unused_word_cost( VALUE self ) {
  */
 static VALUE
 rlink_linkage_disjunct_cost( VALUE self ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	int rval;
-	
+
 	rval = linkage_disjunct_cost( (Linkage)ptr->linkage );
-	
+
 	return INT2FIX( rval );
 }
 
@@ -629,11 +632,11 @@ rlink_linkage_disjunct_cost( VALUE self ) {
  */
 static VALUE
 rlink_linkage_and_cost( VALUE self ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	int rval;
-	
+
 	rval = linkage_and_cost( (Linkage)ptr->linkage );
-	
+
 	return INT2FIX( rval );
 }
 
@@ -649,11 +652,11 @@ rlink_linkage_and_cost( VALUE self ) {
  */
 static VALUE
 rlink_linkage_link_cost( VALUE self ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	int rval;
-	
+
 	rval = linkage_link_cost( (Linkage)ptr->linkage );
-	
+
 	return INT2FIX( rval );
 }
 
@@ -668,11 +671,11 @@ rlink_linkage_link_cost( VALUE self ) {
  */
 static VALUE
 rlink_linkage_canonical_p( VALUE self ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	int rval = 0;
-	
+
 	rval = linkage_is_canonical( (Linkage)ptr->linkage );
-	
+
 	return rval ? Qtrue : Qfalse;
 }
 
@@ -688,11 +691,11 @@ rlink_linkage_canonical_p( VALUE self ) {
  */
 static VALUE
 rlink_linkage_improper_p( VALUE self ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	int rval = 0;
-	
+
 	rval = linkage_is_improper( (Linkage)ptr->linkage );
-	
+
 	return rval ? Qtrue : Qfalse;
 }
 
@@ -708,11 +711,11 @@ rlink_linkage_improper_p( VALUE self ) {
  */
 static VALUE
 rlink_linkage_has_inconsistent_domains_p( VALUE self ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	int rval = 0;
-	
+
 	rval = linkage_has_inconsistent_domains( (Linkage)ptr->linkage );
-	
+
 	return rval ? Qtrue : Qfalse;
 }
 
@@ -726,11 +729,11 @@ rlink_linkage_has_inconsistent_domains_p( VALUE self ) {
  */
 static VALUE
 rlink_linkage_get_violation_name( VALUE self ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	const char *violation_name = NULL;
-	
+
 	violation_name = linkage_get_violation_name( (Linkage)ptr->linkage );
-	
+
 	if ( violation_name ) {
 		return rb_str_new2( violation_name );
 	} else {
@@ -755,13 +758,13 @@ rlink_linkage_get_violation_name( VALUE self ) {
  */
 static VALUE
 rlink_linkage_constituent_tree( VALUE self ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	CNode *ctree = NULL;
 	VALUE rval = Qnil;
-	
+
 	ctree = linkage_constituent_tree( (Linkage)ptr->linkage );
 	rval = rlink_linkage_make_cnode_array( ctree );
-	
+
 	linkage_free_constituent_tree( ctree );
 	return rval;
 }
@@ -776,7 +779,7 @@ rlink_linkage_make_cnode_array( CNode *ctree ) {
 	VALUE nodes = rb_ary_new();
 	VALUE rnode;
 	CNode *cnode = ctree;
-	
+
 	/*	
 		struct CNode_s {
 		  char  * label;
@@ -800,7 +803,7 @@ rlink_linkage_make_cnode_array( CNode *ctree ) {
 		rb_ary_push( nodes, rnode );
 		cnode = linkage_constituent_node_get_next( cnode );
 	}
-	
+
 	return nodes;
 }
 
@@ -820,11 +823,11 @@ rlink_linkage_make_cnode_array( CNode *ctree ) {
  */
 static VALUE
 rlink_linkage_constituent_tree_string( int argc, VALUE *argv, VALUE self ) {
-	rlink_LINKAGE *ptr = get_linkage( self );
+	struct rlink_linkage *ptr = get_linkage( self );
 	char *ctree_string = NULL;
 	VALUE rval = Qnil, modenum = Qnil;
 	int mode;
-	
+
 	if ( rb_scan_args(argc, argv, "01", &modenum) == 1 ) {
 		mode = NUM2INT( modenum );
 	} else {
@@ -842,7 +845,7 @@ rlink_linkage_constituent_tree_string( int argc, VALUE *argv, VALUE self ) {
 	} else {
 		rval = Qnil;
 	}
-	
+
 	return rval;
 }
 
@@ -860,9 +863,9 @@ rlink_linkage_constituent_tree_string( int argc, VALUE *argv, VALUE self ) {
 void
 rlink_init_linkage() {
 	rlink_cLinkage = rb_define_class_under( rlink_mLinkParser, "Linkage", rb_cObject );
-	
+
 	rb_define_alloc_func( rlink_cLinkage, rlink_linkage_s_alloc );
-	
+
 	rb_define_method( rlink_cLinkage, "initialize", rlink_linkage_init, -1 );
 	rb_define_method( rlink_cLinkage, "diagram", rlink_linkage_diagram, 0 );
 	rb_define_method( rlink_cLinkage, "postscript_diagram",
@@ -883,7 +886,7 @@ rlink_init_linkage() {
 	rb_define_method( rlink_cLinkage, "num_links",
 	 	rlink_linkage_get_num_links, 0 );
 	rb_define_alias ( rlink_cLinkage, "link_count", "num_links" );
-	
+
 	rb_define_method( rlink_cLinkage, "link_lword",
 	 	rlink_linkage_get_link_lword, 1 );
 	rb_define_method( rlink_cLinkage, "link_rword",
@@ -901,7 +904,7 @@ rlink_init_linkage() {
 	 	rlink_linkage_get_link_num_domains, 1 );
 	rb_define_method( rlink_cLinkage, "link_domain_names",
 	 	rlink_linkage_get_link_domain_names, 1 );
-	
+
 	rb_define_method( rlink_cLinkage, "words", rlink_linkage_get_words, 0 );
 	rb_define_method( rlink_cLinkage, "disjunct_strings", rlink_linkage_get_disjunct_strings, 0 );
 

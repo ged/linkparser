@@ -27,6 +27,7 @@ describe LinkParser::Dictionary do
 	before( :all ) do
 		$LANG = ENV['LANG']
 		ENV['LANG'] = 'en_US.UTF-8'
+		$DEBUG = true if ENV['DEBUG']
 	end
 
 	after( :all ) do
@@ -35,7 +36,7 @@ describe LinkParser::Dictionary do
 
 
 	it "can be instantiated using all default values" do
-		lambda { LinkParser::Dictionary.new }.should_not raise_error()
+		LinkParser::Dictionary.new.should be_an_instance_of( LinkParser::Dictionary )
 	end
 
 	it "can be instantiated with an options hash" do

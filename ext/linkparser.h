@@ -16,12 +16,12 @@
 #include <locale.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
 
-#include <ruby.h>
-#include <intern.h>				/* For rb_dbl2big() */
+#include "ruby.h"
+#include "ruby/intern.h"
 
-#include <link-grammar/link-includes.h>
-
+#include "link-grammar/link-includes.h"
 
 
 /* Debugging functions/macros */
@@ -62,18 +62,22 @@ extern VALUE rlink_eLpError;
 
 /* 
  * Structures
- */ 
-typedef struct {
+ */
+struct rlink_dictionary {
+	Dictionary dict;
+};
+
+struct rlink_sentence {
 	Sentence 	sentence;
 	VALUE	 	dictionary;
 	VALUE		parsed_p;
 	VALUE		options;
-} rlink_SENTENCE;
+};
 
-typedef struct {
+struct rlink_linkage {
 	Linkage		linkage;
 	VALUE		sentence;
-} rlink_LINKAGE;
+};
 
 
 
@@ -98,15 +102,15 @@ typedef struct {
 /* -------------------------------------------------------
  * Initializer functions
  * ------------------------------------------------------- */
-extern void rlink_init_dict						_(( void ));
-extern void rlink_init_sentence					_(( void ));
-extern void rlink_init_linkage					_(( void ));
-extern void rlink_init_parseoptions				_(( void ));
+extern void rlink_init_dict							_(( void ));
+extern void rlink_init_sentence						_(( void ));
+extern void rlink_init_linkage						_(( void ));
+extern void rlink_init_parseoptions					_(( void ));
 
 /* Fetchers */
-extern Dictionary rlink_get_dict				_(( VALUE ));
-extern rlink_SENTENCE *rlink_get_sentence		_(( VALUE ));
-extern Parse_Options rlink_get_parseopts		_(( VALUE ));
+extern struct rlink_dictionary * rlink_get_dict		_(( VALUE ));
+extern struct rlink_sentence *rlink_get_sentence	_(( VALUE ));
+extern Parse_Options rlink_get_parseopts			_(( VALUE ));
 
 #endif /* _R_LINKPARSER_H */
 

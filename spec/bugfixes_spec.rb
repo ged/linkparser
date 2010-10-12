@@ -24,6 +24,10 @@ require 'linkparser'
 # s = LinkParser::Sentence.new('The cat runs.',@dict)
 # puts s.linkages.first.verb  #  "cat.n" !?!?!
 describe %{bugfix for #3: The first linkage for "The cat runs."} do
+	before( :all ) do
+		$DEBUG = true if ENV['DEBUG']
+	end
+
 	before( :each ) do
 		@dict = LinkParser::Dictionary.new( 'en', :verbosity => 0 )
 		@sentence = @dict.parse( "The cat runs." )

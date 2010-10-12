@@ -48,7 +48,7 @@ check_parseopts( VALUE self ) {
 		rb_raise( rb_eTypeError, "wrong argument type %s (expected LinkParser::ParseOptions)",
 				  rb_class2name(CLASS_OF( self )) );
     }
-	
+
 	return DATA_PTR( self );
 }
 
@@ -114,7 +114,7 @@ rlink_parseopts_init( int argc, VALUE *argv, VALUE self ) {
 	if ( ! check_parseopts(self) ) {
 		Parse_Options opts;
 		VALUE opthash = Qnil;
-		
+
 		debugMsg(( "Initializing a ParseOptions: %p", self ));
 		DATA_PTR( self ) = opts = parse_options_create();
 
@@ -124,7 +124,7 @@ rlink_parseopts_init( int argc, VALUE *argv, VALUE self ) {
 			rb_iterate( rb_each, opthash, rlink_parseopts_each_opthash_i, self );
 		}
 	}
-	
+
 	else {
 		rb_raise( rb_eRuntimeError, "Cannot re-initialize a Dictionary object." );
 	}
@@ -142,19 +142,19 @@ rlink_parseopts_each_opthash_i( VALUE pair, VALUE self ) {
 	VALUE key, val, keystring;
 	char *method_name;
 	ID method;
-	
+
 	key = rb_ary_entry( pair, 0 );
 	val = rb_ary_entry( pair, 1 );
 
 	keystring = rb_obj_as_string( key );
-	
-	method_name = ALLOCA_N( char, RSTRING(keystring)->len + 1 );
-	strncpy( method_name, RSTRING(keystring)->ptr, RSTRING(keystring)->len + 1 );
+
+	method_name = ALLOCA_N( char, RSTRING_LEN(keystring) + 1 );
+	strncpy( method_name, RSTRING_PTR(keystring), RSTRING_LEN(keystring) + 1 );
 	strncat( method_name, "=", 1 );
-	
+
 	debugMsg(( "Calling method %s", method_name ));
 	method = rb_intern( method_name );
-	
+
 	return rb_funcall( self, method, 1, val );
 }
 
@@ -168,7 +168,7 @@ rlink_parseopts_each_opthash_i( VALUE pair, VALUE self ) {
  */
 /*static VALUE
 rlink_parseopts_merge( VALUE self, other ) {
-	
+
 }
 */
 
@@ -1105,7 +1105,7 @@ rlink_parseopts_reset_resources( VALUE self ) {
  */
 void
 rlink_init_parseoptions() {
-	rlink_cParseOptions = rb_define_class_under( rlink_mLinkParser, 
+	rlink_cParseOptions = rb_define_class_under( rlink_mLinkParser,
 		"ParseOptions", rb_cObject );
 
 	rb_define_alloc_func( rlink_cParseOptions, rlink_parseopts_s_alloc );
@@ -1114,113 +1114,113 @@ rlink_init_parseoptions() {
 	rb_define_method( rlink_cParseOptions, "merge", rlink_parseopts_merge, 1 );
 	rb_define_method( rlink_cParseOptions, "merge!", rlink_parseopts_merge_bang, 1 );
 */
-	rb_define_method( rlink_cParseOptions, "verbosity=", 
+	rb_define_method( rlink_cParseOptions, "verbosity=",
 		rlink_parseopts_set_verbosity, 1 );
-	rb_define_method( rlink_cParseOptions, "verbosity", 
+	rb_define_method( rlink_cParseOptions, "verbosity",
 		rlink_parseopts_get_verbosity, 0 );
-	rb_define_method( rlink_cParseOptions, "linkage_limit=", 
+	rb_define_method( rlink_cParseOptions, "linkage_limit=",
 		rlink_parseopts_set_linkage_limit, 1 );
-	rb_define_method( rlink_cParseOptions, "linkage_limit", 
+	rb_define_method( rlink_cParseOptions, "linkage_limit",
 		rlink_parseopts_get_linkage_limit, 0 );
-	rb_define_method( rlink_cParseOptions, "disjunct_cost=", 
+	rb_define_method( rlink_cParseOptions, "disjunct_cost=",
 		rlink_parseopts_set_disjunct_cost, 1 );
-	rb_define_method( rlink_cParseOptions, "disjunct_cost", 
+	rb_define_method( rlink_cParseOptions, "disjunct_cost",
 		rlink_parseopts_get_disjunct_cost, 0 );
-	rb_define_method( rlink_cParseOptions, "min_null_count=", 
+	rb_define_method( rlink_cParseOptions, "min_null_count=",
 		rlink_parseopts_set_min_null_count, 1 );
-	rb_define_method( rlink_cParseOptions, "min_null_count", 
+	rb_define_method( rlink_cParseOptions, "min_null_count",
 		rlink_parseopts_get_min_null_count, 0 );
-	rb_define_method( rlink_cParseOptions, "max_null_count=", 
+	rb_define_method( rlink_cParseOptions, "max_null_count=",
 		rlink_parseopts_set_max_null_count, 1 );
-	rb_define_method( rlink_cParseOptions, "max_null_count", 
+	rb_define_method( rlink_cParseOptions, "max_null_count",
 		rlink_parseopts_get_max_null_count, 0 );
-	rb_define_method( rlink_cParseOptions, "null_block=", 
+	rb_define_method( rlink_cParseOptions, "null_block=",
 		rlink_parseopts_set_null_block, 1 );
-	rb_define_method( rlink_cParseOptions, "null_block", 
+	rb_define_method( rlink_cParseOptions, "null_block",
 		rlink_parseopts_get_null_block, 0 );
-	rb_define_method( rlink_cParseOptions, "islands_ok=", 
+	rb_define_method( rlink_cParseOptions, "islands_ok=",
 		rlink_parseopts_set_islands_ok, 1 );
-	rb_define_method( rlink_cParseOptions, "islands_ok?", 
+	rb_define_method( rlink_cParseOptions, "islands_ok?",
 		rlink_parseopts_get_islands_ok_p, 0 );
-	rb_define_method( rlink_cParseOptions, "short_length=", 
+	rb_define_method( rlink_cParseOptions, "short_length=",
 		rlink_parseopts_set_short_length, 1 );
-	rb_define_method( rlink_cParseOptions, "short_length", 
+	rb_define_method( rlink_cParseOptions, "short_length",
 		rlink_parseopts_get_short_length, 0 );
-	rb_define_method( rlink_cParseOptions, "max_memory=", 
+	rb_define_method( rlink_cParseOptions, "max_memory=",
 		rlink_parseopts_set_max_memory, 1 );
-	rb_define_method( rlink_cParseOptions, "max_memory", 
+	rb_define_method( rlink_cParseOptions, "max_memory",
 		rlink_parseopts_get_max_memory, 0 );
-	rb_define_method( rlink_cParseOptions, "max_sentence_length=", 
+	rb_define_method( rlink_cParseOptions, "max_sentence_length=",
 		rlink_parseopts_set_max_sentence_length, 1 );
-	rb_define_method( rlink_cParseOptions, "max_sentence_length", 
+	rb_define_method( rlink_cParseOptions, "max_sentence_length",
 		rlink_parseopts_get_max_sentence_length, 0 );
-	rb_define_method( rlink_cParseOptions, "max_parse_time=", 
+	rb_define_method( rlink_cParseOptions, "max_parse_time=",
 		rlink_parseopts_set_max_parse_time, 1 );
-	rb_define_method( rlink_cParseOptions, "max_parse_time", 
+	rb_define_method( rlink_cParseOptions, "max_parse_time",
 		rlink_parseopts_get_max_parse_time, 0 );
-	rb_define_method( rlink_cParseOptions, "screen_width=", 
+	rb_define_method( rlink_cParseOptions, "screen_width=",
 		rlink_parseopts_set_screen_width, 1 );
-	rb_define_method( rlink_cParseOptions, "screen_width", 
+	rb_define_method( rlink_cParseOptions, "screen_width",
 		rlink_parseopts_get_screen_width, 0 );
-	rb_define_method( rlink_cParseOptions, "allow_null=", 
+	rb_define_method( rlink_cParseOptions, "allow_null=",
 		rlink_parseopts_set_allow_null, 1 );
-	rb_define_method( rlink_cParseOptions, "allow_null?", 
+	rb_define_method( rlink_cParseOptions, "allow_null?",
 		rlink_parseopts_get_allow_null_p, 0 );
-	rb_define_method( rlink_cParseOptions, "display_walls=", 
+	rb_define_method( rlink_cParseOptions, "display_walls=",
 		rlink_parseopts_set_display_walls, 1 );
-	rb_define_method( rlink_cParseOptions, "display_walls?", 
+	rb_define_method( rlink_cParseOptions, "display_walls?",
 		rlink_parseopts_get_display_walls_p, 0 );
-	rb_define_method( rlink_cParseOptions, "all_short_connectors=", 
+	rb_define_method( rlink_cParseOptions, "all_short_connectors=",
 		rlink_parseopts_set_all_short_connectors, 1 );
-	rb_define_method( rlink_cParseOptions, "all_short_connectors?", 
+	rb_define_method( rlink_cParseOptions, "all_short_connectors?",
 		rlink_parseopts_get_all_short_connectors_p, 0 );
-	rb_define_method( rlink_cParseOptions, "cost_model_type=", 
+	rb_define_method( rlink_cParseOptions, "cost_model_type=",
 		rlink_parseopts_set_cost_model_type, 1 );
 
 /*  (No way to get the cost_model_type from the API)
 
-	rb_define_method( rlink_cParseOptions, "cost_model_type", 
+	rb_define_method( rlink_cParseOptions, "cost_model_type",
 		rlink_parseopts_get_cost_model_type, 0 );
 */
-	rb_define_method( rlink_cParseOptions, "batch_mode=", 
+	rb_define_method( rlink_cParseOptions, "batch_mode=",
 		rlink_parseopts_set_batch_mode, 1 );
-	rb_define_method( rlink_cParseOptions, "batch_mode?", 
+	rb_define_method( rlink_cParseOptions, "batch_mode?",
 		rlink_parseopts_get_batch_mode_p, 0 );
-	rb_define_method( rlink_cParseOptions, "panic_mode=", 
+	rb_define_method( rlink_cParseOptions, "panic_mode=",
 		rlink_parseopts_set_panic_mode, 1 );
-	rb_define_method( rlink_cParseOptions, "panic_mode?", 
+	rb_define_method( rlink_cParseOptions, "panic_mode?",
 		rlink_parseopts_get_panic_mode_p, 0 );
-	rb_define_method( rlink_cParseOptions, "display_on=", 
+	rb_define_method( rlink_cParseOptions, "display_on=",
 		rlink_parseopts_set_display_on, 1 );
-	rb_define_method( rlink_cParseOptions, "display_on?", 
+	rb_define_method( rlink_cParseOptions, "display_on?",
 		rlink_parseopts_get_display_on_p, 0 );
-	rb_define_method( rlink_cParseOptions, "display_postscript=", 
+	rb_define_method( rlink_cParseOptions, "display_postscript=",
 		rlink_parseopts_set_display_postscript, 1 );
-	rb_define_method( rlink_cParseOptions, "display_postscript?", 
+	rb_define_method( rlink_cParseOptions, "display_postscript?",
 		rlink_parseopts_get_display_postscript_p, 0 );
-	rb_define_method( rlink_cParseOptions, "display_constituents=", 
+	rb_define_method( rlink_cParseOptions, "display_constituents=",
 		rlink_parseopts_set_display_constituents, 1 );
-	rb_define_method( rlink_cParseOptions, "display_constituents?", 
+	rb_define_method( rlink_cParseOptions, "display_constituents?",
 		rlink_parseopts_get_display_constituents_p, 0 );
-	rb_define_method( rlink_cParseOptions, "display_bad=", 
+	rb_define_method( rlink_cParseOptions, "display_bad=",
 		rlink_parseopts_set_display_bad, 1 );
-	rb_define_method( rlink_cParseOptions, "display_bad?", 
+	rb_define_method( rlink_cParseOptions, "display_bad?",
 		rlink_parseopts_get_display_bad_p, 0 );
-	rb_define_method( rlink_cParseOptions, "display_links=", 
+	rb_define_method( rlink_cParseOptions, "display_links=",
 		rlink_parseopts_set_display_links, 1 );
-	rb_define_method( rlink_cParseOptions, "display_links?", 
+	rb_define_method( rlink_cParseOptions, "display_links?",
 		rlink_parseopts_get_display_links_p, 0 );
-	rb_define_method( rlink_cParseOptions, "display_union=", 
+	rb_define_method( rlink_cParseOptions, "display_union=",
 		rlink_parseopts_set_display_union, 1 );
-	rb_define_method( rlink_cParseOptions, "display_union?", 
+	rb_define_method( rlink_cParseOptions, "display_union?",
 		rlink_parseopts_get_display_union_p, 0 );
-	rb_define_method( rlink_cParseOptions, "echo_on=", 
+	rb_define_method( rlink_cParseOptions, "echo_on=",
 		rlink_parseopts_set_echo_on, 1 );
-	rb_define_method( rlink_cParseOptions, "echo_on?", 
+	rb_define_method( rlink_cParseOptions, "echo_on?",
 		rlink_parseopts_get_echo_on_p, 0 );
-	rb_define_method( rlink_cParseOptions, "spell_guessing_enabled=", 
+	rb_define_method( rlink_cParseOptions, "spell_guessing_enabled=",
 		rlink_parseopts_set_spell_guess, 1 );
-	rb_define_method( rlink_cParseOptions, "spell_guessing_enabled?", 
+	rb_define_method( rlink_cParseOptions, "spell_guessing_enabled?",
 		rlink_parseopts_get_spell_guess_p, 0 );
 
 	rb_define_method( rlink_cParseOptions, "timer_expired?",
@@ -1231,6 +1231,6 @@ rlink_init_parseoptions() {
 		rlink_parseopts_resources_exhausted_p, 0 );
 	rb_define_method( rlink_cParseOptions, "reset_resources",
 		rlink_parseopts_reset_resources, 0 );
-	
+
 }
 

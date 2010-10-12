@@ -90,6 +90,7 @@ static VALUE
 rlink_link_grammar_version( VALUE self ) {
 #ifdef HAVE_LINKGRAMMAR_GET_VERSION
 	const char *version = linkgrammar_get_version();
+	if ( !version ) rb_bug( "linkgrammar_get_version returned NULL pointer" );
 	return rb_str_new2( version );
 #else
 	return rb_str_new2( "link-grammar-4.3.9-or-earlier" );
@@ -109,7 +110,7 @@ Init_linkparser_ext() {
 
 	rb_define_singleton_method( rlink_mLinkParser, "link_grammar_version",
 		rlink_link_grammar_version, 0 );
-	
+
 	setlocale( LC_ALL, "" );
 
 	rlink_init_dict();
