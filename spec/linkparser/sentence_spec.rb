@@ -23,15 +23,15 @@ require 'linkparser'
 
 describe LinkParser::Sentence do
 
-
 	before( :all ) do
 		@dict = LinkParser::Dictionary.new( 'en', :verbosity => 0 )
+		$DEBUG = true if ENV['DEBUG']
 	end
-
 
 	before( :each ) do
 		@sentence = LinkParser::Sentence.new( "The cat runs.", @dict )
 	end
+
 
 	it "returns an informational string when inspected before it's been parsed" do
 		@sentence.inspect.should =~ %r{

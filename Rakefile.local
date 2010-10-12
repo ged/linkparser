@@ -30,4 +30,28 @@ Rake::ExtensionTask.new( 'linkparser_ext', GEMSPEC ) do |ext|
 	ext.cross_platform = 'i386-mswin32'
 end
 
+task :debug do
+	$DEBUG = true
+	ENV['DEBUG'] = '1'
+end
 
+# Make both the default task and the spec task depend on building the extension
+namespace :spec do
+
+	desc "Run specs under gdb"
+	task :gdb => [ :compile ] do |task|
+		require 'tempfile'
+
+	    cmd_parts = ['run']
+	    cmd_parts << '-Ilib:ext'
+	    cmd_parts << '/usr/bin/spec'
+	    cmd_parts += SPEC_FILES.collect { |fn| %["#{fn}"] }
+	    cmd_parts += COMMON_SPEC_OPTS + ['-f', 's', '-c']
+
+		script = Tempfile.new( 'spec-gdbscript' )
+		script.puts( cmd_parts.join(' ') )
+		script.flush
+
+		run 'gdb', '-x', script.path, RUBY
+	end
+end

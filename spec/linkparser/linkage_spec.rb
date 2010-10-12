@@ -25,6 +25,7 @@ describe LinkParser::Linkage do
 
 	before( :all ) do
 		@dict = LinkParser::Dictionary.new( 'en', :verbosity => 0 )
+		$DEBUG = true if ENV['DEBUG']
 	end
 
 	before( :each ) do

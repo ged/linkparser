@@ -9,3 +9,4 @@ docs
 ^pkg/
 ^release\.notes$
 tmp/
+ChangeLog

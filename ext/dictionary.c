@@ -16,19 +16,45 @@
  *  Memory management functions
  * -------------------------------------------------- */
 
+
+/*
+ * Allocation function
+ */
+static struct rlink_dictionary *
+rlink_dictionary_alloc() {
+	struct rlink_dictionary *ptr = ALLOC( struct rlink_dictionary );
+
+	ptr->dict	= NULL;
+
+	debugMsg(( "Initialized an rlink_dictionary <%p>", ptr ));
+	return ptr;
+}
+
+
 /*
  * Free function
  */
 static void
-rlink_dict_gc_free( Dictionary dict ) {
-	if ( dict ) dictionary_delete( dict );
+rlink_dict_gc_free( struct rlink_dictionary *ptr ) {
+	if ( ptr ) {
+		debugMsg(( "Freeing Dictionary <%p>", ptr ));
+		if ( ptr->dict )
+			dictionary_delete( ptr->dict );
+
+		ptr->dict = NULL;
+
+		xfree( ptr );
+		ptr = NULL;
+	} else {
+		debugMsg(( "Not freeing already freed Dictionary." ));
+	}
 }
 
 
 /*
  * Object validity checker. Returns the data pointer.
  */
-static Dictionary
+static struct rlink_dictionary *
 check_dict( VALUE self ) {
 	Check_Type( self, T_DATA );
 
@@ -36,7 +62,7 @@ check_dict( VALUE self ) {
 		rb_raise( rb_eTypeError, "wrong argument type %s (expected LinkParser::Dictionary)",
 				  rb_class2name(CLASS_OF( self )) );
     }
-	
+
 	return DATA_PTR( self );
 }
 
@@ -44,21 +70,21 @@ check_dict( VALUE self ) {
 /*
  * Fetch the data pointer and check it for sanity.
  */
-static Dictionary
+static struct rlink_dictionary *
 get_dict( VALUE self ) {
-	Dictionary dict = check_dict( self );
+	struct rlink_dictionary *ptr = check_dict( self );
 
-	if ( !dict )
+	if ( !ptr )
 		rb_raise( rb_eRuntimeError, "uninitialized Dictionary" );
 
-	return dict;
+	return ptr;
 }
 
 
 /* 
  * Get the Dictionary behind the LinkParser::Dictionary +object+ specified.
- */ 
-Dictionary
+ */
+struct rlink_dictionary *
 rlink_get_dict( VALUE obj ) {
 	return get_dict( obj );
 }
@@ -93,12 +119,12 @@ rlink_make_oldstyle_dict( VALUE dict_file, VALUE pp_file, VALUE cons_file, VALUE
 	SafeStringValue( pp_file    );
 	SafeStringValue( cons_file  );
 	SafeStringValue( affix_file );
-	
+
 	return dictionary_create(
-		STR2CSTR( dict_file  ),
-		STR2CSTR( pp_file    ),
-		STR2CSTR( cons_file  ),
-		STR2CSTR( affix_file )
+		StringValuePtr(dict_file ),
+		StringValuePtr(pp_file   ),
+		StringValuePtr(cons_file ),
+		StringValuePtr(affix_file)
 	);
 }
 
@@ -148,11 +174,12 @@ static VALUE
 rlink_dict_initialize( int argc, VALUE *argv, VALUE self ) {
 	if ( !check_dict(self) ) {
 		int i = 0;
+		struct rlink_dictionary *ptr = NULL;
 		Dictionary dict = NULL;
 		VALUE arg1, arg2, arg3, arg4, arg5 = Qnil;
 		VALUE lang = Qnil;
 		VALUE opthash = Qnil;
-		
+
 		switch( i = rb_scan_args(argc, argv, "05", &arg1, &arg2, &arg3, &arg4, &arg5) ) {
 		  /* Dictionary.new */
 		  case 0:
@@ -186,10 +213,10 @@ rlink_dict_initialize( int argc, VALUE *argv, VALUE self ) {
 			dict = rlink_make_oldstyle_dict( arg1, arg2, arg3, arg4 );
 			opthash = arg5;
 			break;
-		
-		  /* Anything else is an error */	
+
+		  /* Anything else is an error */
 		  default:
-			rb_raise( rb_eArgError, 
+			rb_raise( rb_eArgError,
 				"wrong number of arguments (%d for 0,1,2,4, or 5)", i );
 		}
 
@@ -197,17 +224,20 @@ rlink_dict_initialize( int argc, VALUE *argv, VALUE self ) {
 		if ( !dict && i < 4 ) {
 			if ( RTEST(lang) ) {
 				SafeStringValue( lang );
-				dict = dictionary_create_lang( STR2CSTR(lang) );
+				dict = dictionary_create_lang( StringValuePtr(lang) );
 			} else {
 				dict = dictionary_create_default_lang();
 			}
 		}
-		
+
 		/* If the dictionary still isn't created, there was an error
 		   creating it */
 		if ( !dict ) rlink_raise_lp_error();
 
-		DATA_PTR( self ) = dict;
+		debugMsg(( "Created dictionary %p", dict ));
+		DATA_PTR( self ) = ptr = rlink_dictionary_alloc();
+
+		ptr->dict = dict;
 
 		/* If they passed in an options hash, save it for later. */
 		if ( RTEST(opthash) ) rb_iv_set( self, "@options", opthash );
@@ -230,13 +260,14 @@ rlink_dict_initialize( int argc, VALUE *argv, VALUE self ) {
  *  connector in the dictionary. This is useful for designing a parsing
  *  algorithm that progresses in stages, first trying the cheap connectors.
  */
-static VALUE 
+static VALUE
 rlink_get_max_cost( VALUE self ) {
-	Dictionary dict = get_dict( self );
-	int cost = dictionary_get_max_cost( dict );
-	
+	struct rlink_dictionary *ptr = get_dict( self );
+
+	int cost = dictionary_get_max_cost( ptr->dict );
+
 	debugMsg(( "Max cost is: %d", cost ));
-	
+
 	return INT2NUM( cost );
 }
 
@@ -250,7 +281,7 @@ rlink_get_max_cost( VALUE self ) {
  *  LinkParser::Sentence. If you specify an +options+ hash, its values will override
  *  those of the Dictionary's for the resulting Sentence.
  */
-static VALUE 
+static VALUE
 rlink_parse( int argc, VALUE *argv, VALUE self ) {
 	VALUE input_string, options, sentence;
 	VALUE args[2];
@@ -262,13 +293,13 @@ rlink_parse( int argc, VALUE *argv, VALUE self ) {
 	args[0] = input_string;
 	args[1] = self;
 	sentence = rb_class_new_instance( 2, args, rlink_cSentence );
-	
+
 	/* Now call #parse on it */
 	if ( i == 1 )
 		rb_funcall( sentence, rb_intern("parse"), 0, 0 );
 	else
 		rb_funcall( sentence, rb_intern("parse"), 1, options );
-	
+
 	return sentence;
 }
 
@@ -291,7 +322,7 @@ rlink_init_dict() {
 
 	rlink_cDictionary = rb_define_class_under( rlink_mLinkParser, "Dictionary",
 	 	rb_cObject );
-	
+
 	rb_define_alloc_func( rlink_cDictionary, rlink_dict_s_alloc );
 	rb_define_method( rlink_cDictionary, "initialize", rlink_dict_initialize, -1 );
 

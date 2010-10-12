@@ -13,7 +13,9 @@ ADDITIONAL_INCLUDE_DIRS = %w[
 	/opt/local/include
 ]
 
-$CFLAGS << ' -Wall' << ' -DDEBUG'
+if ENV['DEBUG']
+	$CFLAGS << ' -Wall' << ' -DDEBUG'
+end
 
 def fail( *messages )
 	$stderr.puts( *messages )

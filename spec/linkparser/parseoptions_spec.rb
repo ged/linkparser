@@ -23,6 +23,10 @@ require 'linkparser'
 
 describe LinkParser::ParseOptions do
 
+	before( :all ) do
+		$DEBUG = true if ENV['DEBUG']
+	end
+
 	before( :each ) do
 		@opts = LinkParser::ParseOptions.new
 	end
