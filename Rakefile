@@ -170,9 +170,9 @@ include RakefileHelpers
 # Set the build ID if the mercurial executable is available
 if hg = which( 'hg' )
 	id = `#{hg} id -n`.chomp
-	PKG_BUILD = "pre%03d" % [(id.chomp[ /^[[:xdigit:]]+/ ] || '1')]
+	PKG_BUILD = (id.chomp[ /^[[:xdigit:]]+/ ] || '1')
 else
-	PKG_BUILD = 'pre000'
+	PKG_BUILD = '0'
 end
 SNAPSHOT_PKG_NAME = "#{PKG_FILE_NAME}.#{PKG_BUILD}"
 SNAPSHOT_GEM_NAME = "#{SNAPSHOT_PKG_NAME}.gem"
@@ -189,7 +189,6 @@ RDOC_OPTIONS = [
   ]
 YARD_OPTIONS = [
 	'--use-cache',
-	'--no-private',
 	'--protected',
 	'-r', README_FILE,
 	'--exclude', 'extconf\\.rb',
@@ -209,27 +208,29 @@ PROJECT_DOCDIR = "#{PROJECT_PUBDIR}/#{PKG_NAME}"
 PROJECT_SCPPUBURL = "#{PROJECT_HOST}:#{PROJECT_PUBDIR}"
 PROJECT_SCPDOCURL = "#{PROJECT_HOST}:#{PROJECT_DOCDIR}"
 
+GEM_PUBHOST = 'rubygems.org'
+
 # Gem dependencies: gemname => version
 DEPENDENCIES = {
 }
 
 # Developer Gem dependencies: gemname => version
 DEVELOPMENT_DEPENDENCIES = {
-	'rake'         => '>= 0.8.7',
-	'rcodetools'   => '>= 0.7.0.0',
-	'rcov'         => '>= 0.8.1.2.0',
-	'rdoc'         => '>= 2.4.3',
-	'RedCloth'     => '>= 4.0.3',
-	'rspec'        => '>= 1.2.6',
-	'ruby-termios' => '>= 0.9.6',
-	'text-format'  => '>= 1.0.0',
-	'tmail'        => '>= 1.2.3.1',
-	'diff-lcs'     => '>= 1.1.2',
+	'rake'          => '~> 0.8.7',
+	'rcodetools'    => '~> 0.7.0.0',
+	'rcov'          => '~> 0.8.1.2.0',
+	'yard'          => '~> 0.6.1',
+	'RedCloth'      => '~> 4.2.3',
+	'rspec'         => '~> 2.0.1',
+	'ruby-termios'  => '~> 0.9.6',
+	'text-format'   => '~> 1.0.0',
+	'tmail'         => '~> 1.2.3.1',
+	'rake-compiler' => '~> 0.7.1',
 }
 
 # Non-gem requirements: packagename => version
 REQUIREMENTS = {
-	'link-grammar' => '>= 4.4.3',
+	'link-grammar' => '>= 4.7.0',
 }
 
 # RubyGem specification
@@ -246,9 +247,10 @@ GEMSPEC   = Gem::Specification.new do |gem|
 		"about the link-grammar library.",
   	  ].join( "\n" )
 
-	gem.authors           = "Martin Chase, Michael Granger"
+	gem.authors           = ["Martin Chase", "Michael Granger"]
 	gem.email             = ["stillflame@FaerieMUD.org", "ged@FaerieMUD.org"]
 	gem.homepage          = 'http://deveiate.org/projects/Ruby-LinkParser/'
+	gem.licenses          = ["BSD"]
 
 	gem.has_rdoc          = true
 	gem.rdoc_options      = RDOC_OPTIONS
@@ -265,6 +267,13 @@ GEMSPEC   = Gem::Specification.new do |gem|
 
 	gem.files             = RELEASE_FILES
 	gem.test_files        = SPEC_FILES
+
+	# signing key and certificate chain
+	gem.signing_key       = '/Volumes/Keys/ged-private_gem_key.pem'
+	gem.cert_chain        = [File.expand_path('~/.gem/ged-public_gem_cert.pem')]
+
+
+	gem.required_ruby_version = '>=1.8.7'
 
 	DEPENDENCIES.each do |name, version|
 		version = '>= 0' if version.length.zero?
