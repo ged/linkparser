@@ -340,31 +340,15 @@ describe LinkParser::Linkage do
 		rval.first.children.collect {|n| n.label }.should include( 'NP', 'VP', '.' )
 	end
 
-	it "returns 0 as the number of the current sublinkage since it has no conjunctions" do
-	    @linkage.current_sublinkage.should == 0 
-	end
-
-
 	it "returns an informational string when inspected" do
-		@linkage.inspect.should =~ /Linkage:0x[[:xdigit:]]+: sublinkage 0: \[\d+ links\]/
+		@linkage.inspect.should =~ /Linkage:0x[[:xdigit:]]+: \[\d+ links\]/
 	end
 
 
-	describe "from a simple sentence with a direct object" do
+	context "from a simple sentence with a direct object" do
 		before( :each ) do
 			@sentence = @dict.parse( "The dog ran home." )
 			@linkage = @sentence.linkages.first
-		end
-
-
-		it "doesn't have any sublinkages" do
-			@linkage.num_sublinkages.should == 1
-		end
-
-		it "doesn't change after computing its union" do
-			lambda {
-				@linkage.compute_union
-			}.should_not change( @linkage, :num_sublinkages )
 		end
 
 
@@ -383,46 +367,31 @@ describe LinkParser::Linkage do
 	end
 
 
-	it "knows that it doesn't have any conjunctions" do
-		@linkage.should_not have_conjunction()
-	end
+	context "deprecated sublinkage API" do
 
-
-	describe "from a sentence with a conjunction" do
 		before( :each ) do
-			@sentence = 
-				@dict.parse( "The ball rolled down the hill and bumped the curb." )
+			@sentence = @dict.parse( "The ball rolled down the hill and bumped the curb." )
 			@linkage = @sentence.linkages.first
 		end
 
-
-		it "knows that it has a conjunction" do
-			@linkage.should have_conjunction()
+		it "warns about deprecation if #num_sublinkages is called" do
+			@linkage.should_receive( :warn ).with( /deprecated/i )
+			@linkage.num_sublinkages
 		end
 
-		it "has two sublinkages" do
-			@linkage.num_sublinkages.should == 2
+		it "warns about deprecation if #compute_union is called" do
+			@linkage.should_receive( :warn ).with( /deprecated/i )
+			@linkage.compute_union
 		end
 
-
-		it "adds a sublinkage after computing its union" do
-			lambda {
-				@linkage.compute_union
-			}.should change( @linkage, :num_sublinkages ).from(2).to(3)
-		end
-
-
-		it "knows what word is the verb in the current sublinkage" do
-			@linkage.verb.should == 'rolled'
+		it "warn about deprecation if #current_sublinkage= is called" do
+			@linkage.should_receive( :warn ).with( /deprecated/i )
 			@linkage.current_sublinkage = 1
-			@linkage.verb.should == 'bumped'
 		end
 
-
-		it "knows what word is the object in the current sublinkage" do
-			@linkage.object.should == 'hill'
-			@linkage.current_sublinkage = 1
-			@linkage.object.should == 'curb'
+		it "warn about deprecation if #current_sublinkage is called" do
+			@linkage.should_receive( :warn ).with( /deprecated/i )
+			@linkage.current_sublinkage
 		end
 
 	end
@@ -433,7 +402,7 @@ describe LinkParser::Linkage do
 	end
 
 
-	describe "from an imperative sentence" do
+	context "from an imperative sentence" do
 		before( :each ) do
 			@sentence = @dict.parse( "Go to the store!" )
 			@linkage = @sentence.linkages.first
@@ -448,7 +417,7 @@ describe LinkParser::Linkage do
 	end
 
 
-	describe "bugfixes" do
+	context "bugfixes" do
 
 		it "also strips off the '.p' from the subject and object when they are plural" do
 			sent = @dict.parse( 'People like goats.' )

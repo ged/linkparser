@@ -57,8 +57,9 @@ describe LinkParser::ParseOptions do
 	end
 
 	it "supports all the members mentioned in the documentation" do
-		pending "some of them aren't implemented in the link-grammar library"
-		@opts.display_short?.should == true		# Not in the API
+		pending "some of them aren't implemented in the link-grammar library" do
+			@opts.display_short?.should == true		# Not in the API
+		end
 	end
 
 
@@ -80,18 +81,8 @@ describe LinkParser::ParseOptions do
 		}.should_not raise_error()
 	end
 
-
-	describe "in versions of link-grammar >= 4.5.0" do
-
-		before( :each ) do
-			version_vec = LinkParser.link_grammar_version[/(\d+\.\d+\.\d+)/, 1].
-				split('.').collect {|v| v.to_i }.pack('n*')
-			pending "the underlying library is %s" unless version_vec >= [4,5,0].pack('n*')
-		end
-
-		it "knows whether spell_guessing is enabled or not" do
-			@opts.spell_guessing_enabled?.should == true
-		end
+	it "knows whether spell_guessing is enabled or not" do
+		@opts.spell_guessing_enabled?.should == true
 	end
 
 end
