@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'linkparser'
+require 'linkparser/mixins'
 
 # 
 # Additional high-level functionality for LinkParser::Sentence objects.
@@ -24,6 +25,30 @@ require 'linkparser'
 #  
 # See the LICENSE file for copyright/licensing information.
 class LinkParser::Linkage
+	extend LinkParser::DeprecationUtilities
+
+	require 'linkparser_ext'
+
+	###
+	### Deprecated API
+	### These methods are going to be removed in a future version. 
+	###
+
+	### Returns +true+ if the linkage has more than one sublinkage (i.e., the 
+	### sentence has a conjunction).
+	def has_conjunction?
+		return self.num_sublinkages > 1
+	end
+	deprecated_method :has_conjunction?
+
+	# These are all defined in the extension
+	deprecated_method :num_sublinkages
+	deprecated_method :current_sublinkage=
+	deprecated_method :current_sublinkage
+	deprecated_method :compute_union
+
+	### End deprecated stuff
+
 
 	# Descriptions of the linkage types, keyed by linkage symbol
 	LINK_TYPES = {
@@ -146,10 +171,9 @@ class LinkParser::Linkage
 
 	### Return a human-readable representation of the Sentence object.
 	def inspect
-		return %{#<%s:0x%x: sublinkage %d: [%d links]>} % [
+		return %{#<%s:0x%x: [%d links]>} % [
 			self.class.name,
 			self.object_id / 2,
-			self.current_sublinkage,
 			self.num_links
 		]
 	end
@@ -237,14 +261,6 @@ class LinkParser::Linkage
 		return self.links.find {|link| link.label == 'Wi' && link.rword =~ /\.v$/ } ?
 			true : false
 	end
-
-
-	### Returns +true+ if the linkage has more than one sublinkage (i.e., the 
-	### sentence has a conjunction).
-	def has_conjunction?
-		return self.num_sublinkages > 1
-	end
-
 
 end # class Sentence
 

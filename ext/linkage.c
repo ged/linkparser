@@ -1,11 +1,11 @@
 /*
  *  linkage.c - Ruby LinkParser Linkage class
  *  $Id$
- *  
+ *
  *  Authors:
  *    * Michael Granger <ged@FaerieMUD.org>
- *  
- *  Please see the LICENSE file at the top of the distribution for licensing 
+ *
+ *  Please see the LICENSE file at the top of the distribution for licensing
  *  information.
  */
 
@@ -137,7 +137,7 @@ rlink_linkage_s_alloc(  VALUE klass ) {
  *     new( index, sentence, options={} )   -> LinkParser::Linkage
  *
  *  Create a new LinkParser::Linkage object out of the linkage indicated by
- *  +index+ (a positive Integer) from the specified sentence (a 
+ *  +index+ (a positive Integer) from the specified sentence (a
  *  LinkParser::Sentence). The optional options hash can be used to override
  *  the parse options of the Sentence for the new linkage.
  */
@@ -166,7 +166,7 @@ rlink_linkage_init( argc, argv, self )
 		link_index = NUM2INT(index);
 		max_index = sentence_num_valid_linkages((Sentence)sent_ptr->sentence) - 1;
 		if ( link_index > max_index )
-			rb_raise( rlink_eLpError, "Invalid linkage %d (max is %d)", 
+			rb_raise( rlink_eLpError, "Invalid linkage %d (max is %d)",
 				link_index, max_index );
 
 		linkage = linkage_create( link_index, (Sentence)sent_ptr->sentence, opts );
@@ -212,9 +212,9 @@ rlink_linkage_diagram( VALUE self ) {
  *  call-seq:
  *     postscript_diagram( full_doc=false )   -> str
  *
- *  Returns the macros needed to print out the linkage in a postscript file. 
- *  By default, the output is just the set of postscript macros that describe 
- *  the diagram. With full_doc=true a complete encapsulated postscript document 
+ *  Returns the macros needed to print out the linkage in a postscript file.
+ *  By default, the output is just the set of postscript macros that describe
+ *  the diagram. With full_doc=true a complete encapsulated postscript document
  *  is returned.
  */
 static VALUE
@@ -236,13 +236,13 @@ rlink_linkage_print_postscript( VALUE self, VALUE full_doc ) {
  *  call-seq:
  *     links_and_domains   -> str
  *
- *  Return a String containing a lists all of the links and domain names for 
+ *  Return a String containing a lists all of the links and domain names for
  *  the current sublinkage.
  *
  *  Example:
  *    sent = dict.parse("I eat, therefore I think")
  *    puts sent.linkages.first.links_and_domains
- *  
+ *
  *  prints:
  *              /////          RW      <---RW---->  RW        /////
  *    (m)       /////          Wd      <---Wd---->  Wd        I.p
@@ -251,7 +251,7 @@ rlink_linkage_print_postscript( VALUE self, VALUE full_doc ) {
  *    (m)       ,              Xd      <---Xd---->  Xd        therefore
  *    (m) (m)   therefore      Wd      <---Wd---->  Wd        I.p
  *    (m) (m)   I.p            Sp*i    <---Sp*i-->  Sp        think.v
- * 
+ *
  */
 static VALUE
 rlink_linkage_links_and_domains( VALUE self ) {
@@ -267,12 +267,27 @@ rlink_linkage_links_and_domains( VALUE self ) {
 }
 
 
+/*
+ * call-seq:
+ *    is_fat?   -> true or false
+ *
+ * Return +true+ if "fat" linkages were enabled when this linkage was parsed. See
+ * http://www.abiword.org/projects/link-grammar/dict/coordination.html for more
+ * information.
+ */
+static VALUE
+rlink_linkage_is_fat_p( VALUE self ) {
+	struct rlink_linkage *ptr = get_linkage( self );
+	return RTEST( linkage_is_fat(ptr->linkage) ) ? Qtrue : Qfalse;
+}
+
+
 
 /*
  *  call-seq:
  *     num_sublinkages   -> fixnum
  *
- *  Return the number of sublinkages for a linkage with conjunctions, 1 
+ *  Return the number of sublinkages for a linkage with conjunctions, 1
  *  otherwise.
  */
 static VALUE
@@ -286,8 +301,8 @@ rlink_linkage_num_sublinkages( VALUE self ) {
  *  call-seq:
  *     current_sublinkage = index   -> true or false
  *
- *  After this call, all operations on the linkage will refer to the index-th 
- *  sublinkage. In the case of a linkage without conjunctions, this has no 
+ *  After this call, all operations on the linkage will refer to the index-th
+ *  sublinkage. In the case of a linkage without conjunctions, this has no
  *  effect.
  */
 static VALUE
@@ -309,25 +324,20 @@ rlink_linkage_current_sublinkage_eq( VALUE self, VALUE index ) {
  */
 static VALUE
 rlink_linkage_current_sublinkage( VALUE self ) {
-
-#ifdef HAVE_LINKAGE_GET_CURRENT_SUBLINKAGE
 	struct rlink_linkage *ptr = get_linkage( self );
 	int rval = 0;
 
 	rval = linkage_get_current_sublinkage( (Linkage)ptr->linkage );
 
 	return INT2FIX( rval );
-#else
-	rb_notimplement();
-#endif
 }
 
 
 /*
  * num_words
  * --
- * The number of words in the sentence for which this is a linkage. Note that 
- * this function does not return the number of words used in the current 
+ * The number of words in the sentence for which this is a linkage. Note that
+ * this function does not return the number of words used in the current
  * sublinkage.
  */
 static VALUE
@@ -352,7 +362,7 @@ rlink_linkage_get_num_links( VALUE self ) {
 /*
  * link_lword( index )
  * --
- * The number of the word on the left end of the index-th link of the 
+ * The number of the word on the left end of the index-th link of the
  * current sublinkage.
  */
 static VALUE
@@ -367,7 +377,7 @@ rlink_linkage_get_link_lword( VALUE self, VALUE index ) {
 /*
  * link_rword( index )
  * --
- * The number of the word on the right end of the index-th link of the 
+ * The number of the word on the right end of the index-th link of the
  * current sublinkage.
  */
 static VALUE
@@ -449,13 +459,13 @@ rlink_linkage_get_link_rlabel( VALUE self, VALUE index ) {
 /*
  *  disjunct_strings -> array
  *
- *  Return an Array of Strings showing the disjuncts that were actually used in association 
- *  with each corresponding word in the current linkage. Each string shows the disjuncts 
- *  in proper order; that is, left-to-right, in the order in which they link to other words. 
+ *  Return an Array of Strings showing the disjuncts that were actually used in association
+ *  with each corresponding word in the current linkage. Each string shows the disjuncts
+ *  in proper order; that is, left-to-right, in the order in which they link to other words.
  *  The returned strings can be thought of as a very precise part-of-speech-like label for
  *  each word, indicating how it was used in the given sentence; this can be useful
  *  for corpus statistics.
- *  
+ *
  *  For a parsed version of the disjunct strings, call #disjuncts instead.
  *
  */
@@ -537,8 +547,8 @@ rlink_linkage_get_link_domain_names( VALUE self, VALUE index ) {
  *  call-seq:
  *     words   -> array
  *
- *  Return the Array of word spellings or individual word spelling for the 
- *  current sublinkage. These are the "inflected" spellings, such as "dog.n". 
+ *  Return the Array of word spellings or individual word spelling for the
+ *  current sublinkage. These are the "inflected" spellings, such as "dog.n".
  *  The original spellings can be obtained by calls to Sentence#words.
  */
 static VALUE
@@ -568,7 +578,7 @@ rlink_linkage_get_words( VALUE self ) {
  *  sublinkages together -- in effect creating a "master" linkage (which may
  *  have crossing links). The union is created as another sublinkage, thus
  *  increasing the number of sublinkages by one, and is returned by this method.
- *  If the linkage has no conjunctions, computing its union has no effect. This 
+ *  If the linkage has no conjunctions, computing its union has no effect. This
  *  method returns true if computing its union caused another sublinkage to be
  *  created.
  */
@@ -591,7 +601,7 @@ rlink_linkage_compute_union( VALUE self ) {
  *
  *  Returns the unused word cost of the linkage, which corresponds to the number
  *  of null links that were required to parse it.
- *     
+ *
  */
 static VALUE
 rlink_linkage_unused_word_cost( VALUE self ) {
@@ -626,7 +636,7 @@ rlink_linkage_disjunct_cost( VALUE self ) {
  *  call-seq:
  *     linkage.and_cost   -> fixnum
  *
- *  Returns the AND cost of the linkage, which is the difference in length 
+ *  Returns the AND cost of the linkage, which is the difference in length
  *  between and-list elements.
  *
  */
@@ -645,8 +655,8 @@ rlink_linkage_and_cost( VALUE self ) {
  *  call-seq:
  *     linkage.link_cost   -> fixnum
  *
- *  Returns the total (LEN) cost of the linkage, which is the total length of 
- *  all links in the sentence minus the number of words -- since the total link 
+ *  Returns the total (LEN) cost of the linkage, which is the total length of
+ *  all links in the sentence minus the number of words -- since the total link
  *  length is never less than the number of words.
  *
  */
@@ -665,8 +675,8 @@ rlink_linkage_link_cost( VALUE self ) {
  *  call-seq:
  *     linkage.canonical?   -> true or false
  *
- *  Returns +true+ if the linkage is canonical. The canonical linkage is the 
- *  one in which the minimal disjunct that ever occurrs in a position is used 
+ *  Returns +true+ if the linkage is canonical. The canonical linkage is the
+ *  one in which the minimal disjunct that ever occurrs in a position is used
  *  in that position.
  */
 static VALUE
@@ -684,7 +694,7 @@ rlink_linkage_canonical_p( VALUE self ) {
  *  call-seq:
  *     linkage.improper?   -> true or false
  *
- *  Returns +true+ if the linkage is "improper". 
+ *  Returns +true+ if the linkage is "improper".
  *  --
  *  :FIXME: Find out what an "improper fat linkage" is.
  *
@@ -704,7 +714,7 @@ rlink_linkage_improper_p( VALUE self ) {
  *  call-seq:
  *     linkage.has_inconsistent_domains?   -> true or false
  *
- *  Returns +true+ if the linkage has inconsistent domains. 
+ *  Returns +true+ if the linkage has inconsistent domains.
  *  --
  *  :FIXME: Find out what it means that a linkage has inconsistent domains.
  *
@@ -724,8 +734,8 @@ rlink_linkage_has_inconsistent_domains_p( VALUE self ) {
  *  call-seq:
  *     linkage.violation_name   -> str
  *
- *  If the linkage violated any post-processing rules, this method returns the 
- *  name of the violated rule in the post-process knowledge file. 
+ *  If the linkage violated any post-processing rules, this method returns the
+ *  name of the violated rule in the post-process knowledge file.
  */
 static VALUE
 rlink_linkage_get_violation_name( VALUE self ) {
@@ -751,10 +761,10 @@ rlink_linkage_get_violation_name( VALUE self ) {
  *     sent = dict.parse( "He is a big dog." )
  *     link = sent.linkages.first
  *     ctree = link.constituent_tree
- *     # => [#<struct Struct::LinkParserLinkageCTree label="S", 
+ *     # => [#<struct Struct::LinkParserLinkageCTree label="S",
  *               children=[#<struct Struct::LinkParserLinkageCTree label="NP">, ...],
  *               start=0, end=5>]
- *     
+ *
  */
 static VALUE
 rlink_linkage_constituent_tree( VALUE self ) {
@@ -770,7 +780,7 @@ rlink_linkage_constituent_tree( VALUE self ) {
 }
 
 
-/* 
+/*
  * Make an Array of LinkParser::Linkage::CTree objects from the specified
  * linked list of CNode *.
  */
@@ -780,7 +790,7 @@ rlink_linkage_make_cnode_array( CNode *ctree ) {
 	VALUE rnode;
 	CNode *cnode = ctree;
 
-	/*	
+	/*
 		struct CNode_s {
 		  char  * label;
 		  CNode * child;
@@ -797,7 +807,7 @@ rlink_linkage_make_cnode_array( CNode *ctree ) {
 		  );
 
 		/* Make a node array for any children */
-		rb_struct_aset( rnode, INT2FIX(1), 
+		rb_struct_aset( rnode, INT2FIX(1),
 			rlink_linkage_make_cnode_array(linkage_constituent_node_get_child(cnode)) );
 
 		rb_ary_push( nodes, rnode );
@@ -818,7 +828,7 @@ rlink_linkage_make_cnode_array( CNode *ctree ) {
  *     sent = dict.parse( "He is a big dog." )
  *     link = sent.linkages.first
  *     link.constituent_tree_string
- *     
+ *
  *     # ==> "(S (NP He)\n   (VP is\n       (NP a big dog))\n   .)\n"
  */
 static VALUE
@@ -851,12 +861,12 @@ rlink_linkage_constituent_tree_string( int argc, VALUE *argv, VALUE self ) {
 
 
 
-/* 
+/*
  * This is the API's representation of a parse. A LinkParser::Sentence may have one or more
  * of LinkParser::Linkages, each of which represents one possible structure of the sentence.
- * It can be thought of as a Sentence together with a collection of links. If the parse 
- * has a conjunction, then the Linkage is made up of at least two "sublinkages". A 
- * Linkage can be pretty printed in either ASCII or Postscript format, and individual 
+ * It can be thought of as a Sentence together with a collection of links. If the parse
+ * has a conjunction, then the Linkage is made up of at least two "sublinkages". A
+ * Linkage can be pretty printed in either ASCII or Postscript format, and individual
  * links can be extracted.
  *
  */
@@ -868,73 +878,52 @@ rlink_init_linkage() {
 
 	rb_define_method( rlink_cLinkage, "initialize", rlink_linkage_init, -1 );
 	rb_define_method( rlink_cLinkage, "diagram", rlink_linkage_diagram, 0 );
-	rb_define_method( rlink_cLinkage, "postscript_diagram",
-	 	rlink_linkage_print_postscript, 1 );
-	rb_define_method( rlink_cLinkage, "links_and_domains", 
-		rlink_linkage_links_and_domains, 0 );
+	rb_define_method( rlink_cLinkage, "postscript_diagram", rlink_linkage_print_postscript, 1 );
+	rb_define_method( rlink_cLinkage, "links_and_domains", rlink_linkage_links_and_domains, 0 );
 
-	rb_define_method( rlink_cLinkage, "num_sublinkages", 
-		rlink_linkage_num_sublinkages, 0 );
-	rb_define_method( rlink_cLinkage, "current_sublinkage=",
-		rlink_linkage_current_sublinkage_eq, 1 );
-	rb_define_method( rlink_cLinkage, "current_sublinkage",
-		rlink_linkage_current_sublinkage, 0 );
-
-	rb_define_method( rlink_cLinkage, "num_words",
-	 	rlink_linkage_get_num_words, 0 );
+	rb_define_method( rlink_cLinkage, "num_words", rlink_linkage_get_num_words, 0 );
 	rb_define_alias ( rlink_cLinkage, "word_count", "num_words" );
-	rb_define_method( rlink_cLinkage, "num_links",
-	 	rlink_linkage_get_num_links, 0 );
+	rb_define_method( rlink_cLinkage, "num_links", rlink_linkage_get_num_links, 0 );
 	rb_define_alias ( rlink_cLinkage, "link_count", "num_links" );
 
-	rb_define_method( rlink_cLinkage, "link_lword",
-	 	rlink_linkage_get_link_lword, 1 );
-	rb_define_method( rlink_cLinkage, "link_rword",
-	 	rlink_linkage_get_link_rword, 1 );
-	rb_define_method( rlink_cLinkage, "link_length",
-	 	rlink_linkage_get_link_length, 1 );
-	rb_define_method( rlink_cLinkage, "link_label",
-	 	rlink_linkage_get_link_label, 1 );
-	rb_define_method( rlink_cLinkage, "link_llabel",
-	 	rlink_linkage_get_link_llabel, 1 );
-	rb_define_method( rlink_cLinkage, "link_rlabel",
-	 	rlink_linkage_get_link_rlabel, 1 );
+	rb_define_method( rlink_cLinkage, "link_lword", rlink_linkage_get_link_lword, 1 );
+	rb_define_method( rlink_cLinkage, "link_rword", rlink_linkage_get_link_rword, 1 );
+	rb_define_method( rlink_cLinkage, "link_length", rlink_linkage_get_link_length, 1 );
+	rb_define_method( rlink_cLinkage, "link_label", rlink_linkage_get_link_label, 1 );
+	rb_define_method( rlink_cLinkage, "link_llabel", rlink_linkage_get_link_llabel, 1 );
+	rb_define_method( rlink_cLinkage, "link_rlabel", rlink_linkage_get_link_rlabel, 1 );
 
-	rb_define_method( rlink_cLinkage, "link_num_domains",
-	 	rlink_linkage_get_link_num_domains, 1 );
-	rb_define_method( rlink_cLinkage, "link_domain_names",
-	 	rlink_linkage_get_link_domain_names, 1 );
+	rb_define_method( rlink_cLinkage, "link_num_domains", rlink_linkage_get_link_num_domains, 1 );
+	rb_define_method( rlink_cLinkage, "link_domain_names", rlink_linkage_get_link_domain_names, 1 );
 
 	rb_define_method( rlink_cLinkage, "words", rlink_linkage_get_words, 0 );
 	rb_define_method( rlink_cLinkage, "disjunct_strings", rlink_linkage_get_disjunct_strings, 0 );
 
-	rb_define_method( rlink_cLinkage, "compute_union",
-	 	rlink_linkage_compute_union, 0 );
-	rb_define_method( rlink_cLinkage, "unused_word_cost",
-	 	rlink_linkage_unused_word_cost, 0 );
-	rb_define_method( rlink_cLinkage, "disjunct_cost",
-	 	rlink_linkage_disjunct_cost, 0 );
-	rb_define_method( rlink_cLinkage, "and_cost",
-	 	rlink_linkage_and_cost, 0 );
-	rb_define_method( rlink_cLinkage, "link_cost",
-	 	rlink_linkage_link_cost, 0 );
-	rb_define_method( rlink_cLinkage, "canonical?",
-	 	rlink_linkage_canonical_p, 0 );
-	rb_define_method( rlink_cLinkage, "improper?",
-	 	rlink_linkage_improper_p, 0 );
+	rb_define_method( rlink_cLinkage, "compute_union", rlink_linkage_compute_union, 0 );
+	rb_define_method( rlink_cLinkage, "unused_word_cost", rlink_linkage_unused_word_cost, 0 );
+	rb_define_method( rlink_cLinkage, "disjunct_cost", rlink_linkage_disjunct_cost, 0 );
+	rb_define_method( rlink_cLinkage, "and_cost", rlink_linkage_and_cost, 0 );
+	rb_define_method( rlink_cLinkage, "link_cost", rlink_linkage_link_cost, 0 );
+	rb_define_method( rlink_cLinkage, "canonical?", rlink_linkage_canonical_p, 0 );
+	rb_define_method( rlink_cLinkage, "improper?", rlink_linkage_improper_p, 0 );
 	rb_define_method( rlink_cLinkage, "has_inconsistent_domains?",
-	 	rlink_linkage_has_inconsistent_domains_p, 0 );
-	rb_define_method( rlink_cLinkage, "violation_name",
-	 	rlink_linkage_get_violation_name, 0 );
+		rlink_linkage_has_inconsistent_domains_p, 0 );
+	rb_define_method( rlink_cLinkage, "violation_name", rlink_linkage_get_violation_name, 0 );
 
 	/* Struct that contains links of a constituent tree (:label, :children, :start, :end) */
 	rb_define_const( rlink_cLinkage, "CTree", rlink_sLinkageCTree );
-	rlink_sLinkageCTree = rb_struct_define( "LinkParserLinkageCTree", 
+	rlink_sLinkageCTree = rb_struct_define( "LinkParserLinkageCTree",
 		"label", "children", "start", "end", NULL );
 
-	rb_define_method( rlink_cLinkage, "constituent_tree",
-		rlink_linkage_constituent_tree, 0 );
+	rb_define_method( rlink_cLinkage, "constituent_tree", rlink_linkage_constituent_tree, 0 );
 	rb_define_method( rlink_cLinkage, "constituent_tree_string",
-	 	rlink_linkage_constituent_tree_string, -1 );
+		rlink_linkage_constituent_tree_string, -1 );
+
+	/* Deprecated sublinkage API */
+	rb_define_method( rlink_cLinkage, "num_sublinkages", rlink_linkage_num_sublinkages, 0 );
+	rb_define_method( rlink_cLinkage, "current_sublinkage=",
+		rlink_linkage_current_sublinkage_eq, 1 );
+	rb_define_method( rlink_cLinkage, "current_sublinkage", rlink_linkage_current_sublinkage, 0 );
+
 }
 

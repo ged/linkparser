@@ -71,7 +71,7 @@ describe LinkParser::Dictionary do
 		}.should raise_error( LinkParser::Error )
 	end
 
-	describe "instance" do
+	context "instance" do
 
 		TEST_SENTENCE = "The dog plays with the ball."
 
