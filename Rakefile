@@ -42,6 +42,7 @@ rescue LoadError
 	end
 end
 
+require 'pathname'
 require 'rbconfig'
 require 'rake'
 require 'rake/testtask'
