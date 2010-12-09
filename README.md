@@ -26,8 +26,8 @@ Suggestions welcomed.
 First, you'll need to install the Abiword link-grammar library that comes with
 this source (or download it yourself if you wish):
 
-    $ tar -xvzf link-grammar-4.6.5.tar.gz
-    $ cd link-grammar-4.6.5
+    $ tar -xvzf link-grammar-4.7.0.tar.gz
+    $ cd link-grammar-4.7.0
     $ ./configure; make; sudo make install
     $ cd ..
 

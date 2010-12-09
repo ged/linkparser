@@ -10,3 +10,5 @@ docs
 ^release\.notes$
 tmp/
 ChangeLog
+^\.yardoc/
+^release\.ann$
