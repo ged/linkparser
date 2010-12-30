@@ -277,6 +277,11 @@ describe LinkParser::Linkage do
 	end
 
 
+	it "knows what word is the subject of the sentence" do
+		@linkage.subject.should == "flag"
+	end
+
+
 	it "knows when the sentence doesn't have a direct object" do
 		@linkage.object.should be_nil()
 	end
@@ -311,22 +316,22 @@ describe LinkParser::Linkage do
 	end
 
 	it "raises an exception for any numeric constituent tree string mode greater than 3" do
-		lambda {
+		expect {
 			@linkage.constituent_tree_string( 4 )
-		}.should raise_error( ArgumentError, /illegal mode 4/i )
+		}.to raise_error( ArgumentError, /illegal mode 4/i )
 	end
 
 	it "raises an exception for any numeric constituent tree string mode less than 1" do
-		lambda {
+		expect {
 			@linkage.constituent_tree_string( 0 )
-		}.should raise_error( ArgumentError, /illegal mode 0/i )
+		}.to raise_error( ArgumentError, /illegal mode 0/i )
 	end
 
 
 	it "raises an exception when a non-numeric constituent tree string mode is given" do
-		lambda {
+		expect {
 			@linkage.constituent_tree_string( 'glarg' )
-		}.should raise_error( TypeError )
+		}.to raise_error( TypeError )
 	end
 
 	it "returns an Array of CTree structs for its constituent tree" do
@@ -359,8 +364,7 @@ describe LinkParser::Linkage do
 			#       |      +-Ds-+--Ss--+---Ou---+    |
 			#       |      |    |      |        |    |
 			#   LEFT-WALL the dog.n ran.v-d home.n-u . 
-			# ...but it might not be the first one, so check them all.
-			@sentence.linkages.find {|linkage| linkage.object == 'home' }
+			@sentence.object.should == 'home'
 
 		end
 
