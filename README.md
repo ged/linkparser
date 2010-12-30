@@ -1,12 +1,13 @@
-# Ruby-LinkParser
+# linkparser
 
-This module is a Ruby binding for the link-grammar library, a syntactic parser
-of English. 
+* http://deveiate.org/projects/Ruby-LinkParser
 
-## Authors
+## Description
 
-* Michael Granger <ged@FaerieMUD.org>
-* Martin Chase <stillflame@FaerieMUD.org>
+A Ruby binding for the link-grammar library, a syntactic parser of
+English. See http://www.link.cs.cmu.edu/link/ for more information about
+the Link Grammar, and http://www.abisource.org/projects/link-grammar/
+for information about the link-grammar library.
 
 
 ## Requirements
@@ -26,15 +27,15 @@ Suggestions welcomed.
 First, you'll need to install the Abiword link-grammar library that comes with
 this source (or download it yourself if you wish):
 
-    $ tar -xvzf link-grammar-4.7.0.tar.gz
-    $ cd link-grammar-4.7.0
+    $ tar -xvzf link-grammar-4.7.1.tar.gz
+    $ cd link-grammar-4.7.1
     $ ./configure; make; sudo make install
     $ cd ..
 
 Now build, test, and install the Ruby library:
 
     $ rake
-    $ sudo rake install
+    $ sudo rake install_gem
 
 If you've installed the link-grammar library someplace that isn't in your
 regular include path, you might have to tell the build system where to look:
@@ -83,13 +84,38 @@ That's it!
     # LEFT-WALL people.p use.v Ruby for.p all kinds.n of nifty.a things.n . 
 
 
-## Legal
+## Authors
 
-For licensing information, see the LICENSE file.
-
-For copyright and licensing information for link-grammar itself, see the
-LICENSE file in that distribution.
-
- $Id$
+* Michael Granger <ged@FaerieMUD.org>
+* Martin Chase <stillflame@FaerieMUD.org>
 
 
+## License
+
+Copyright (c) 2006-2010, The FaerieMUD Consortium
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice,
+  this list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of the author/s, nor the names of the project's
+  contributors may be used to endorse or promote products derived from this
+  software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
