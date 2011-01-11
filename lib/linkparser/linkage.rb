@@ -215,12 +215,12 @@ class LinkParser::Linkage
 
 	### Return the verb word from the linkage.
 	def verb
-		if link = self.links.find {|link| link.llabel =~ /^(O([DFNTX]?)|P|BI|K|LI|MV|Q)[a-z\*]*/ }
+		if verblink = self.links.find {|link| link.llabel =~ /^(O([DFNTX]?)|P|BI|K|LI|MV|Q)[a-z\*]*/ }
 			# $deferr.puts "Picking %s: LL of %p is %s" % [ link.lword, link, link.llabel ]
-			return link.lword.sub( /\.v(-d)?$/, '' )
-		elsif link = self.links.find {|link| link.rlabel =~ /^(SI|S|AF)[a-z\*]*/ }
+			return verblink.lword.sub( /\.v(-d)?$/, '' )
+		elsif verblink = self.links.find {|link| link.rlabel =~ /^(SI|S|AF)[a-z\*]*/ }
 			# $deferr.puts "Picking %s: RL of %p is %s" % [ link.rword, link, link.rlabel ]
-			return link.rword.sub( /\.v(-d)?$/, '' )
+			return verblink.rword.sub( /\.v(-d)?$/, '' )
 		else
 			return nil
 		end
@@ -229,15 +229,15 @@ class LinkParser::Linkage
 
 	### Return the subject from the linkage.
 	def subject
-		link = self.links.find {|link| link.llabel[0] == ?S } or return nil
-		return link.lword.sub( /\.[np](?:-\w)?$/, '' )
+		subjlink = self.links.find {|link| link.llabel[0] == ?S } or return nil
+		return subjlink.lword.sub( /\.[np](?:-\w)?$/, '' )
 	end
 
 
 	### Return the object from the linkage.
 	def object
-		link = self.links.find {|link| link.rlabel[0] == ?O } or return nil
-		return link.rword.sub( /\.[np](?:-\w)?$/, '' )
+		objlink = self.links.find {|link| link.rlabel[0] == ?O } or return nil
+		return objlink.rword.sub( /\.[np](?:-\w)?$/, '' )
 	end
 
 
