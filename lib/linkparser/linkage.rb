@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'linkparser'
+require 'linkparser' unless defined?( LinkParser )
 require 'linkparser/mixins'
 
 # 
@@ -26,8 +26,6 @@ require 'linkparser/mixins'
 # See the LICENSE file for copyright/licensing information.
 class LinkParser::Linkage
 	extend LinkParser::DeprecationUtilities
-
-	require 'linkparser_ext'
 
 	###
 	### Deprecated API

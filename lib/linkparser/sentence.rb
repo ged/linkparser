@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 
-require 'linkparser'
+require 'linkparser' unless defined?( LinkParser )
 
 # 
 # A Sentence is the API's representation of an input string, tokenized
