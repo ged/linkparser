@@ -19,7 +19,6 @@
 #include <assert.h>
 
 #include "ruby.h"
-#include "ruby/intern.h"
 
 #include "link-grammar/link-includes.h"
 
