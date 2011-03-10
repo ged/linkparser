@@ -1,6 +1,9 @@
+ChangeLog
+History.md
 LICENSE
 README.md
 Rakefile
+docs/basic-api.rb
 ext/dictionary.c
 ext/extconf.rb
 ext/linkage.c
@@ -12,6 +15,7 @@ lib/linkparser.rb
 lib/linkparser/linkage.rb
 lib/linkparser/mixins.rb
 lib/linkparser/sentence.rb
+misc/readme-example.rb
 spec/bugfixes_spec.rb
 spec/linkparser/dictionary_spec.rb
 spec/linkparser/linkage_spec.rb
