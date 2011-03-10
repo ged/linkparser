@@ -92,7 +92,7 @@ That's it!
 
 ## License
 
-Copyright (c) 2006-2010, The FaerieMUD Consortium
+Copyright (c) 2006-2011, The FaerieMUD Consortium
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
