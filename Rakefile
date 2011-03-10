@@ -4,19 +4,24 @@ require 'hoe'
 require 'rake/extensiontask' # rake-compiler
 
 Hoe.plugin :mercurial
-Hoe.plugin :yard
 Hoe.plugin :signing
 
 Hoe.plugins.delete :rubyforge
 
+# Main gem configuration
 hoespec = Hoe.spec 'linkparser' do
 	self.readme_file = 'README.md'
+	self.history_file = 'History.md'
 
 	self.developer 'Michael Granger', 'ged@FaerieMUD.org'
 	self.developer 'Martin Chase', 'stillflame@FaerieMUD.org'
 
-	self.extra_dev_deps <<
-		['rspec', '~> 2.3.1']
+	self.extra_deps.push *{
+		'rake-compiler' => '~> 0.7',
+	}
+	self.extra_dev_deps.push *{
+		'rspec' => '~> 2.4',
+	}
 
 	self.spec_extras[:licenses] = ["BSD"]
 	self.spec_extras[:signing_key] = '/Volumes/Keys/ged-private_gem_key.pem'
@@ -26,24 +31,45 @@ hoespec = Hoe.spec 'linkparser' do
 
 	self.hg_sign_tags = true if self.respond_to?( :hg_sign_tags= )
 
-	self.yard_opts = [ '--use-cache', '--protected', '--verbose' ]
 	self.rdoc_locations << "deveiate:/usr/local/www/public/code/#{remote_rdoc_dir}"
 end
 
 ENV['VERSION'] ||= hoespec.spec.version.to_s
 
-# Run specs before commit
+# Ensure the specs pass before checking in
 task 'hg:precheckin' => :spec
 
 # Need to (re)compile before running specs
 task :spec => :compile
 
-# Compile task
-Rake::ExtensionTask.new( 'linkparser_ext', hoespec.spec ) do |ext|
-	ext.ext_dir = 'ext'
+# gem-testers support
+task :test do
+	# rake-compiler always wants to copy the compiled extension into lib/, but
+	# we don't want testers to have to re-compile, especially since that
+	# often fails because they can't (and shouldn't have to) write to tmp/ in
+	# the installed gem dir. So we clear the task rake-compiler set up
+	# to break the dependency between :spec and :compile when running under
+	# rubygems-test, and then run :spec.
+	Rake::Task[ EXT.to_s ].clear
+	Rake::Task[ :spec ].execute
+end
+
+desc "Turn on warnings and debugging in the build."
+task :maint do
+	ENV['MAINTAINER_MODE'] = 'yes'
+end
+
+ENV['RUBY_CC_VERSION'] = '1.8.7:1.9.2'
+
+# Rake-compiler task
+Rake::ExtensionTask.new do |ext|
+	ext.gem_spec       = hoespec.spec
+	ext.name           = 'linkparser_ext'
+	ext.ext_dir        = 'ext'
+	ext.lib_dir        = 'lib'
 	ext.source_pattern = "*.{c,h}"
-	ext.cross_compile = true
-	ext.cross_platform = 'i386-mswin32'
+	ext.cross_compile  = true
+	ext.cross_platform = %w[i386-mswin32 i386-mingw32]
 end
 
 
@@ -73,9 +99,6 @@ begin
 			fh.print( content )
 		end
 	end
-
-	# Rebuild the ChangeLog immediately before release
-	task :prerelease => 'ChangeLog'
 
 rescue NameError => err
 	task :no_hg_helpers do
