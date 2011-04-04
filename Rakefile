@@ -1,5 +1,6 @@
 #!/usr/bin/env rake
 
+require 'rbconfig'
 require 'pathname'
 
 begin
@@ -19,7 +20,10 @@ BASEDIR = Pathname( __FILE__ ).dirname
 SPECDIR = BASEDIR + 'spec'
 EXTDIR  = BASEDIR + 'ext'
 
+DLEXT   = Config::CONFIG['DLEXT']
+
 EXTCONF = EXTDIR + 'extconf.rb'
+EXT     = EXTDIR + "linkparser_ext.#{DLEXT}"
 
 # Hoe plugins
 Hoe.plugin :mercurial
