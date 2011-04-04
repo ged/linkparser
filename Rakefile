@@ -19,11 +19,12 @@ end
 BASEDIR = Pathname( __FILE__ ).dirname
 SPECDIR = BASEDIR + 'spec'
 EXTDIR  = BASEDIR + 'ext'
+LIBDIR  = BASEDIR + 'lib'
 
 DLEXT   = Config::CONFIG['DLEXT']
 
 EXTCONF = EXTDIR + 'extconf.rb'
-EXT     = EXTDIR + "linkparser_ext.#{DLEXT}"
+EXT     = LIBDIR + "linkparser_ext.#{DLEXT}"
 
 # Hoe plugins
 Hoe.plugin :mercurial
