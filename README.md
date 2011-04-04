@@ -4,90 +4,69 @@
 
 ## Description
 
-A Ruby binding for the link-grammar library, a syntactic parser of
-English. See http://www.link.cs.cmu.edu/link/ for more information about
-the Link Grammar, and http://www.abisource.org/projects/link-grammar/
-for information about the link-grammar library.
+This module is a Ruby binding for [the Abiword version][abiword] of CMU's 
+[Link Grammar][link-grammar], a syntactic parser of English. 
 
 
-## Requirements
+### Example Usage
 
-* Ruby 1.8.7 or 1.9.2
-* link-grammar (version 4.7.0 or later) from the AbiWord project 
-  (http://www.abisource.com/projects/link-grammar/) 
+	require 'linkparser'
+	
+	dict = LinkParser::Dictionary.new( :screen_width => 100 )
+	sent = dict.parse( "People use Ruby for all kinds of nifty things." )
+	# => #<LinkParser::Sentence:0xcf8eb "LEFT-WALL people use Ruby for all kinds
+	#      of nifty things . RIGHT-WALL"/2 linkages/0 nulls>
+	
+	sent.subject        # => "people"
+	sent.verb           # => "use"
+	sent.object         # => "Ruby"
+	
+	puts sent.constituent_tree_string
+	# =>
+	# (S (NP People)
+	#    (VP use
+	#        (NP Ruby)
+	#        (PP for
+	#            (NP (NP all kinds)
+	#                (PP of
+	#                    (NP nifty things)))))
+	#    .)
+	
+	puts sent.diagram
+	# =>
+	#     +-------------------------------Xp------------------------------+
+	#     |                +----MVp---+----Jp----+     +------Jp-----+    |
+	#     +----Wd---+--Sp--+--Os-+    |    +-Dmc-+--Mp-+    +----A---+    |
+	#     |         |      |     |    |    |     |     |    |        |    |
+	# LEFT-WALL people.p use.v Ruby for.p all kinds.n of nifty.a things.n . 
 
 
 ## Installation
 
-These instructions assume a UNIX or UNIX-like environment. I've built it on
-MacOS X, FreeBSD, and Ubuntu Linux. I'm not sure how to get this to build
-under Windows, as I don't have a Windows license with which to test it.
-Suggestions welcomed.
+First, download and install the latest version of the link-grammar 
+library from [Abiword's site][abiword-dl].
 
-First, you'll need to install the Abiword link-grammar library that comes with
-this source (or download it yourself if you wish):
+Then install the gem:
 
-    $ tar -xvzf link-grammar-4.7.1.tar.gz
-    $ cd link-grammar-4.7.1
-    $ ./configure; make; sudo make install
-    $ cd ..
+    gem install linkparser
 
-Now build, test, and install the Ruby library:
+You may need to specify the path to the link-grammar library if you 
+installed it somewhere that your linker doesn't look by default:
 
-    $ rake
-    $ sudo rake install_gem
-
-If you've installed the link-grammar library someplace that isn't in your
-regular include path, you might have to tell the build system where to look:
-
-    $ rake -- --with-link-grammar-dir=/usr/local
-
-Under MacOS X, unless you've taken extra steps to compile the link-grammar
-library as a universal binary, you'll probably also have to limit it to
-your machine's architecture:
-
-    $ ARCHFLAGS="-arch i386" rake -- --with-link-grammar-dir=/usr/local
-
-That's it!
+    gem install linkparser -- --with-link-grammar=/usr/local
 
 
-## Example Usage
+## Contributing
 
-    require 'linkparser'
-    
-    dict = LinkParser::Dictionary.new( :screen_width => 100 )
-    sent = dict.parse( "People use Ruby for all kinds of nifty things." )
-    # => #<LinkParser::Sentence:0xcf8eb "LEFT-WALL people use Ruby for all kinds
-    #      of nifty things . RIGHT-WALL"/2 linkages/0 nulls>
-    
-    sent.subject        # => "people"
-    sent.verb           # => "use"
-    sent.object         # => "Ruby"
-    
-    puts sent.constituent_tree_string
-    # =>
-    # (S (NP People)
-    #    (VP use
-    #        (NP Ruby)
-    #        (PP for
-    #            (NP (NP all kinds)
-    #                (PP of
-    #                    (NP nifty things)))))
-    #    .)
-    
-    puts sent.diagram
-    # =>
-    #     +-------------------------------Xp------------------------------+
-    #     |                +----MVp---+----Jp----+     +------Jp-----+    |
-    #     +----Wd---+--Sp--+--Os-+    |    +-Dmc-+--Mp-+    +----A---+    |
-    #     |         |      |     |    |    |     |     |    |        |    |
-    # LEFT-WALL people.p use.v Ruby for.p all kinds.n of nifty.a things.n . 
+You can check out the current development source [with Mercurial][hg-repo],
+or if you prefer Git, via [its Github mirror][github-mirror].
 
+After checking out the source, run:
 
-## Authors
+	$ rake newb
 
-* Michael Granger <ged@FaerieMUD.org>
-* Martin Chase <stillflame@FaerieMUD.org>
+This task will install any missing dependencies, run the tests/specs,
+and generate the API documentation.
 
 
 ## License
@@ -119,3 +98,10 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+[abiword]:http://www.abisource.com/projects/link-grammar/
+[link-grammar]:http://www.link.cs.cmu.edu/link/ "Link Grammar"
+[abiword-dl]:http://www.abisource.com/projects/link-grammar/#download
+[hg-repo]:http://repo.deveiate.org/LinkParser
+[github-mirror]:http://github.com/ged/linkparser
