@@ -18,9 +18,9 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include "ruby.h"
+#include <ruby.h>
 
-#include "link-grammar/link-includes.h"
+#include <link-grammar/link-includes.h>
 
 
 /* Debugging functions/macros */
