@@ -8,7 +8,7 @@
 module LinkParser
 
 	# Release version
-	VERSION = '1.1.1'
+	VERSION = '1.1.2'
 
 	# Load the correct version if it's a Windows binary gem
 	if RUBY_PLATFORM =~/(mswin|mingw)/i

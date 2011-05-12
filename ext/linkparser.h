@@ -1,6 +1,6 @@
 /*
  *		linkparser.h - Ruby-LinkParser Header
- *		$Id$
+ *		$Id: linkparser.h,v 65471608cc6e 2011/04/04 18:56:35 ged $
  *
  *		Authors:
  *		  * Michael Granger <ged@FaerieMUD.org>

@@ -1,6 +1,6 @@
 /*
  *  sentence.c - Ruby LinkParser
- *  $Id$
+ *  $Id: sentence.c,v 21df914cedb1 2010/10/12 15:45:26 ged $
  *  
  *  Authors:
  *    * Michael Granger <ged@FaerieMUD.org>

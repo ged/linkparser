@@ -1,7 +1,7 @@
 #!/usr/bin/ruby -w
 #
 # Specification for the LinkParser library
-# $Id$
+# $Id: linkparser_spec.rb,v 1eddd00723e6 2010/11/22 15:59:36 ged $
 #
 # See the LICENSE file in the distribution for information about copyright and licensing.
 #

@@ -1,6 +1,6 @@
 /*
  *  linkage.c - Ruby LinkParser Linkage class
- *  $Id$
+ *  $Id: linkage.c,v 54e4e2ff8899 2010/11/25 00:50:55 ged $
  *
  *  Authors:
  *    * Michael Granger <ged@FaerieMUD.org>

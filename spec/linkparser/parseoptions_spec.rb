@@ -1,7 +1,7 @@
 #!/usr/bin/ruby -w
 #
 # Specification for the LinkParser::ParseOptions class
-# $Id$
+# $Id: parseoptions_spec.rb,v 54e4e2ff8899 2010/11/25 00:50:55 ged $
 #
 # See the LICENSE file in the distribution for information about copyright and licensing.
 #
