@@ -10,8 +10,8 @@ pkgconfig = with_config( 'pkg-config' ) || 'pkg-config'
 pkgconfig = find_executable( pkgconfig ) or
 	abort "Couldn't find your pkg-config binary"
 
-$LDFLAGS << `#{pkgconfig} --libs-only-L link-grammar`.chomp
-$CFLAGS <<  `#{pkgconfig} --cflags link-grammar`.chomp
+$LDFLAGS << ' ' + `#{pkgconfig} --libs-only-L link-grammar`.chomp
+$CFLAGS <<  ' ' + `#{pkgconfig} --cflags link-grammar`.chomp
 
 
 dir_config( 'link-grammar' )
