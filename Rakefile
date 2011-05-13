@@ -48,7 +48,7 @@ hoespec = Hoe.spec 'linkparser' do
 	}
 
 	self.spec_extras[:licenses] = ["BSD"]
-	self.spec_extras[:extensions] = [ EXTCONF.to_s ]
+	self.spec_extras[:extensions] = [ File.join('ext','extconf.rb') ]
 
 	self.require_ruby_version( '>=1.8.7' )
 
