@@ -29,6 +29,7 @@ EXT     = LIBDIR + "linkparser_ext.#{DLEXT}"
 # Hoe plugins
 Hoe.plugin :mercurial
 Hoe.plugin :signing
+Hoe.plugin :gemspec
 
 Hoe.plugins.delete :rubyforge
 
