@@ -29,6 +29,7 @@ EXT     = LIBDIR + "linkparser_ext.#{DLEXT}"
 # Hoe plugins
 Hoe.plugin :mercurial
 Hoe.plugin :signing
+Hoe.plugin :gemspec
 
 Hoe.plugins.delete :rubyforge
 
@@ -45,7 +46,7 @@ hoespec = Hoe.spec 'linkparser' do
 	self.dependency 'hoe-deveiate', '~> 0.0.6', :development
 
 	self.spec_extras[:licenses] = ["BSD"]
-	self.spec_extras[:extensions] = [ EXTCONF.to_s ]
+	self.spec_extras[:extensions] = [ File.join('ext','extconf.rb') ]
 
 	self.require_ruby_version( '>=1.8.7' )
 

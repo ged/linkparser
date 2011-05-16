@@ -1,0 +1,18 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    hoe (2.9.4)
+      rake (>= 0.8.7)
+    hoe-gemspec (1.0.0)
+      hoe (>= 2.2.0)
+    rake (0.8.7)
+    rake-compiler (0.7.8)
+      rake
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  hoe
+  hoe-gemspec
+  rake-compiler
