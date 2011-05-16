@@ -16,7 +16,7 @@ rescue LoadError => err
 end
 
 # Build constants
-BASEDIR = Pathname( __FILE__ ).dirname
+BASEDIR = Pathname( __FILE__ ).dirname.relative_path_from( Pathname.pwd )
 SPECDIR = BASEDIR + 'spec'
 EXTDIR  = BASEDIR + 'ext'
 LIBDIR  = BASEDIR + 'lib'
@@ -40,12 +40,9 @@ hoespec = Hoe.spec 'linkparser' do
 	self.developer 'Michael Granger', 'ged@FaerieMUD.org'
 	self.developer 'Martin Chase', 'stillflame@FaerieMUD.org'
 
-	self.extra_deps.push *{
-		'rake-compiler' => '~> 0.7',
-	}
-	self.extra_dev_deps.push *{
-		'rspec'         => '~> 2.4',
-	}
+	self.dependency 'rake-compiler', '~> 0.7'
+	self.dependency 'rspec', '~> 2.4', :development
+	self.dependency 'hoe-deveiate', '~> 0.0.6', :development
 
 	self.spec_extras[:licenses] = ["BSD"]
 	self.spec_extras[:extensions] = [ EXTCONF.to_s ]
