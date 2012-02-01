@@ -1,9 +1,9 @@
 .gemtest
 ChangeLog
-History.md
+History.rdoc
 LICENSE
 Manifest.txt
-README.md
+README.rdoc
 Rakefile
 examples/basic-api.rb
 examples/readme-example.rb

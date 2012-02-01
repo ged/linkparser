@@ -11,7 +11,6 @@ module LinkParser
 
 		### Make a wrapper for a deprecated method. The wrapper will print a deprecation warning
 		### to STDERR, and then call the method with the same name prefixed with an underscore.
-		### @param [Symbol, #to_sym] name  the name of the method to deprecate.
 		def deprecated_method( *names )
 			names.each do |name|
 				method_body = lambda do |*args|
