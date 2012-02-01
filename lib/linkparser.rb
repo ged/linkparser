@@ -1,14 +1,15 @@
 #!/usr/bin/ruby
 
 # The LinkParser top-level namespace.
-#  
-# @author Michael Granger <ged@FaerieMUD.org>
-# @author Martin Chase <stillflame@FaerieMUD.org>
-#  
+#
+# == Author/s
+# * Michael Granger <ged@FaerieMUD.org>
+# * Martin Chase <stillflame@FaerieMUD.org>
+#
 module LinkParser
 
 	# Release version
-	VERSION = '1.1.3'
+	VERSION = '1.1.4'
 
 	# Load the correct version if it's a Windows binary gem
 	if RUBY_PLATFORM =~/(mswin|mingw)/i
