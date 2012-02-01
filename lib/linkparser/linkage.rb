@@ -16,7 +16,7 @@ require 'linkparser/mixins'
 # 
 # == Version
 #
-#  $Id: linkage.rb,v 507ef20fc315 2011/01/11 19:06:53 ged $
+#  $Id$
 # 
 # == License
 #

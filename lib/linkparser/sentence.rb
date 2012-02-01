@@ -14,7 +14,7 @@ require 'linkparser' unless defined?( LinkParser )
 # 
 # == Version
 #
-#  $Id: sentence.rb,v 23a39531870a 2011/01/11 18:18:12 ged $
+#  $Id$
 # 
 # == License
 # 

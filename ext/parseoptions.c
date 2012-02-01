@@ -1,6 +1,6 @@
 /*
  *  parseoptions.c - Ruby LinkParser::ParseOptions class
- *  $Id: parseoptions.c,v 21df914cedb1 2010/10/12 15:45:26 ged $
+ *  $Id$
  *  
  *  Authors:
  *    * Michael Granger <ged@FaerieMUD.org>

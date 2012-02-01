@@ -1,7 +1,7 @@
 #!/usr/bin/ruby -w
 #
 # Specification for the LinkParser::Linkage class
-# $Id: linkage_spec.rb,v 7af8c401b107 2010/12/30 18:00:05 ged $
+# $Id$
 #
 # See the LICENSE file in the distribution for information about copyright and licensing.
 #

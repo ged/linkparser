@@ -1,7 +1,7 @@
 #!/usr/bin/ruby -w
 #
 # Specification for various bugfixes to the LinkParser binding
-# $Id: bugfixes_spec.rb,v 1eddd00723e6 2010/11/22 15:59:36 ged $
+# $Id$
 #
 # See the LICENSE file in the distribution for information about copyright and licensing.
 #
