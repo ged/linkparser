@@ -40,9 +40,8 @@ hoespec = Hoe.spec 'linkparser' do
 	self.developer 'Michael Granger', 'ged@FaerieMUD.org'
 	self.developer 'Martin Chase', 'stillflame@FaerieMUD.org'
 
-	self.dependency 'rake-compiler', '~> 0.7'
-	self.dependency 'rspec', '~> 2.4', :development
-	self.dependency 'hoe-deveiate', '~> 0.0.6', :development
+	self.dependency 'rake-compiler', '~> 0', :development
+	self.dependency 'hoe-deveiate', '~> 0', :development
 
 	self.spec_extras[:licenses] = ["BSD"]
 	self.spec_extras[:extensions] = [ EXTCONF.to_s ]

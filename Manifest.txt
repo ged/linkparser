@@ -1,8 +1,12 @@
+.gemtest
 ChangeLog
 History.md
 LICENSE
+Manifest.txt
 README.md
 Rakefile
+examples/basic-api.rb
+examples/readme-example.rb
 ext/dictionary.c
 ext/extconf.rb
 ext/linkage.c
