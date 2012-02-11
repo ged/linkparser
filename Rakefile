@@ -36,7 +36,7 @@ Hoe.plugins.delete :rubyforge
 hoespec = Hoe.spec 'linkparser' do
 	self.readme_file = 'README.rdoc'
 	self.history_file = 'History.rdoc'
-	self.extra_rdoc_files = FileList[ '*.rdoc' ]
+	self.extra_rdoc_files = FileList[ '*.rdoc', 'ext/*.[ch]' ]
 
 	self.developer 'Michael Granger', 'ged@FaerieMUD.org'
 	self.developer 'Martin Chase', 'stillflame@FaerieMUD.org'
