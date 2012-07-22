@@ -371,6 +371,30 @@ describe LinkParser::Linkage do
 	end
 
 
+  context "when parsing a simple sentence" do
+    it "returns the object of the preposition" do
+      # This depends on the linkage:
+      #    +------------------Xp-----------------+
+      #    |                      +----Js---+    |
+      #    +--Wd--+--Sp*i-+--MVp--+   +--Ds-+    |
+      #    |      |       |       |   |     |    |
+      #    LEFT-WALL I.p jumped.v-d over the couch.n .
+      sentence = @dict.parse("I jumped over the couch.")
+      sentence.object_of_preposition.should == 'couch'
+    end
+    it "returns the entire prepositional object with modifiers" do
+      # This depends on the linkage:
+      #    +----------------------------Xp---------------------------+
+      #    |                      +-------------Jp------------+      |
+      #    +--Wd--+--Sp*i-+--MVp--+      +----A----+----AN----+      |
+      #    |      |       |       |      |         |          |      |
+      #    LEFT-WALL I.p jumped.v-d over Las[?].a Vegas[?].n County[?].n . 
+      sentence = @dict.parse("I jumped over Las Vegas County.")
+      sentence.object_of_preposition.should == 'Las[?] Vegas[?] County[?]'
+    end
+  end
+
+
 	context "deprecated sublinkage API" do
 
 		before( :each ) do
