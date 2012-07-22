@@ -12,7 +12,7 @@ This module is a Ruby binding for
 === Example Usage
 
     require 'linkparser'
-	
+     
     dict = LinkParser::Dictionary.new( :screen_width => 100 )
     sent = dict.parse( "People use Ruby for all kinds of nifty things." )
     # => #<LinkParser::Sentence:0xcf8eb "LEFT-WALL people use Ruby for all kinds
