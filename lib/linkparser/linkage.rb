@@ -244,17 +244,18 @@ class LinkParser::Linkage
   ### Return the object of the preposition in the linkage.
   def object_of_preposition
     objlink = self.links.find {|link| link.rlabel[0] == ?J } or return nil
-    if objlink.length > 1
-      # Check if the prepositional object contains a modifier.
-      modifier_structs = self.links.find_all {|link| link.rlabel[0] == ?A } 
-      if modifier_structs.empty?
-        return objlink.rword.sub( /\.[n](?:-\w)?$/, '' )
-      end
+    # Check if the prepositional object contains a modifier.
+    modlinks = self.links.find_all {|link| link.rlabel[0] == ?A } 
+    if modlinks.empty?
+      # No modifiers
+      return objlink.rword.sub( /\.[n](?:-\w)?$/, '' )
+    else
+      # At least one modifier
       modifiers = []
-      modifier_structs.each do |modifier_struct|
-        modifiers << modifier_struct.lword.sub( /\.(a|n)?/, '' )
+      modlinks.each do |modlink|
+        modifiers << modlink.lword.sub( /\.(a|n)?/, '' )
       end
-      modifiers.unshift(modifier_structs.first.rword.sub( /\.(a|n)?/, '' ))
+      modifiers.unshift(modlinks.first.rword.sub( /\.(a|n)?/, '' ))
       return modifiers.reverse.join(' ')
     end
   end
