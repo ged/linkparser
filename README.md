@@ -1,20 +1,21 @@
-= linkparser
+linkparser
+===
 
-* http://deveiate.org/projects/Ruby-LinkParser
+* [http://deveiate.org/projects/Ruby-LinkParser](http://deveiate.org/projects/Ruby-LinkParser)
 
-== Description
+## Description
 
 This module is a Ruby binding for 
-{the Abiword version}[http://www.abisource.com/projects/link-grammar/] of CMU's
-{Link Grammar}[http://www.link.cs.cmu.edu/link/], a syntactic parser of English.
+[the Abiword version](http://www.abisource.com/projects/link-grammar/) of CMU's
+[Link Grammar](http://www.link.cs.cmu.edu/link/), a syntactic parser of English.
 
-
-=== Example Usage
+### Example Usage
 
 	require 'linkparser'
 	
 	dict = LinkParser::Dictionary.new( :screen_width => 100 )
 	sent = dict.parse( "People use Ruby for all kinds of nifty things." )
+	
 	# => #<LinkParser::Sentence:0xcf8eb "LEFT-WALL people use Ruby for all kinds
 	#      of nifty things . RIGHT-WALL"/2 linkages/0 nulls>
 	
@@ -23,6 +24,7 @@ This module is a Ruby binding for
 	sent.object         # => "Ruby"
 	
 	puts sent.constituent_tree_string
+	
 	# =>
 	# (S (NP People)
 	#    (VP use
@@ -34,6 +36,7 @@ This module is a Ruby binding for
 	#    .)
 	
 	puts sent.diagram
+	
 	# =>
 	#     +-------------------------------Xp------------------------------+
 	#     |                +----MVp---+----Jp----+     +------Jp-----+    |
@@ -42,11 +45,11 @@ This module is a Ruby binding for
 	# LEFT-WALL people.p use.v Ruby for.p all kinds.n of nifty.a things.n . 
 
 
-== Installation
+## Installation
 
 First, download and install the latest version of the link-grammar 
 library from 
-{Abiword's site}[http://www.abisource.com/projects/link-grammar/#download].
+[Abiword's site](http://www.abisource.com/projects/link-grammar/#download).
 
 Then install the gem:
 
@@ -58,12 +61,12 @@ installed it somewhere that your linker doesn't look by default:
     gem install linkparser -- --with-link-grammar=/usr/local
 
 
-== Contributing
+## Contributing
 
 You can check out the current development source
-{with Mercurial}[http://repo.deveiate.org/LinkParser],
+[with Mercurial](http://repo.deveiate.org/LinkParser),
 or if you prefer Git, via
-{its Github mirror}[http://github.com/ged/linkparser].
+[its Github mirror](http://github.com/ged/linkparser).
 
 After checking out the source, run:
 
@@ -73,9 +76,10 @@ This task will install any missing dependencies, run the tests/specs,
 and generate the API documentation.
 
 
-== License
+## License
 
 Copyright (c) 2006-2013, The FaerieMUD Consortium
+
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -91,6 +95,7 @@ modification, are permitted provided that the following conditions are met:
 * Neither the name of the author/s, nor the names of the project's
   contributors may be used to endorse or promote products derived from this
   software without specific prior written permission.
+
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
