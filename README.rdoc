@@ -11,35 +11,35 @@ This module is a Ruby binding for
 
 === Example Usage
 
-	require 'linkparser'
-	
-	dict = LinkParser::Dictionary.new( :screen_width => 100 )
-	sent = dict.parse( "People use Ruby for all kinds of nifty things." )
-	# => #<LinkParser::Sentence:0xcf8eb "LEFT-WALL people use Ruby for all kinds
-	#      of nifty things . RIGHT-WALL"/2 linkages/0 nulls>
-	
-	sent.subject        # => "people"
-	sent.verb           # => "use"
-	sent.object         # => "Ruby"
-	
-	puts sent.constituent_tree_string
-	# =>
-	# (S (NP People)
-	#    (VP use
-	#        (NP Ruby)
-	#        (PP for
-	#            (NP (NP all kinds)
-	#                (PP of
-	#                    (NP nifty things)))))
-	#    .)
-	
-	puts sent.diagram
-	# =>
-	#     +-------------------------------Xp------------------------------+
-	#     |                +----MVp---+----Jp----+     +------Jp-----+    |
-	#     +----Wd---+--Sp--+--Os-+    |    +-Dmc-+--Mp-+    +----A---+    |
-	#     |         |      |     |    |    |     |     |    |        |    |
-	# LEFT-WALL people.p use.v Ruby for.p all kinds.n of nifty.a things.n . 
+    require 'linkparser'
+     
+    dict = LinkParser::Dictionary.new( :screen_width => 100 )
+    sent = dict.parse( "People use Ruby for all kinds of nifty things." )
+    # => #<LinkParser::Sentence:0xcf8eb "LEFT-WALL people use Ruby for all kinds
+    #      of nifty things . RIGHT-WALL"/2 linkages/0 nulls>
+      
+    sent.subject        # => "people"
+    sent.verb           # => "use"
+    sent.object         # => "Ruby"
+      
+    puts sent.constituent_tree_string
+    # =>
+    # (S (NP People)
+    #    (VP use
+    #        (NP Ruby)
+    #        (PP for
+    #            (NP (NP all kinds)
+    #                (PP of
+    #                    (NP nifty things)))))
+    #    .)
+
+    puts sent.diagram
+    # =>
+    #     +-------------------------------Xp------------------------------+
+    #     |                +----MVp---+----Jp----+     +------Jp-----+    |
+    #     +----Wd---+--Sp--+--Os-+    |    +-Dmc-+--Mp-+    +----A---+    |
+    #     |         |      |     |    |    |     |     |    |        |    |
+    # LEFT-WALL people.p use.v Ruby for.p all kinds.n of nifty.a things.n . 
 
 
 == Installation
