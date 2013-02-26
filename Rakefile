@@ -21,7 +21,7 @@ SPECDIR = BASEDIR + 'spec'
 EXTDIR  = BASEDIR + 'ext'
 LIBDIR  = BASEDIR + 'lib'
 
-DLEXT   = Config::CONFIG['DLEXT']
+DLEXT   = RbConfig::CONFIG['DLEXT']
 
 EXTCONF = EXTDIR + 'extconf.rb'
 EXT     = LIBDIR + "linkparser_ext.#{DLEXT}"
