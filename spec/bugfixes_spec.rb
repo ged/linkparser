@@ -1,48 +1,35 @@
-#!/usr/bin/ruby -w
-#
-# Specification for various bugfixes to the LinkParser binding
-# $Id$
-#
-# See the LICENSE file in the distribution for information about copyright and licensing.
-#
+# -*- ruby -*-
+#encoding: utf-8
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname.new( __FILE__ ).dirname.parent
-
-	libdir = basedir + 'lib'
-	extdir = basedir + 'ext'
-
-	$LOAD_PATH.unshift( basedir.to_s ) unless $LOAD_PATH.include?( basedir.to_s )
-	$LOAD_PATH.unshift( libdir.to_s ) unless $LOAD_PATH.include?( libdir.to_s )
-	$LOAD_PATH.unshift( extdir.to_s ) unless $LOAD_PATH.include?( extdir.to_s )
-}
+require_relative 'helpers'
 
 require 'rspec'
-
 require 'linkparser'
 
-# @dict = LinkParser::Dictionary.new( :verbosity => 0 )
-# s = LinkParser::Sentence.new('The cat runs.',@dict)
-# puts s.linkages.first.verb  #  "cat.n" !?!?!
-describe %{bugfix for #3: The first linkage for "The cat runs."} do
+
+describe LinkParser do
+
 	before( :all ) do
-		$DEBUG = true if ENV['DEBUG']
+		@dict = LinkParser::Dictionary.new('en', verbosity: 0)
 	end
 
-	before( :each ) do
-		@dict = LinkParser::Dictionary.new( 'en', :verbosity => 0 )
-		@sentence = @dict.parse( "The cat runs." )
-		@linkage = @sentence.linkages.first
-	end
+	let( :sentence ) { @dict.parse( text ) }
+	let( :linkage ) { sentence.linkages.first }
 
 
-	it "thinks cat is the subject" do
-		@linkage.subject.should == "cat"
+	describe 'bugfix for #3: The first linkage for "The cat runs."' do
+
+		let( :text ) { "The cat runs." }
+
+
+		it "selects cat as the subject" do
+			expect( linkage.subject ).to eq( "cat" )
+		end
+
+		it "selects runs as the verb" do
+			expect( linkage.verb ).to eq( "runs" )
+		end
+
 	end
 
-	it "thinks runs is the verb" do
-		@linkage.verb.should == "runs"
-	end
 end
-

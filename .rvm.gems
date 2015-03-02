@@ -1,2 +1,4 @@
-hoe-deveiate -v 0.1.1
-rake-compiler -v 0.8.1
+hoe-deveiate -v0.6.0
+rake-compiler -v0.9.3
+rdoc -v4.1.2
+loggability -v0.11.0

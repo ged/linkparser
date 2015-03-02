@@ -1,28 +1,20 @@
-#!/usr/bin/ruby
+# -*- ruby -*-
+#encoding: utf-8
 
 require 'linkparser' unless defined?( LinkParser )
 
-# 
 # A Sentence is the API's representation of an input string, tokenized
 # and interpreted according to a specific Dictionary. After a Sentence
 # is created and parsed, various attributes of the resulting set of
 # linkages can be obtained.
-# 
-# == Authors
-# 
-# * Michael Granger <ged@FaerieMUD.org>
-# 
-# == Version
-#
-#  $Id$
-# 
-# == License
-# 
-#  :include: LICENSE
-#--
-#  
-# See the LICENSE file for copyright/licensing information.
 class LinkParser::Sentence
+	extend Loggability,
+	       LinkParser::DeprecationUtilities
+
+
+	# Use LinkParser's logger
+	log_to :linkparser
+
 
 	######
 	public
@@ -41,7 +33,7 @@ class LinkParser::Sentence
 			contents = "(unparsed)"
 		end
 
-		return "#<%s:0x%x %s>" % [
+		return "#<%s:%#x %s>" % [
 			self.class.name,
 			self.object_id / 2,
 			contents,
@@ -59,26 +51,21 @@ class LinkParser::Sentence
 	protected
 	#########
 
-	### Return the singleton class for this object
-	def singleton_class
-		class << self; self; end
-	end
-
-
 	### Proxy method -- auto-delegate calls to the first linkage.
-	def method_missing( sym, *args )
+	def method_missing( sym, *args, &block )
+		return super unless LinkParser::Linkage.instance_methods.include?( sym )
 
-		# Check both symbol and string for forward-compatibility with 1.9.x
-		return super unless
-			LinkParser::Linkage.instance_methods.include?( sym.to_s ) ||
-			LinkParser::Linkage.instance_methods.include?( sym )
+		linkage_method = LinkParser::Linkage.instance_method( sym )
+		meth = lambda do |*args, &block|
+			linkage = self.linkages.first or raise LinkParser::Error, "sentence has no linkages"
+			linkage_method.bind( linkage ).call( *args, &block )
+		end
 
-		linkage = self.linkages.first or raise LinkParser::Error, "sentence has no linkages"
+		self.singleton_class.instance_exec( sym, meth ) do |name, new_method|
+			define_method( name, &new_method )
+		end
 
-		meth = linkage.method( sym )
-		self.singleton_class.send( :define_method, sym, &meth )
-
-		meth.call( *args )
+		meth.call( *args, &block )
 	rescue => err
 		raise err, err.message, err.backtrace[ 0..-2 ]
 	end

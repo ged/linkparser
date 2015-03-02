@@ -1,31 +1,15 @@
-#!/usr/bin/ruby -w
-#
-# Specification for the LinkParser::Dictionary class
-# $Id$
-#
-# See the LICENSE file in the distribution for information about copyright and licensing.
-#
+# -*- ruby -*-
+#encoding: utf-8
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname.new( __FILE__ ).dirname.parent.parent
-
-	libdir = basedir + 'lib'
-	extdir = basedir + 'ext'
-
-	$LOAD_PATH.unshift( basedir.to_s ) unless $LOAD_PATH.include?( basedir.to_s )
-	$LOAD_PATH.unshift( libdir.to_s ) unless $LOAD_PATH.include?( libdir.to_s )
-	$LOAD_PATH.unshift( extdir.to_s ) unless $LOAD_PATH.include?( extdir.to_s )
-}
+require_relative '../helpers'
 
 require 'rspec'
-
 require 'linkparser'
 
 
 describe LinkParser::Dictionary do
 
-	### Work around current system's locale
+	### Tests expect English locale
 	before( :all ) do
 		$LANG = ENV['LANG']
 		ENV['LANG'] = 'en_US.UTF-8'
@@ -38,66 +22,63 @@ describe LinkParser::Dictionary do
 
 
 	it "can be instantiated using all default values" do
-		LinkParser::Dictionary.new.should be_an_instance_of( LinkParser::Dictionary )
+		expect( LinkParser::Dictionary.new ).to be_an_instance_of( LinkParser::Dictionary )
 	end
 
 	it "can be instantiated with an options hash" do
-		LinkParser::Dictionary.new( :verbosity => 2 ).options[:verbosity].should == 2
+		dict = LinkParser::Dictionary.new( :verbosity => 2 )
+		expect( dict ).to be_a( LinkParser::Dictionary )
+		expect( dict.options[:verbosity] ).to eq( 2 )
 	end
 
 	it "raises an error when created with an bad number of arguments" do
-		lambda {
+		expect {
 			LinkParser::Dictionary.new( "foo", "bar", "baz" )
-		}.should raise_error(ArgumentError)
+		}.to raise_error( ArgumentError )
 	end
 
 	it "can be instantiated with a language argument" do
-		lambda {LinkParser::Dictionary.new( 'en' )}.should_not raise_error()
+		dict = LinkParser::Dictionary.new( 'en' )
+		expect( dict ).to be_a( LinkParser::Dictionary )
 	end
 
 	it "can be instantiated with both a language and an options hash" do
-		LinkParser::Dictionary.new('en', :verbosity => 2).options[:verbosity].should == 2
-	end
-
-	it "raises an exception if created with unknown dictionaries" do
-		lambda {
-			LinkParser::Dictionary.new('foo', 'bar', 'baz', 'bim')
-		}.should raise_error( LinkParser::Error )
+		dict = LinkParser::Dictionary.new( 'en', :verbosity => 2 )
+		expect( dict.options[:verbosity] ).to eq( 2 )
 	end
 
 	it "raises an exception if created with an unknown language" do
-		lambda {
-			LinkParser::Dictionary.new('zz')
-		}.should raise_error( LinkParser::Error )
+		expect {
+			LinkParser::Dictionary.new( 'ie' )
+		}.to raise_error( LinkParser::Error )
 	end
+
+	it "raises an exception if created with an unknown language" do
+		expect {
+			LinkParser::Dictionary.new('zz')
+		}.to raise_error( LinkParser::Error )
+	end
+
 
 	context "instance" do
 
 		TEST_SENTENCE = "The dog plays with the ball."
 
-		before( :each ) do
-			@dict = LinkParser::Dictionary.new( 
-				:verbosity => 0,
-				:max_null_count => 18,
-				:echo_on => true
-			  )
+		before( :all ) do
+			@dict = LinkParser::Dictionary.new( verbosity: 0, max_null_count: 18, islands_ok: true )
 		end
 
-
-		it "knows what the total cost of its linkages are" do
-			@dict.max_cost.should be_an_instance_of(Fixnum)
-		end
 
 		it "can parse a sentence" do
-			@dict.parse( TEST_SENTENCE ).
-				should be_an_instance_of( LinkParser::Sentence )
+			sentence = @dict.parse( TEST_SENTENCE )
+			expect( sentence ).to be_an_instance_of( LinkParser::Sentence )
 		end
 
 		it "passes on its options to the sentences it parses" do
 			sentence = @dict.parse( TEST_SENTENCE )
-			sentence.options.max_null_count.should == 18
-			sentence.options.verbosity.should == 0
-			sentence.options.echo_on?.should == true
+			expect( sentence.options.max_null_count ).to eq( 18 )
+			expect( sentence.options.verbosity ).to eq( 0 )
+			expect( sentence.options.islands_ok? ).to eq( true )
 		end
 	end
 

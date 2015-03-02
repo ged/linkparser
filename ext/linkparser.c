@@ -27,31 +27,58 @@ VALUE rlink_cParseOptions;
 VALUE rlink_sLinkageCTree;
 
 
-/* --------------------------------------------------
- * Utility functions
- * -------------------------------------------------- */
+/* --------------------------------------------------------------
+ * Logging Functions
+ * -------------------------------------------------------------- */
 
+/*
+ * Log a message to the given +context+ object's logger.
+ */
 void
 #ifdef HAVE_STDARG_PROTOTYPES
-rlink_debug(const char *fmt, ...)
+rlink_log_obj( VALUE context, const char *level, const char *fmt, ... )
 #else
-rlink_debug(fmt, va_alist)
-	 const char *fmt;
-	 va_dcl
+rlink_log_obj( VALUE context, const char *level, const char *fmt, va_dcl )
 #endif
 {
-	char buf[BUFSIZ], buf2[BUFSIZ];
+	char buf[BUFSIZ];
 	va_list	args;
-
-	if (!RTEST(ruby_debug)) return;
-
-	snprintf( buf, BUFSIZ, "LinkParser Debug>>> %s", fmt );
+	VALUE logger = Qnil;
+	VALUE message = Qnil;
 
 	va_init_list( args, fmt );
-	vsnprintf( buf2, BUFSIZ, buf, args );
-	fputs( buf2, stderr );
-	fputs( "\n", stderr );
-	fflush( stderr );
+	vsnprintf( buf, BUFSIZ, fmt, args );
+	message = rb_str_new2( buf );
+
+	logger = rb_funcall( context, rb_intern("log"), 0, 0 );
+	rb_funcall( logger, rb_intern(level), 1, message );
+
+	va_end( args );
+}
+
+
+/*
+ * Log a message to the global logger.
+ */
+void
+#ifdef HAVE_STDARG_PROTOTYPES
+rlink_log( const char *level, const char *fmt, ... )
+#else
+rlink_log( const char *level, const char *fmt, va_dcl )
+#endif
+{
+	char buf[BUFSIZ];
+	va_list	args;
+	VALUE logger = Qnil;
+	VALUE message = Qnil;
+
+	va_init_list( args, fmt );
+	vsnprintf( buf, BUFSIZ, fmt, args );
+	message = rb_str_new2( buf );
+
+	logger = rb_funcall( rlink_mLinkParser, rb_intern("logger"), 0, 0 );
+	rb_funcall( logger, rb_intern(level), 1, message );
+
 	va_end( args );
 }
 
@@ -63,7 +90,8 @@ rlink_debug(fmt, va_alist)
  * somewhere useful. 
  */
 void
-rlink_raise_lp_error() {
+rlink_raise_lp_error()
+{
 	rb_raise( rlink_eLpError, "Unknown error" );
 }
 
@@ -71,7 +99,8 @@ rlink_raise_lp_error() {
 /* Make a Parse_Options after merging the specified default_options with any 
    new options given. */
 VALUE
-rlink_make_parse_options( VALUE default_options, VALUE options ) {
+rlink_make_parse_options( VALUE default_options, VALUE options )
+{
 	if ( NIL_P(options) ) options = rb_hash_new();
 	options = rb_funcall( default_options, rb_intern("merge"), 1, options );
 
@@ -87,7 +116,8 @@ rlink_make_parse_options( VALUE default_options, VALUE options ) {
  *
  */
 static VALUE
-rlink_link_grammar_version( VALUE self ) {
+rlink_link_grammar_version( VALUE self )
+{
 #ifdef HAVE_LINKGRAMMAR_GET_VERSION
 	const char *version = linkgrammar_get_version();
 	if ( !version ) rb_bug( "linkgrammar_get_version returned NULL pointer" );
@@ -102,7 +132,8 @@ rlink_link_grammar_version( VALUE self ) {
  * LinkParser extension init function
  */
 void
-Init_linkparser_ext() {
+Init_linkparser_ext()
+{
 	rlink_mLinkParser = rb_define_module( "LinkParser" );
 
 	/* The exception class used for LinkParser errors */
@@ -110,8 +141,6 @@ Init_linkparser_ext() {
 
 	rb_define_singleton_method( rlink_mLinkParser, "link_grammar_version",
 		rlink_link_grammar_version, 0 );
-
-	setlocale( LC_ALL, "" );
 
 	rlink_init_dict();
 	rlink_init_sentence();

@@ -1,52 +1,49 @@
-= linkparser
+# linkparser
 
 * http://deveiate.org/projects/Ruby-LinkParser
 
-== Description
+## Description
 
 This module is a Ruby binding for 
-{the Abiword version}[http://www.abisource.com/projects/link-grammar/] of CMU's
-{Link Grammar}[http://www.link.cs.cmu.edu/link/], a syntactic parser of English.
+[the Abiword version](http://www.abisource.com/projects/link-grammar/) of CMU's
+[Link Grammar](http://www.link.cs.cmu.edu/link/), a syntactic parser of English.
 
 
-=== Example Usage
+### Example Usage
 
-    require 'linkparser'
-     
-    dict = LinkParser::Dictionary.new( :screen_width => 100 )
+    dict = LinkParser::Dictionary.new
+    => #<LinkParser::Dictionary:0x007f9a5b117220>
+    
     sent = dict.parse( "People use Ruby for all kinds of nifty things." )
-    # => #<LinkParser::Sentence:0xcf8eb "LEFT-WALL people use Ruby for all kinds
-    #      of nifty things . RIGHT-WALL"/2 linkages/0 nulls>
-      
-    sent.subject        # => "people"
-    sent.verb           # => "use"
-    sent.object         # => "Ruby"
-      
-    puts sent.constituent_tree_string
-    # =>
-    # (S (NP People)
-    #    (VP use
-    #        (NP Ruby)
-    #        (PP for
-    #            (NP (NP all kinds)
-    #                (PP of
-    #                    (NP nifty things)))))
-    #    .)
-
-    puts sent.diagram
-    # =>
-    #     +-------------------------------Xp------------------------------+
-    #     |                +----MVp---+----Jp----+     +------Jp-----+    |
-    #     +----Wd---+--Sp--+--Os-+    |    +-Dmc-+--Mp-+    +----A---+    |
-    #     |         |      |     |    |    |     |     |    |        |    |
-    # LEFT-WALL people.p use.v Ruby for.p all kinds.n of nifty.a things.n . 
+    => #<LinkParser::Sentence:0x1fe69761a146 "LEFT-WALL people.p use.v Ruby.f 
+        for.p all.a kinds.n of   nifty.a things.n . RIGHT-WALL"/15 
+        linkages/0 nulls>
+    
+    sent.subject
+    => "people"
+    
+    sent.verb
+    => "use"
+    
+    sent.object
+    => "Ruby.f"
+    
+    puts sent.diagram( max_width: 200 )
+    > 
+    >     +---------------------------------Xp--------------------------------+
+    >     |                             +---------------Jp---------------+    |
+    >     |                             |            +--------Dmc--------+    |
+    >     +------>WV------>+-----MVp----+            |     +------Jd-----+    |
+    >     +----Wd---+--Sp--+--Os--+     |     +-Dmcn-+-OFd-+    +----A---+    +--RW--+
+    >     |         |      |      |     |     |      |     |    |        |    |      |
+    > LEFT-WALL people.p use.v Ruby.f for.p all.a kinds.n of nifty.a things.n . RIGHT-WALL
 
 
-== Installation
+## Installation
 
 First, download and install the latest version of the link-grammar 
 library from 
-{Abiword's site}[http://www.abisource.com/projects/link-grammar/#download].
+[Abiword's site](http://www.abisource.com/projects/link-grammar/#download).
 
 Then install the gem:
 
@@ -58,12 +55,12 @@ installed it somewhere that your linker doesn't look by default:
     gem install linkparser -- --with-link-grammar=/usr/local
 
 
-== Contributing
+## Contributing
 
 You can check out the current development source
-{with Mercurial}[http://repo.deveiate.org/LinkParser],
+[with Mercurial](http://repo.deveiate.org/LinkParser),
 or if you prefer Git, via
-{its Github mirror}[http://github.com/ged/linkparser].
+[its Github mirror](http://github.com/ged/linkparser).
 
 After checking out the source, run:
 
@@ -73,9 +70,9 @@ This task will install any missing dependencies, run the tests/specs,
 and generate the API documentation.
 
 
-== License
+## License
 
-Copyright (c) 2006-2012, The FaerieMUD Consortium
+Copyright (c) 2006-2015, The FaerieMUD Consortium
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -102,5 +99,4 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 

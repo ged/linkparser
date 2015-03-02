@@ -21,12 +21,13 @@
  * Allocation function
  */
 static struct rlink_dictionary *
-rlink_dictionary_alloc() {
+rlink_dictionary_alloc()
+{
 	struct rlink_dictionary *ptr = ALLOC( struct rlink_dictionary );
 
 	ptr->dict	= NULL;
 
-	debugMsg(( "Initialized an rlink_dictionary <%p>", ptr ));
+	rlink_log( "debug", "Initialized an rlink_dictionary <%p>", ptr );
 	return ptr;
 }
 
@@ -35,9 +36,9 @@ rlink_dictionary_alloc() {
  * Free function
  */
 static void
-rlink_dict_gc_free( struct rlink_dictionary *ptr ) {
+rlink_dict_gc_free( struct rlink_dictionary *ptr )
+{
 	if ( ptr ) {
-		debugMsg(( "Freeing Dictionary <%p>", ptr ));
 		if ( ptr->dict )
 			dictionary_delete( ptr->dict );
 
@@ -45,8 +46,6 @@ rlink_dict_gc_free( struct rlink_dictionary *ptr ) {
 
 		xfree( ptr );
 		ptr = NULL;
-	} else {
-		debugMsg(( "Not freeing already freed Dictionary." ));
 	}
 }
 
@@ -55,7 +54,8 @@ rlink_dict_gc_free( struct rlink_dictionary *ptr ) {
  * Object validity checker. Returns the data pointer.
  */
 static struct rlink_dictionary *
-check_dict( VALUE self ) {
+check_dict( VALUE self )
+{
 	Check_Type( self, T_DATA );
 
     if ( !IsDictionary(self) ) {
@@ -71,7 +71,8 @@ check_dict( VALUE self ) {
  * Fetch the data pointer and check it for sanity.
  */
 static struct rlink_dictionary *
-get_dict( VALUE self ) {
+get_dict( VALUE self )
+{
 	struct rlink_dictionary *ptr = check_dict( self );
 
 	if ( !ptr )
@@ -85,7 +86,8 @@ get_dict( VALUE self ) {
  * Get the Dictionary behind the LinkParser::Dictionary +object+ specified.
  */
 struct rlink_dictionary *
-rlink_get_dict( VALUE obj ) {
+rlink_get_dict( VALUE obj )
+{
 	return get_dict( obj );
 }
 
@@ -103,8 +105,9 @@ rlink_get_dict( VALUE obj ) {
  *  Allocate a new LinkParser::Dictionary object.
  */
 static VALUE
-rlink_dict_s_alloc( VALUE klass ) {
-	debugMsg(( "Wrapping an uninitialized Dictionary pointer." ));
+rlink_dict_s_alloc( VALUE klass )
+{
+	rlink_log( "debug", "Wrapping an uninitialized Dictionary pointer." );
 	return Data_Wrap_Struct( klass, 0, rlink_dict_gc_free, 0 );
 }
 
@@ -114,7 +117,9 @@ rlink_dict_s_alloc( VALUE klass ) {
  * can be useful for testing and stuff.
  */
 static Dictionary
-rlink_make_oldstyle_dict( VALUE dict_file, VALUE pp_file, VALUE cons_file, VALUE affix_file ) {
+rlink_make_oldstyle_dict( VALUE dict_file, VALUE pp_file, VALUE cons_file, VALUE affix_file )
+{
+#ifdef HAVE_DICTIONARY_CREATE
 	SafeStringValue( dict_file  );
 	SafeStringValue( pp_file    );
 	SafeStringValue( cons_file  );
@@ -126,6 +131,11 @@ rlink_make_oldstyle_dict( VALUE dict_file, VALUE pp_file, VALUE cons_file, VALUE
 		StringValuePtr(cons_file ),
 		StringValuePtr(affix_file)
 	);
+#else
+	rb_raise( rb_eNotImpError,
+		"Old-style dictionary creation isn't supported by the installed version of link-grammar." );
+    UNREACHABLE;
+#endif
 }
 
 
@@ -171,7 +181,8 @@ rlink_make_oldstyle_dict( VALUE dict_file, VALUE pp_file, VALUE cons_file, VALUE
  * 
  */
 static VALUE
-rlink_dict_initialize( int argc, VALUE *argv, VALUE self ) {
+rlink_dict_initialize( int argc, VALUE *argv, VALUE self )
+{
 	if ( !check_dict(self) ) {
 		int i = 0;
 		struct rlink_dictionary *ptr = NULL;
@@ -183,24 +194,24 @@ rlink_dict_initialize( int argc, VALUE *argv, VALUE self ) {
 		switch( i = rb_scan_args(argc, argv, "05", &arg1, &arg2, &arg3, &arg4, &arg5) ) {
 		  /* Dictionary.new */
 		  case 0:
-			debugMsg(( "No arguments" ));
+			rlink_log_obj( self, "debug", "No arguments" );
 			break;
 
 		  /* Dictionary.new( lang )*/
 		  /* Dictionary.new( opthash )*/
 		  case 1:
 			if( TYPE(arg1) == T_HASH ) {
-				debugMsg(( "One arg: options hash."));
+				rlink_log_obj( self, "debug", "One arg: options hash." );
 				opthash = arg1;
 			} else {
-				debugMsg(( "One arg: language" ));
+				rlink_log_obj( self, "debug", "One arg: language" );
 				lang = arg1;
 			}
 			break;
 
 		  /* Dictionary.new( lang, opthash ) */
 		  case 2:
-			debugMsg(( "Two args: language and options hash."));
+			rlink_log_obj( self, "debug", "Two args: language and options hash." );
 			lang = arg1;
 			opthash = arg2;
 			break;
@@ -209,7 +220,7 @@ rlink_dict_initialize( int argc, VALUE *argv, VALUE self ) {
 		  /* Dictionary.new( dict, pp, cons, affix, opthash ) */
 		  case 4:
 		  case 5:
-			debugMsg(( "Four or five args: old-style explicit dict files." ));
+			rlink_log_obj( self, "debug", "Four or five args: old-style explicit dict files." );
 			dict = rlink_make_oldstyle_dict( arg1, arg2, arg3, arg4 );
 			opthash = arg5;
 			break;
@@ -234,14 +245,17 @@ rlink_dict_initialize( int argc, VALUE *argv, VALUE self ) {
 		   creating it */
 		if ( !dict ) rlink_raise_lp_error();
 
-		debugMsg(( "Created dictionary %p", dict ));
+		rlink_log_obj( self, "debug", "Created dictionary %p", dict );
 		DATA_PTR( self ) = ptr = rlink_dictionary_alloc();
 
 		ptr->dict = dict;
 
 		/* If they passed in an options hash, save it for later. */
-		if ( RTEST(opthash) ) rb_iv_set( self, "@options", opthash );
-		else rb_iv_set( self, "@options", rb_hash_new() );
+		if ( RTEST(opthash) ) {
+			rb_iv_set( self, "@options", opthash );
+		} else {
+			rb_iv_set( self, "@options", rb_hash_new() );
+		}
 	}
 
 	else {
@@ -249,26 +263,6 @@ rlink_dict_initialize( int argc, VALUE *argv, VALUE self ) {
 	}
 
 	return Qnil;
-}
-
-
-/*
- *  call-seq:
- *     dictionary.max_cost   -> fixnum
- *
- *  Returns the maximum cost (number of brackets []) that is placed on any
- *  connector in the dictionary. This is useful for designing a parsing
- *  algorithm that progresses in stages, first trying the cheap connectors.
- */
-static VALUE
-rlink_get_max_cost( VALUE self ) {
-	struct rlink_dictionary *ptr = get_dict( self );
-
-	int cost = dictionary_get_max_cost( ptr->dict );
-
-	debugMsg(( "Max cost is: %d", cost ));
-
-	return INT2NUM( cost );
 }
 
 
@@ -282,7 +276,8 @@ rlink_get_max_cost( VALUE self ) {
  *  those of the Dictionary's for the resulting Sentence.
  */
 static VALUE
-rlink_parse( int argc, VALUE *argv, VALUE self ) {
+rlink_parse( int argc, VALUE *argv, VALUE self )
+{
 	VALUE input_string, options, sentence;
 	VALUE args[2];
 	int i;
@@ -315,18 +310,18 @@ rlink_parse( int argc, VALUE *argv, VALUE self ) {
  *  file, and then creates all other objects through it.
  */
 void
-rlink_init_dict() {
+rlink_init_dict()
+{
 #ifdef FOR_RDOC
 	rlink_mLinkParser = rb_define_module( "LinkParser" );
 #endif
 
 	rlink_cDictionary = rb_define_class_under( rlink_mLinkParser, "Dictionary",
-	 	rb_cObject );
+		rb_cObject );
 
 	rb_define_alloc_func( rlink_cDictionary, rlink_dict_s_alloc );
 	rb_define_method( rlink_cDictionary, "initialize", rlink_dict_initialize, -1 );
 
-	rb_define_method( rlink_cDictionary, "max_cost", rlink_get_max_cost, 0 );
 	rb_define_method( rlink_cDictionary, "parse", rlink_parse, -1 );
 
 	/* The LinkParser::ParseOptions object for the Dictionary */
