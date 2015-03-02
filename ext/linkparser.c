@@ -1,11 +1,11 @@
 /*
  *  linkparser.c - Ruby LinkParser
  *  $Id$
- *  
+ *
  *  Authors:
  *    * Michael Granger <ged@FaerieMUD.org>
- *  
- *  Please see the LICENSE file at the top of the distribution for licensing 
+ *
+ *  Please see the LICENSE file at the top of the distribution for licensing
  *  information.
  */
 
@@ -85,9 +85,9 @@ rlink_log( const char *level, const char *fmt, va_dcl )
 
 /*
  * Raise a LinkParser::Error. The link-grammar library no longer supports fetching the actual
- * error message, so this just raises an exception with "Unknown error" now. Hopefully the 
+ * error message, so this just raises an exception with "Unknown error" now. Hopefully the
  * library will have printed out the actual problem to stderr, and stderr is pointed
- * somewhere useful. 
+ * somewhere useful.
  */
 void
 rlink_raise_lp_error()
@@ -96,7 +96,7 @@ rlink_raise_lp_error()
 }
 
 
-/* Make a Parse_Options after merging the specified default_options with any 
+/* Make a Parse_Options after merging the specified default_options with any
    new options given. */
 VALUE
 rlink_make_parse_options( VALUE default_options, VALUE options )

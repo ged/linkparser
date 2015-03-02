@@ -1,11 +1,11 @@
 /*
  *  dict.c - Ruby LinkParser - Dictionary Class
  *  $Id$
- *  
+ *
  *  Authors:
  *    * Michael Granger <ged@FaerieMUD.org>
- *  
- *  Please see the LICENSE file at the top of the distribution for licensing 
+ *
+ *  Please see the LICENSE file at the top of the distribution for licensing
  *  information.
  */
 
@@ -82,7 +82,7 @@ get_dict( VALUE self )
 }
 
 
-/* 
+/*
  * Get the Dictionary behind the LinkParser::Dictionary +object+ specified.
  */
 struct rlink_dictionary *
@@ -144,41 +144,41 @@ rlink_make_oldstyle_dict( VALUE dict_file, VALUE pp_file, VALUE cons_file, VALUE
  *      LinkParser::Dictionary.new( *args )                        -> dict
  *
  * Create a new LinkParser::Dictionary.
- * 
+ *
  * The preferred way to set up the dictionary is to call it with no
  * arguments, which will look for a dictionary with the same language
  * as the current environment. Alternatively, a fixed language can be
  * specified by specifying an ISO639 language code, for example,
  * <tt>LinkParser::Dictionary.new( :en )</tt>.
- * 
+ *
  * Explicit dictionary file names can be also specified, like so:
- *     
+ *
  *     Dictionary.new( dict_file,
  *                     post_process_file,
  *                     constituent_knowledge_file,
  *                     affix_file )
- *     
- * This mode of dictionary construction is not recommended for new 
- * development, and is intended for advanced users only. To create the 
- * dictionary, the Dictionary looks in the current directory and the data 
+ *
+ * This mode of dictionary construction is not recommended for new
+ * development, and is intended for advanced users only. To create the
+ * dictionary, the Dictionary looks in the current directory and the data
  * directory for the files +dict_file+, +post_process_file+,
  * +constituent_knowledge_file+, and +affix_file+. The last three entries
  * may be omitted. If +dict_file+ is a fully specified path name, then
  * the other file names, which need not be fully specified, will be
  * prefixed by the directory specified by +dict_file+.
- * 
+ *
  * In any case, a Hash of options can be specified which will be used
  * as default ParseOption attributes for any sentences created from
  * it.
  *
  *  Examples:
  *      dict = LinkParser::Dictionary.new
- *      
+ *
  *      dict = LinkParser::Dictionary.new( :de )
- *      
+ *
  *      dict = LinkParser::Dictionary.new( '/var/data/custom_dicts/4.2.dict' )
- *      
- * 
+ *
+ *
  */
 static VALUE
 rlink_dict_initialize( int argc, VALUE *argv, VALUE self )
@@ -271,7 +271,7 @@ rlink_dict_initialize( int argc, VALUE *argv, VALUE self )
  *     dictionary.parse( string )            -> sentence
  *     dictionary.parse( string, options )   -> sentence
  *
- *  Parse the specified sentence +string+ with the dictionary and return a 
+ *  Parse the specified sentence +string+ with the dictionary and return a
  *  LinkParser::Sentence. If you specify an +options+ hash, its values will override
  *  those of the Dictionary's for the resulting Sentence.
  */
@@ -302,9 +302,9 @@ rlink_parse( int argc, VALUE *argv, VALUE self )
 
 
 
-/* 
+/*
  *  Document-class: LinkParser::Dictionary
- *  
+ *
  *  A Dictionary is the programmer's handle on the set of word definitions that defines the
  *  grammar. A user creates a Dictionary from a grammar file and post-process knowledge
  *  file, and then creates all other objects through it.

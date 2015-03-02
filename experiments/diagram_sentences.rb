@@ -28,13 +28,13 @@ end
 
 ### Example output:
 # Sentence to diagram:  The bat left the cave just after sunset.
-# 
+#
 #     +---------------------------Xp--------------------------+
 #     +-----Wd----+      +----Os----+                         |
 #     |      +-Ds-+--Ss--+    +--Ds-+--Ma--+-MVp-+---Jp--+    |
 #     |      |    |      |    |     |      |     |       |    |
-# LEFT-WALL the bat.n left.v the cave.n just.a after sunset.n . 
-# 
+# LEFT-WALL the bat.n left.v the cave.n just.a after sunset.n .
+#
 #            LEFT-WALL      Xp      <---Xp---->  Xp        .
 #  (m)       LEFT-WALL      Wd      <---Wd---->  Wd        bat.n
 #  (m)       the            D       <---Ds---->  Ds        bat.n
@@ -45,4 +45,4 @@ end
 #  (m) (e)   just.a         MV      <---MVp--->  MVp       after
 #  (m) (e)   after          J       <---Jp---->  Jp        sunset.n
 #            .              RW      <---RW---->  RW        RIGHT-WALL
-# 
+#
