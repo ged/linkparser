@@ -1,15 +1,20 @@
-#!/usr/bin/ruby
+# -*- ruby -*-
+#encoding: utf-8
+
+require 'loggability'
 
 # The LinkParser top-level namespace.
-#
-# == Author/s
-# * Michael Granger <ged@FaerieMUD.org>
-# * Martin Chase <stillflame@FaerieMUD.org>
-#
 module LinkParser
+	extend Loggability
+
 
 	# Release version
-	VERSION = '1.1.4'
+	VERSION = '2.0.0'
+
+
+	# Loggability API -- set up a logger
+	log_as :linkparser
+
 
 	# Load the correct version if it's a Windows binary gem
 	if RUBY_PLATFORM =~/(mswin|mingw)/i
@@ -26,8 +31,10 @@ module LinkParser
 	end
 
 	require 'linkparser/mixins'
+	require 'linkparser/dictionary'
 	require 'linkparser/sentence'
 	require 'linkparser/linkage'
+	require 'linkparser/parseoptions'
 
 
 end # class LinkParser

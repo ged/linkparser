@@ -13,7 +13,7 @@ BEGIN {
 
 require 'linkparser'
 
-dict = LinkParser::Dictionary.new( :screen_width => 120, :verbosity => 2 )
+dict = LinkParser::Dictionary.new( :verbosity: 2 )
 loop do
 	input_string = prompt( "Sentence to diagram: " )
 	break if input_string.empty?

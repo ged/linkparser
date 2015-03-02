@@ -1,22 +1,7 @@
-#!/usr/bin/ruby -w
-#
-# Specification for the LinkParser::Sentence class
-# $Id$
-#
-# See the LICENSE file in the distribution for information about copyright and licensing.
-#
+# -*- ruby -*-
+#encoding: utf-8
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname.new( __FILE__ ).dirname.parent.parent
-
-	libdir = basedir + 'lib'
-	extdir = basedir + 'ext'
-
-	$LOAD_PATH.unshift( basedir.to_s ) unless $LOAD_PATH.include?( basedir.to_s )
-	$LOAD_PATH.unshift( libdir.to_s ) unless $LOAD_PATH.include?( libdir.to_s )
-	$LOAD_PATH.unshift( extdir.to_s ) unless $LOAD_PATH.include?( extdir.to_s )
-}
+require_relative '../helpers'
 
 require 'rspec'
 require 'linkparser/mixins'
@@ -46,18 +31,18 @@ describe LinkParser, "mixins" do
 		end
 
 		it "provides a function for marking a method as deprecated" do
-			@object.should_receive( :warn ).with( /deprecated/i )
-			@object.no_args.should == :no_args_result
+			expect( @object ).to receive( :warn ).with( /deprecated/i )
+			expect( @object.no_args ).to eq( :no_args_result )
 		end
 
 		it "provides a function for marking a method that takes arguments as deprecated" do
-			@object.should_receive( :warn ).with( /deprecated/i )
-			@object.two_args( :arg_one, :arg_two ).should == [ :arg_one, :arg_two ]
+			expect( @object ).to receive( :warn ).with( /deprecated/i )
+			expect( @object.two_args( :arg_one, :arg_two ) ).to eq( [ :arg_one, :arg_two ] )
 		end
 
 		it "provides a function for marking a method with splatted arguments as deprecated" do
-			@object.should_receive( :warn ).with( /deprecated/i )
-			@object.splat_args( :arg_one, :arg_two ).should == [ :arg_one, :arg_two ]
+			expect( @object ).to receive( :warn ).with( /deprecated/i )
+			expect( @object.splat_args( :arg_one, :arg_two ) ).to eq( [ :arg_one, :arg_two ] )
 		end
 
 

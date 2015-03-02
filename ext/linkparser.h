@@ -22,16 +22,22 @@
 
 #include <link-grammar/link-includes.h>
 
+#include "extconf.h"
 
-/* Debugging functions/macros */
+/* --------------------------------------------------------------
+ * Declarations
+ * -------------------------------------------------------------- */
+
 #ifdef HAVE_STDARG_PROTOTYPES
 #include <stdarg.h>
 #define va_init_list(a,b) va_start(a,b)
-extern void rlink_debug(const char *fmt, ...);
+void rlink_log_obj( VALUE, const char *, const char *, ... );
+void rlink_log( const char *, const char *, ... );
 #else
 #include <varargs.h>
 #define va_init_list(a,b) va_start(a)
-extern void rlink_debug(fmt, va_alist);
+void rlink_log_obj( VALUE, const char *, const char *, va_dcl );
+void rlink_log( const char *, const char *, va_dcl );
 #endif
 
 extern void rlink_raise_lp_error _(( void ));
@@ -67,8 +73,8 @@ struct rlink_dictionary {
 };
 
 struct rlink_sentence {
-	Sentence 	sentence;
-	VALUE	 	dictionary;
+	Sentence	sentence;
+	VALUE		dictionary;
 	VALUE		parsed_p;
 	VALUE		options;
 };
@@ -83,14 +89,6 @@ struct rlink_linkage {
 /*
  * Macros
  */
-
-/* Debugging macro */
-#if DEBUG
-#  define debugMsg(f)	rlink_debug f
-#else /* ! DEBUG */
-#  define debugMsg(f) 
-#endif /* DEBUG */
-
 
 #define IsDictionary( obj ) rb_obj_is_kind_of( (obj), rlink_cDictionary )
 #define IsSentence( obj ) rb_obj_is_kind_of( (obj), rlink_cSentence )

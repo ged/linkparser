@@ -1,140 +1,120 @@
-#!/usr/bin/ruby -w
-#
-# Specification for the LinkParser::Sentence class
-# $Id$
-#
-# See the LICENSE file in the distribution for information about copyright and licensing.
-#
+# -*- ruby -*-
+#encoding: utf-8
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname.new( __FILE__ ).dirname.parent.parent
-
-	libdir = basedir + 'lib'
-	extdir = basedir + 'ext'
-
-	$LOAD_PATH.unshift( basedir.to_s ) unless $LOAD_PATH.include?( basedir.to_s )
-	$LOAD_PATH.unshift( libdir.to_s ) unless $LOAD_PATH.include?( libdir.to_s )
-	$LOAD_PATH.unshift( extdir.to_s ) unless $LOAD_PATH.include?( extdir.to_s )
-}
+require_relative '../helpers'
 
 require 'rspec'
-
 require 'linkparser'
 
 
 describe LinkParser::Sentence do
 
 	before( :all ) do
-		@dict = LinkParser::Dictionary.new( 'en', :verbosity => 0 )
-		$DEBUG = true if ENV['DEBUG']
+		@dict = LinkParser::Dictionary.new( 'en', verbosity: 0 )
 	end
 
-	before( :each ) do
-		@sentence = LinkParser::Sentence.new( "The cat runs.", @dict )
-	end
+
+	let( :dict ) { @dict }
+	let( :sentence ) { described_class.new("The cat runs.", dict) }
 
 
 	it "returns an informational string when inspected before it's been parsed" do
-		@sentence.inspect.should =~ %r{
+		expect( sentence.inspect ).to match( %r{
 			<
 				LinkParser::Sentence:0x[[:xdigit:]]+
 				\s
 				\(unparsed\)
 			>
-		}x
+		}x )
 	end
 
 	it "returns an informational string when inspected after it's been parsed" do
-		@sentence.parse
-		@sentence.inspect.should =~ %r{
+		sentence.parse
+		expect( sentence.inspect ).to match( %r{
 			<
 				LinkParser::Sentence:0x[[:xdigit:]]+
 				\s
-				(?-x:"LEFT-WALL the cat runs . RIGHT-WALL")
+				(?-x:"LEFT-WALL the cat\.n runs\.v . RIGHT-WALL")
 				/\d+\slinkages
 				/\d+\snulls
 			>
-		}x
+		}x )
 	end
 
 	it "can return itself as a tokenized string" do
-		@sentence.to_s.should == "LEFT-WALL the cat runs . RIGHT-WALL"
+		expect( sentence.to_s ).to eq( "LEFT-WALL the cat.n runs.v . RIGHT-WALL" )
 	end
 
 
 	it "returns the linkage count as the result of parsing the sentence" do
-		@sentence.parse.should == 1
+		expect( sentence.parse ).to eq( 3 )
 	end
 
 
 	it "accepts parse options when parsing" do
-		@sentence.parse( :verbosity => 0 )
+		sentence.parse( verbosity: 0 )
 	end
 
 
 	it "knows how many words are in it, including walls and punctuation" do
-		@sentence.length == 6
+		expect( sentence.length ).to eq( 6 )
 	end
 
 
 	it "delegates linkage methods to its first linkage" do
-		@sentence.num_links.should == 5
+		expect( sentence.num_links ).to eq( 6 )
 	end
 
 
 	it "knows whether or not it's been parsed" do
-		@sentence.should_not be_parsed()
-		@sentence.parse
-		@sentence.should be_parsed()
+		expect( sentence ).to_not be_parsed()
+		sentence.parse
+		expect( sentence ).to be_parsed()
 	end
 
 
 	it "can return its linkages" do
-		@sentence.should have(1).linkages
-		@sentence.linkages.first.should be_an_instance_of( LinkParser::Linkage )
+		expect( sentence.linkages.count ).to eq( 3 )
+		expect( sentence.linkages ).to all( be_an_instance_of(LinkParser::Linkage) )
 	end
 
-	it "can return words at a specified position" do
-		@sentence.word( 0 ).should == 'LEFT-WALL'
-		@sentence[ -1 ].should == 'RIGHT-WALL'
-	end
 
 	it "can return an Array of all tokenized words" do
-		@sentence.words.should == [
-			'LEFT-WALL', 'the', 'cat', 'runs', '.', 'RIGHT-WALL'
-		]
+		expect( sentence.words ).to eq([
+			'LEFT-WALL', 'the', 'cat.n', 'runs.v', '.', 'RIGHT-WALL'
+		])
 	end
 
 
 	it "knows that it doesn't have any superfluous words in it" do
-		@sentence.null_count == 0
+		expect( sentence.null_count ).to eq( 0 )
 	end
 
 
 
 	describe "parsed from a sentence with a superfluous word in it" do
 
-		before( :each ) do
-			@sentence = @dict.parse( "This sentence contains a gravel superfluous word.")
+		let( :sentence ) do
+			described_class.new("This sentence contains a gravel superfluous word.", dict)
 		end
 
 
 		it "knows how many null links it has" do
-			@sentence.null_count == 1
+			sentence.parse( max_null_count: 3, min_null_count: 1 )
+			expect( sentence.null_count ).to eq( 1 )
 		end
+
 	end
 
 
 	describe "parsed from a sentence that yields no linkages" do
 
-		before( :each ) do
-			@sentence = @dict.parse( "The event that he smiled at me gives me hope" )
-		end
+		let( :sentence ) { dict.parse("The event that he smiled at me gives me hope") }
+
 
 		it "raises a descriptive exception if a delegated method is called" do
 			expect {
-				@sentence.constituent_tree_string
+				sentence.diagram
 			}.to raise_error( LinkParser::Error, /sentence has no linkages/i )
 		end
 

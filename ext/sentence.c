@@ -1,11 +1,11 @@
 /*
  *  sentence.c - Ruby LinkParser
  *  $Id$
- *  
+ *
  *  Authors:
  *    * Michael Granger <ged@FaerieMUD.org>
- *  
- *  Please see the LICENSE file at the top of the distribution for licensing 
+ *
+ *  Please see the LICENSE file at the top of the distribution for licensing
  *  information.
  */
 
@@ -30,7 +30,8 @@
  * Allocation function
  */
 static struct rlink_sentence *
-rlink_sentence_alloc() {
+rlink_sentence_alloc()
+{
 	struct rlink_sentence *ptr = ALLOC( struct rlink_sentence );
 
 	ptr->sentence	= NULL;
@@ -38,7 +39,7 @@ rlink_sentence_alloc() {
 	ptr->parsed_p	= Qfalse;
 	ptr->options	= Qnil;
 
-	debugMsg(( "Initialized an rlink_sentence <%p>", ptr ));
+	rlink_log( "debug", "Initialized an rlink_sentence <%p>", ptr  );
 	return ptr;
 }
 
@@ -47,16 +48,11 @@ rlink_sentence_alloc() {
  * GC Mark function
  */
 static void
-rlink_sentence_gc_mark( struct rlink_sentence *ptr ) {
-	debugMsg(( "Marking LinkParser::Sentence %p", ptr ));
-
+rlink_sentence_gc_mark( struct rlink_sentence *ptr )
+{
 	if ( ptr ) {
 		rb_gc_mark( ptr->dictionary );
 		rb_gc_mark( ptr->options );
-	}
-
-	else {
-		debugMsg(( "Not marking uninitialized rlink_sentence struct" ));
 	}
 }
 
@@ -65,35 +61,25 @@ rlink_sentence_gc_mark( struct rlink_sentence *ptr ) {
  * GC Free function
  */
 static void
-rlink_sentence_gc_free( struct rlink_sentence *ptr ) {
+rlink_sentence_gc_free( struct rlink_sentence *ptr )
+{
 	if ( ptr ) {
-		debugMsg(( "In free function of Sentence <%p>", ptr ));
-
 		if ( ptr->dictionary && TYPE(ptr->dictionary) == T_DATA ) {
 			struct rlink_dictionary *dictionary = rlink_get_dict( ptr->dictionary );
-			debugMsg(( "  sentence's dictionary is: <%p>", dictionary ));
 
 			/* Freeing the dictionary automatically frees the sentences it belongs to, so
 			   don't double-free if the dictionary struct or its pointer is done. */
 			if ( dictionary->dict ) {
-				debugMsg(( "  deleting Sentence <%p>", ptr->sentence ));
 				sentence_delete( (Sentence)ptr->sentence );
 			}
-		} else {
-			debugMsg(( "  not deleting a Sentence belonging to an already-freed dictionary." ));
 		}
 
 		ptr->sentence = NULL;
 		ptr->options = Qnil;
 		ptr->dictionary = Qnil;
 
-		debugMsg(( "  freeing rlink_sentence <%p>", ptr ));
 		xfree( ptr );
 		ptr = NULL;
-	}
-
-	else {
-		debugMsg(( "Not freeing an uninitialized rlink_sentence struct" ));
 	}
 }
 
@@ -102,7 +88,8 @@ rlink_sentence_gc_free( struct rlink_sentence *ptr ) {
  * Object validity checker. Returns the data pointer.
  */
 static struct rlink_sentence *
-check_sentence(  VALUE	self ) {
+check_sentence(  VALUE	self )
+{
 	Check_Type( self, T_DATA );
 
     if ( !IsSentence(self) ) {
@@ -118,7 +105,8 @@ check_sentence(  VALUE	self ) {
  * Fetch the data pointer and check it for sanity.
  */
 static struct rlink_sentence *
-get_sentence(  VALUE self ) {
+get_sentence(  VALUE self )
+{
 	struct rlink_sentence *ptr = check_sentence( self );
 
 	if ( !ptr )
@@ -132,7 +120,8 @@ get_sentence(  VALUE self ) {
  * Publicly-usable sentence-fetcher
  */
 struct rlink_sentence *
-rlink_get_sentence( VALUE self ) {
+rlink_get_sentence( VALUE self )
+{
 	return get_sentence( self );
 }
 
@@ -150,8 +139,9 @@ rlink_get_sentence( VALUE self ) {
  *
  */
 static VALUE
-rlink_sentence_s_alloc(  VALUE klass ) {
-	debugMsg(( "Wrapping an uninitialized Sentence pointer." ));
+rlink_sentence_s_alloc(  VALUE klass )
+{
+	rlink_log( "debug", "Wrapping an uninitialized Sentence pointer." );
 	return Data_Wrap_Struct( klass, rlink_sentence_gc_mark, rlink_sentence_gc_free, 0 );
 }
 
@@ -171,7 +161,8 @@ rlink_sentence_s_alloc(  VALUE klass ) {
  *     LinkParser::Sentence.new( "The boy runs", dict )  #=> #<LinkParser::Sentence:0x5481ac>
  */
 static VALUE
-rlink_sentence_init( VALUE self, VALUE input_string, VALUE dictionary ) {
+rlink_sentence_init( VALUE self, VALUE input_string, VALUE dictionary )
+{
 	if ( !check_sentence(self) ) {
 		struct rlink_sentence *ptr;
 		Sentence sent;
@@ -200,12 +191,13 @@ rlink_sentence_init( VALUE self, VALUE input_string, VALUE dictionary ) {
  *     sentence.parse( options={} )   -> fixnum
  *
  *  Attach a parse set to this sentence and return the number of linkages
- *  found. If any +options+ are specified, they override those set in the 
+ *  found. If any +options+ are specified, they override those set in the
  *  sentence's dictionary.
- * 
+ *
  */
 static VALUE
-rlink_sentence_parse( int argc, VALUE *argv, VALUE self ) {
+rlink_sentence_parse( int argc, VALUE *argv, VALUE self )
+{
 	struct rlink_sentence *ptr = get_sentence( self );
 	Parse_Options opts;
 	VALUE defopts = Qnil;
@@ -216,7 +208,7 @@ rlink_sentence_parse( int argc, VALUE *argv, VALUE self ) {
 	if ( RTEST(ptr->parsed_p) )
 		rb_raise( rlink_eLpError, "Can't reparse a sentence." );
 	*/
-	debugMsg(( "Parsing sentence <%p>", ptr ));
+	rlink_log_obj( self, "debug", "Parsing sentence <%p>", ptr  );
 
 	/* Merge the hash from this call with the one from the dict and build
 	   Parse_Options from it. */
@@ -250,7 +242,8 @@ rlink_sentence_parse( int argc, VALUE *argv, VALUE self ) {
  *     sentence.parsed?   #-> true
  */
 static VALUE
-rlink_sentence_parsed_p( VALUE self ) {
+rlink_sentence_parsed_p( VALUE self )
+{
 	struct rlink_sentence *ptr = get_sentence( self );
 	return ptr->parsed_p;
 }
@@ -266,7 +259,8 @@ rlink_sentence_parsed_p( VALUE self ) {
  *     sentence.options.islands_ok?  # -> true
  */
 static VALUE
-rlink_sentence_options( VALUE self ) {
+rlink_sentence_options( VALUE self )
+{
 	struct rlink_sentence *ptr = get_sentence( self );
 	return ptr->options;
 }
@@ -283,7 +277,8 @@ rlink_sentence_options( VALUE self ) {
  *
  */
 static VALUE
-rlink_sentence_linkages( VALUE self ) {
+rlink_sentence_linkages( VALUE self )
+{
 	struct rlink_sentence *ptr = get_sentence( self );
 	int i, count = 0;
 	VALUE rary;
@@ -313,13 +308,13 @@ rlink_sentence_linkages( VALUE self ) {
  *  call-seq:
  *     sentence.length   -> fixnum
  *
- *  Returns the number of words in the tokenized sentence, including the 
+ *  Returns the number of words in the tokenized sentence, including the
  *  boundary words and punctuation.
  *
  */
-
 static VALUE
-rlink_sentence_length( VALUE self ) {
+rlink_sentence_length( VALUE self )
+{
 	struct rlink_sentence *ptr = get_sentence( self );
 
 	if ( !RTEST(ptr->parsed_p) )
@@ -331,92 +326,13 @@ rlink_sentence_length( VALUE self ) {
 
 /*
  *  call-seq:
- *     sentence.word( idx )   -> str
- *
- *  Returns the spelling of the n-th word in the sentence as it appears after 
- *  tokenization.
- */
-static VALUE
-rlink_sentence_word( VALUE self, VALUE n ) {
-	struct rlink_sentence *ptr = get_sentence( self );
-	const char *word;
-
-	if ( !RTEST(ptr->parsed_p) )
-		rlink_sentence_parse( 0, 0, self );
-
-	word = sentence_get_word( (Sentence)ptr->sentence, FIX2INT(n) );
-	return rb_str_new2( word );
-}
-
-
-/*
- *  call-seq:
- *     sentence.words   -> array
- *
- *  Returns the words of the sentence as they appear after tokenization.
- *
- *     sentence = LinkParser::Dictionary.new.parse( "The dogs barks." )
- *     sentence.words  #-> 
- */
-static VALUE
-rlink_sentence_words( VALUE self ) {
-	struct rlink_sentence *ptr = get_sentence( self );
-	const char *word;
-	int i, length;
-	VALUE words = rb_ary_new();
-
-	if ( !RTEST(ptr->parsed_p) )
-		rlink_sentence_parse( 0, 0, self );
-
-	length = sentence_length( (Sentence)ptr->sentence );
-	for ( i = 0; i < length; i++ ) {
-		word = sentence_get_word( (Sentence)ptr->sentence, i );
-		debugMsg(( "Word %d: <%s>", i, word ));
-		rb_ary_push( words, rb_str_new2(word) );
-	}
-
-	return words;
-}
-
-
-/*
- *  call-seq:
- *     sentence[index]   		 -> str
- *     sentence[start, length]   -> str
- *     sentence[range]   		 -> str
- *
- *  Element Reference---Returns the element at index, or returns a subarray 
- *  starting at start and continuing for length elements, or returns a subarray 
- *  specified by range. Negative indices count backward from the end of the 
- *  array (-1 is the last element). Returns nil if the index (or starting 
- *  index) are out of range.
- *
- *     sent = dict.parse( "Birds fly south for the winter." )
- *     
- *     sent[1]		# => "birds"
- *     sent[0,4]	# => ["LEFT-WALL", "birds", "fly", "south"]
- *     sent[1..3]	# => ["birds", "fly", "south"]
- *     
- */
-static VALUE
-rlink_sentence_aref( argc, argv, self )
-	int argc;
-	VALUE *argv;
-	VALUE self;
-{
-	VALUE words = rlink_sentence_words( self );
-	return rb_funcall2( words, rb_intern("[]"), argc, argv );
-}
-
-
-/*
- *  call-seq:
  *     sentence.null_count   -> int
  *
  *  Returns the number of null links that were used in parsing the sentence.
  */
 static VALUE
-rlink_sentence_null_count( VALUE self ) {
+rlink_sentence_null_count( VALUE self )
+{
 	struct rlink_sentence *ptr = get_sentence( self );
 	int count;
 
@@ -432,11 +348,12 @@ rlink_sentence_null_count( VALUE self ) {
  *  call-seq:
  *     sentence.num_linkages_found   -> fixnum
  *
- *  Returns the number of linkages found when parsing the sentence. This will 
+ *  Returns the number of linkages found when parsing the sentence. This will
  *  cause the sentence to be parsed if it hasn't been already.
  */
 static VALUE
-rlink_sentence_num_linkages_found( VALUE self ) {
+rlink_sentence_num_linkages_found( VALUE self )
+{
 	struct rlink_sentence *ptr = get_sentence( self );
 	int i = 0;
 
@@ -456,7 +373,8 @@ rlink_sentence_num_linkages_found( VALUE self ) {
  *  Return the number of linkages that had no post-processing violations.
  */
 static VALUE
-rlink_sentence_num_valid_linkages( VALUE self ) {
+rlink_sentence_num_valid_linkages( VALUE self )
+{
 	struct rlink_sentence *ptr = get_sentence( self );
 	int count;
 
@@ -472,11 +390,12 @@ rlink_sentence_num_valid_linkages( VALUE self ) {
  *  call-seq:
  *     sentence.num_linkages_post_processed   -> fixnum
  *
- *  Return the number of linkages that were actually post-processed (which may 
+ *  Return the number of linkages that were actually post-processed (which may
  *  be less than the number found because of the linkage_limit parameter).
  */
 static VALUE
-rlink_sentence_num_linkages_post_processed( VALUE self ) {
+rlink_sentence_num_linkages_post_processed( VALUE self )
+{
 	struct rlink_sentence *ptr = get_sentence( self );
 	int count;
 
@@ -492,11 +411,12 @@ rlink_sentence_num_linkages_post_processed( VALUE self ) {
  *  call-seq:
  *     sentence.num_violations( i )   -> fixnum
  *
- *  The number of post-processing violations that the i-th linkage had during 
+ *  The number of post-processing violations that the i-th linkage had during
  *  the last parse.
  */
 static VALUE
-rlink_sentence_num_violations( VALUE self, VALUE i ) {
+rlink_sentence_num_violations( VALUE self, VALUE i )
+{
 	struct rlink_sentence *ptr = get_sentence( self );
 	int count;
 
@@ -515,7 +435,8 @@ rlink_sentence_num_violations( VALUE self, VALUE i ) {
  *  The maximum cost of connectors used in the i-th linkage of the sentence.
  */
 static VALUE
-rlink_sentence_disjunct_cost( VALUE self, VALUE i ) {
+rlink_sentence_disjunct_cost( VALUE self, VALUE i )
+{
 	struct rlink_sentence *ptr = get_sentence( self );
 	int count;
 
@@ -529,17 +450,18 @@ rlink_sentence_disjunct_cost( VALUE self, VALUE i ) {
 
 /*
  * Document-class: LinkParser::Sentence
- * 
+ *
  *   A Sentence is the API's representation of an input string,
  *   tokenized and interpreted according to a specific Dictionary. After
  *   a Sentence is created and parsed, various attributes of the
  *   resulting set of linkages can be obtained.
- * 
+ *
  */
 void
-rlink_init_sentence() {
+rlink_init_sentence()
+{
 	rlink_cSentence = rb_define_class_under( rlink_mLinkParser, "Sentence",
-	 	rb_cObject );
+		rb_cObject );
 
 	rb_define_alloc_func( rlink_cSentence, rlink_sentence_s_alloc );
 
@@ -551,27 +473,18 @@ rlink_init_sentence() {
 	rb_define_method( rlink_cSentence, "options", rlink_sentence_options, 0 );
 
 	rb_define_method( rlink_cSentence, "length", rlink_sentence_length, 0 );
-	rb_define_method( rlink_cSentence, "word", rlink_sentence_word, 1 );
-	rb_define_method( rlink_cSentence, "words", rlink_sentence_words, 0 );
-	rb_define_method( rlink_cSentence, "[]", rlink_sentence_aref, -1 );
 
-	rb_define_method( rlink_cSentence, "null_count", 
+	rb_define_method( rlink_cSentence, "null_count",
 		rlink_sentence_null_count, 0 );
-	rb_define_method( rlink_cSentence, "num_linkages_found", 
+	rb_define_method( rlink_cSentence, "num_linkages_found",
 		rlink_sentence_num_linkages_found, 0 );
-	rb_define_method( rlink_cSentence, "num_valid_linkages", 
+	rb_define_method( rlink_cSentence, "num_valid_linkages",
 		rlink_sentence_num_valid_linkages, 0 );
-	rb_define_method( rlink_cSentence, "num_linkages_post_processed", 
+	rb_define_method( rlink_cSentence, "num_linkages_post_processed",
 		rlink_sentence_num_linkages_post_processed, 0 );
-	rb_define_method( rlink_cSentence, "num_violations", 
+	rb_define_method( rlink_cSentence, "num_violations",
 		rlink_sentence_num_violations, 1 );
-	rb_define_method( rlink_cSentence, "disjunct_cost", 
+	rb_define_method( rlink_cSentence, "disjunct_cost",
 		rlink_sentence_disjunct_cost, 1 );
-
-/*
-	link_public_api(char *) sentence_get_nth_word(Sentence sent, int i);
-	link_public_api(int) sentence_nth_word_has_disjunction(Sentence sent, int i);
-*/
-
 }
 

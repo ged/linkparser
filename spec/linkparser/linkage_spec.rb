@@ -1,420 +1,351 @@
-#!/usr/bin/ruby -w
-#
-# Specification for the LinkParser::Linkage class
-# $Id$
-#
-# See the LICENSE file in the distribution for information about copyright and licensing.
-#
+# -*- ruby -*-
+#encoding: utf-8
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname.new( __FILE__ ).dirname.parent.parent
-
-	libdir = basedir + 'lib'
-	extdir = basedir + 'ext'
-
-	$LOAD_PATH.unshift( basedir.to_s ) unless $LOAD_PATH.include?( basedir.to_s )
-	$LOAD_PATH.unshift( libdir.to_s ) unless $LOAD_PATH.include?( libdir.to_s )
-	$LOAD_PATH.unshift( extdir.to_s ) unless $LOAD_PATH.include?( extdir.to_s )
-}
+require_relative '../helpers'
 
 require 'rspec'
-
 require 'linkparser'
 
 
 describe LinkParser::Linkage do
 
 	before( :all ) do
-		@dict = LinkParser::Dictionary.new( 'en', :verbosity => 0 )
-		$DEBUG = true if ENV['DEBUG']
-	end
-
-	before( :each ) do
-		@sentence = @dict.parse( "The flag was wet." )
-		@linkage = @sentence.linkages.first
+		@dict = LinkParser::Dictionary.new( 'en', verbosity: 0 )
 	end
 
 
-	#     +-------------Xp-------------+
-	#     +-----Wd-----+               |
-	#     |      +--Ds-+--Ss-+--Pa-+   |
-	#     |      |     |     |     |   |
-	# LEFT-WALL the flag.n was.v wet.a .
+	let( :dict ) { @dict }
+
+	let( :text ) { "The flag was wet." }
+	let( :sentence ) { @dict.parse(text) }
+	let( :linkage ) { sentence.linkages.first }
+
+
 	it "can build a diagram string for a sentence" do
-		@linkage.diagram.should =~ /LEFT-WALL/
-		@linkage.diagram.should =~ /the/
-		@linkage.diagram.should =~ /flag\.n/
-		@linkage.diagram.should =~ /was\.v/
-		@linkage.diagram.should =~ /wet\.a/
-
-		@linkage.diagram.should =~ /-Xp-/
-		@linkage.diagram.should =~ /-Wd-/
-		@linkage.diagram.should =~ /-Ds-/
-		@linkage.diagram.should =~ /-Ss-/
-		@linkage.diagram.should =~ /-Pa-/
+		expect( linkage.diagram.each_line.to_a ).to include(
+			"    +--------------Xp--------------+       \n",
+			"    +-------->WV------->+          |       \n",
+			"    +-----Wd-----+      |          |       \n",
+			"    |      +Ds**c+--Ss--+--Pa--+   +--RW--+\n",
+			"    |      |     |      |      |   |      |\n",
+			"LEFT-WALL the flag.n was.v-d wet.a . RIGHT-WALL \n",
+		)
 	end
 
 
-	 #       LEFT-WALL      Xp      <---Xp---->  Xp        .
-	 # (m)   LEFT-WALL      Wd      <---Wd---->  Wd        flag.n
-	 # (m)   the            D       <---Ds---->  Ds        flag.n
-	 # (m)   flag.n         Ss      <---Ss---->  Ss        was.v
-	 # (m)   was.v          Pa      <---Pa---->  Pa        wet.a
-	 #       .              RW      <---RW---->  RW        RIGHT-WALL
-	it "can build a 'links and domains' diagram" do
-		@linkage.links_and_domains.should =~ /LEFT-WALL/
-		@linkage.links_and_domains.should =~ /the/
-		@linkage.links_and_domains.should =~ /flag\.n/
-		@linkage.links_and_domains.should =~ /was\.v/
-		@linkage.links_and_domains.should =~ /wet\.a/
+	it "can build a diagram string for a sentence wrapped to a screen width" do
+		diagram = linkage.diagram( max_width: 10 )
 
-		@linkage.links_and_domains.should =~ /-Xp-/
-		@linkage.links_and_domains.should =~ /-Wd-/
-		@linkage.links_and_domains.should =~ /-Ds-/
-		@linkage.links_and_domains.should =~ /-Ss-/
-		@linkage.links_and_domains.should =~ /-Pa-/
+		pending \
+			'link-grammar itself returns "wet.a . \n" as the second-to-last ' \
+			'line.'
+		expect( diagram.each_line.map(&:length) ).to all( be <= 11 )
+	end
+
+
+	it "can build a diagram string without wall-words" do
+		expect( linkage.diagram(display_walls: false) ).to_not include( 'RIGHT-WALL' )
+	end
+
+
+	it "can build a 'links and domains' diagram" do
+		expect( linkage.links_and_domains.each_line ).to include(
+			"           LEFT-WALL      Xp            ----Xp-----  Xp              .\n",
+			" (s) (v)   LEFT-WALL      hWV           >---WV---->  dWV             was.v-d\n",
+			"           LEFT-WALL      Wd            ----Wd-----  Wd              flag.n\n",
+			" (s)       flag.n         Ss            ----Ss-----  Ss              was.v-d\n",
+			" (s)       the            D             ----Ds**c--  Ds**c           flag.n\n",
+			" (s) (v)   was.v-d        Pa            ----Pa-----  Pa              wet.a\n",
+			"           .              RW            ----RW-----  RW              RIGHT-WALL\n",
+			"\n"
+		)
 	end
 
 
 	it "knows how many words are in the sentence" do
 		# LEFT-WALL + words + '.' + RIGHT-WALL = 7
-		@linkage.num_words.should == 7
+		expect( linkage.num_words ).to eq( 7 )
 	end
 
 
 	it "can return a list of the tokenized words" do
-		@linkage.words.should include("LEFT-WALL")
-		@linkage.words.should include("the")
-		@linkage.words.should include("flag.n")
-		@linkage.words.should include("was.v-d")
-		@linkage.words.should include("wet.a")
-		@linkage.words.should include(".")
-		@linkage.words.should include("RIGHT-WALL")
+		expect( linkage.words ).to include("LEFT-WALL")
+		expect( linkage.words ).to include("the")
+		expect( linkage.words ).to include("flag.n")
+		expect( linkage.words ).to include("was.v-d")
+		expect( linkage.words ).to include("wet.a")
+		expect( linkage.words ).to include(".")
+		expect( linkage.words ).to include("RIGHT-WALL")
 	end
 
 
 	it "knows how many links are in the sentence" do
-		@linkage.num_links.should == 6
+		expect( linkage.num_links ).to eq( 7 )
 	end
 
 
 	it "can return the left word for any of its links" do
-	 	#       LEFT-WALL      Xp      <---Xp---->  Xp        .
-		@linkage.link_lword( 0 ).should == @linkage.words.index('LEFT-WALL')
-
-		# (m)   LEFT-WALL      Wd      <---Wd---->  Wd        flag.n
-		@linkage.link_lword( 1 ).should == @linkage.words.index('LEFT-WALL')
-
-		# (m)   the            D       <---Ds---->  Ds        flag.n
-		@linkage.link_lword( 2 ).should == @linkage.words.index('the')
-
-		# (m)   flag.n         Ss      <---Ss---->  Ss        was.v
-		@linkage.link_lword( 3 ).should == @linkage.words.index('flag.n')
-
-		# (m)   was.v          Pa      <---Pa---->  Pa        wet.a
-		@linkage.link_lword( 4 ).should == @linkage.words.index('was.v-d')
-
-		#       .              RW      <---RW---->  RW        RIGHT-WALL
-		@linkage.link_lword( 5 ).should == @linkage.words.index('.')
-
+		 #       LEFT-WALL      Xp      <---Xp---->  Xp        .
+		expect( linkage.link_lword(0) ).to eq( linkage.words.index('LEFT-WALL') )
+		 # (m)   LEFT-WALL      WV      <---WV---->  WV        was.v-d
+		expect( linkage.link_lword(1) ).to eq( linkage.words.index('LEFT-WALL') )
+		 # (m)   LEFT-WALL      Wd      <---Wd---->  Wd        flag.n
+		expect( linkage.link_lword(2) ).to eq( linkage.words.index('LEFT-WALL') )
+		 # (m)   flag.n         Ss      <---Ss---->  Ss        was.v-d
+		expect( linkage.link_lword(3) ).to eq( linkage.words.index('flag.n') )
+		 # (m)   the            D       <---Ds---->  Ds        flag.n
+		expect( linkage.link_lword(4) ).to eq( linkage.words.index('the') )
+		 # (m)   was.v-d        Pa      <---Pa---->  Pa        wet.a
+		expect( linkage.link_lword(5) ).to eq( linkage.words.index('was.v-d') )
+		 #       .              RW      <---RW---->  RW        RIGHT-WALL
+		expect( linkage.link_lword(6) ).to eq( linkage.words.index('.') )
 	end
 
 	it "can return the right word for any of its links" do
-	 	#       LEFT-WALL      Xp      <---Xp---->  Xp        .
-		@linkage.link_rword( 0 ).should == @linkage.words.index('.')
-
-		# (m)   LEFT-WALL      Wd      <---Wd---->  Wd        flag.n
-		@linkage.link_rword( 1 ).should == @linkage.words.index('flag.n')
-
-		# (m)   the            D       <---Ds---->  Ds        flag.n
-		@linkage.link_rword( 2 ).should == @linkage.words.index('flag.n')
-
-		# (m)   flag.n         Ss      <---Ss---->  Ss        was.v
-		@linkage.link_rword( 3 ).should == @linkage.words.index('was.v-d')
-
-		# (m)   was.v          Pa      <---Pa---->  Pa        wet.a
-		@linkage.link_rword( 4 ).should == @linkage.words.index('wet.a')
-
-		#       .              RW      <---RW---->  RW        RIGHT-WALL
-		@linkage.link_rword( 5 ).should == @linkage.words.index('RIGHT-WALL')
-
+		 #       LEFT-WALL      Xp      <---Xp---->  Xp        .
+		expect( linkage.link_rword(0) ).to eq( linkage.words.index('.') )
+		 # (m)   LEFT-WALL      WV      <---WV---->  WV        was.v-d
+		expect( linkage.link_rword(1) ).to eq( linkage.words.index('was.v-d') )
+		 # (m)   LEFT-WALL      Wd      <---Wd---->  Wd        flag.n
+		expect( linkage.link_rword(2) ).to eq( linkage.words.index('flag.n') )
+		 # (m)   flag.n         Ss      <---Ss---->  Ss        was.v-d
+		expect( linkage.link_rword(3) ).to eq( linkage.words.index('was.v-d') )
+		 # (m)   the            D       <---Ds---->  Ds        flag.n
+		expect( linkage.link_rword(4) ).to eq( linkage.words.index('flag.n') )
+		 # (m)   was.v-d        Pa      <---Pa---->  Pa        wet.a
+		expect( linkage.link_rword(5) ).to eq( linkage.words.index('wet.a') )
+		 #       .              RW      <---RW---->  RW        RIGHT-WALL
+		expect( linkage.link_rword(6) ).to eq( linkage.words.index('RIGHT-WALL') )
 	end
 
 
 	it "can return the length of any of its links" do
-		@linkage.link_length( 0 ).should == 5 
-		@linkage.link_length( 1 ).should == 2
-		@linkage.link_length( 2 ).should == 1
-		@linkage.link_length( 3 ).should == 1
-		@linkage.link_length( 4 ).should == 1
-		@linkage.link_length( 5 ).should == 1
+		expect( linkage.link_length(0) ).to eq( 5 )
+		expect( linkage.link_length(1) ).to eq( 3 )
+		expect( linkage.link_length(2) ).to eq( 2 )
+		expect( linkage.link_length(3) ).to eq( 1 )
+		expect( linkage.link_length(4) ).to eq( 1 )
+		expect( linkage.link_length(5) ).to eq( 1 )
+		expect( linkage.link_length(6) ).to eq( 1 )
 
 		# Out-of-bounds just returns -1
-		@linkage.link_length( 7 ).should == -1
+		expect( linkage.link_length(11) ).to eq( -1 )
 	end
 
 
 	it "can return labels for any of its links" do
-		@linkage.link_label( 0 ).should == "Xp"
-		@linkage.link_label( 1 ).should == "Wd"
-		@linkage.link_label( 2 ).should == "Ds"
-		@linkage.link_label( 3 ).should == "Ss"
-		@linkage.link_label( 4 ).should == "Pa"
-		@linkage.link_label( 5 ).should == "RW"
+		expect( linkage.link_label(0) ).to eq( "Xp" )
+		expect( linkage.link_label(1) ).to eq( "WV" )
+		expect( linkage.link_label(2) ).to eq( "Wd" )
+		expect( linkage.link_label(3) ).to eq( "Ss" )
+		expect( linkage.link_label(4) ).to eq( "Ds**c" )
+		expect( linkage.link_label(5) ).to eq( "Pa" )
+		expect( linkage.link_label(6) ).to eq( "RW" )
 
-		@linkage.link_label( 7 ).should be_nil
+		expect( linkage.link_label(7) ).to be_nil
 	end
 
 
 	it "can return left labels for any of its links" do
-		@linkage.link_llabel( 0 ).should == "Xp"
-		@linkage.link_llabel( 1 ).should == "Wd"
-		@linkage.link_llabel( 2 ).should == "D"
-		@linkage.link_llabel( 3 ).should == "Ss"
-		@linkage.link_llabel( 4 ).should == "Pa"
-		@linkage.link_llabel( 5 ).should == "RW"
+		expect( linkage.link_llabel(0) ).to eq( "Xp" )
+		expect( linkage.link_llabel(1) ).to eq( "hWV" )
+		expect( linkage.link_llabel(2) ).to eq( "Wd" )
+		expect( linkage.link_llabel(3) ).to eq( "Ss" )
+		expect( linkage.link_llabel(4) ).to eq( "D" )
+		expect( linkage.link_llabel(5) ).to eq( "Pa" )
+		expect( linkage.link_llabel(6) ).to eq( "RW" )
 
-		@linkage.link_llabel( 7 ).should be_nil
+		expect( linkage.link_llabel(7) ).to be_nil
 	end
 
 
 	it "can return labels for any of its links" do
-		@linkage.link_rlabel( 0 ).should == "Xp"
-		@linkage.link_rlabel( 1 ).should == "Wd"
-		@linkage.link_rlabel( 2 ).should == "Ds"
-		@linkage.link_rlabel( 3 ).should == "Ss"
-		@linkage.link_rlabel( 4 ).should == "Pa"
-		@linkage.link_rlabel( 5 ).should == "RW"
+		expect( linkage.link_rlabel(0) ).to eq( "Xp" )
+		expect( linkage.link_rlabel(1) ).to eq( "dWV" )
+		expect( linkage.link_rlabel(2) ).to eq( "Wd" )
+		expect( linkage.link_rlabel(3) ).to eq( "Ss" )
+		expect( linkage.link_rlabel(4) ).to eq( "Ds**c" )
+		expect( linkage.link_rlabel(5) ).to eq( "Pa" )
+		expect( linkage.link_rlabel(6) ).to eq( "RW" )
 
-		@linkage.link_rlabel( 7 ).should be_nil
+		expect( linkage.link_rlabel(7) ).to be_nil
 	end
 
 
 	it "can return the number of domains for any link" do
-		@linkage.link_num_domains( 0 ).should == 0
-		1.upto(4) do |i|
-			@linkage.link_num_domains( i ).should == 1
-		end
-		@linkage.link_num_domains( 5 ).should == 0
+		expect( linkage.link_num_domains(0) ).to eq( 0 )
+		expect( linkage.link_num_domains(1) ).to eq( 2 )
+		expect( linkage.link_num_domains(2) ).to eq( 0 )
+		expect( linkage.link_num_domains(3) ).to eq( 1 )
+		expect( linkage.link_num_domains(4) ).to eq( 1 )
+		expect( linkage.link_num_domains(5) ).to eq( 2 )
+		expect( linkage.link_num_domains(6) ).to eq( 0 )
 
-		@linkage.link_num_domains( 112 ).should == -1
+		expect( linkage.link_num_domains(112) ).to eq( -1 )
 	end
 
 
 	it "can return the names of the domains of any of its links" do
-		@linkage.link_domain_names( 0 ).should be_an_instance_of( Array )
-		@linkage.link_domain_names( 0 ).should be_empty
+		expect( linkage.link_domain_names(0) ).to be_an_instance_of( Array )
+		expect( linkage.link_domain_names(0) ).to be_empty
 
-		1.upto(4) do |i|
-			@linkage.link_domain_names( i ).should be_an_instance_of( Array )
-			@linkage.link_domain_names( i ).should == ["m"]
-		end
+		expect( linkage.link_domain_names(1) ).to be_an_instance_of( Array )
+		expect( linkage.link_domain_names(1) ).to eq( ['s', 'v'] )
 
-		@linkage.link_domain_names( 5 ).should be_an_instance_of( Array )
-		@linkage.link_domain_names( 5 ).should be_empty
+		expect( linkage.link_domain_names(2) ).to be_an_instance_of( Array )
+		expect( linkage.link_domain_names(2) ).to be_empty
 
-		@linkage.link_domain_names( 12 ).should be_an_instance_of( Array )
-		@linkage.link_domain_names( 12 ).should be_empty
+		expect( linkage.link_domain_names(3) ).to be_an_instance_of( Array )
+		expect( linkage.link_domain_names(3) ).to eq( ["s"] )
+
+		expect( linkage.link_domain_names(4) ).to be_an_instance_of( Array )
+		expect( linkage.link_domain_names(4) ).to eq( ['s'] )
+
+		expect( linkage.link_domain_names(5) ).to be_an_instance_of( Array )
+		expect( linkage.link_domain_names(5) ).to eq( ['s', 'v'] )
+
+		expect( linkage.link_domain_names(6) ).to be_an_instance_of( Array )
+		expect( linkage.link_domain_names(6) ).to be_empty
+
+		expect( linkage.link_domain_names(12) ).to be_an_instance_of( Array )
+		expect( linkage.link_domain_names(12) ).to be_empty
 	end
 
 
 	it "can return the disjunct strings for any of its words" do
-		@linkage.disjunct_strings.should have( @linkage.num_words ).members
+		expect( linkage.disjunct_strings.length ).to eq( linkage.num_words )
 	end
 
 
 	it "can return parsed disjuncts for any of its words" do
-		@linkage.disjuncts.should have( @linkage.num_words ).members
+		expect( linkage.disjuncts.length ).to eq( linkage.num_words )
 	end
 
 
 	it "can report on the various cost metrics of the parse" do
-		@linkage.unused_word_cost.should be_an_instance_of( Fixnum )
-		@linkage.disjunct_cost.should be_an_instance_of( Fixnum )
-		@linkage.and_cost.should be_an_instance_of( Fixnum )
-		@linkage.link_cost.should be_an_instance_of( Fixnum )
+		expect( linkage.unused_word_cost ).to be_an_instance_of( Fixnum )
+		expect( linkage.disjunct_cost ).to be_an_instance_of( Fixnum )
+		expect( linkage.link_cost ).to be_an_instance_of( Fixnum )
 	end
 
 
-	### :FIXME: I don't know what these do/mean yet, so for now just test to 
+	### :FIXME: I don't know what these do/mean yet, so for now just test to
 	### make sure they're implemented. They should really be tested with
 	### sentences that have predictable results.
 	it "implements Link Grammar predicate methods" do
-		@linkage.should respond_to( :canonical? )
-		@linkage.should respond_to( :improper? )
-		@linkage.should respond_to( :has_inconsistent_domains? )
-		@linkage.should respond_to( :violation_name )
+		expect( linkage ).to respond_to( :violation_name )
 	end
 
 
 	 #       LEFT-WALL      Xp      <---Xp---->  Xp        .
+	 # (m)   LEFT-WALL      WV      <---WV---->  WV        was.v-d
 	 # (m)   LEFT-WALL      Wd      <---Wd---->  Wd        flag.n
+	 # (m)   flag.n         Ss      <---Ss---->  Ss        was.v-d
 	 # (m)   the            D       <---Ds---->  Ds        flag.n
-	 # (m)   flag.n         Ss      <---Ss---->  Ss        was.v
-	 # (m)   was.v          Pa      <---Pa---->  Pa        wet.a
+	 # (m)   was.v-d        Pa      <---Pa---->  Pa        wet.a
 	 #       .              RW      <---RW---->  RW        RIGHT-WALL
 	it "contains link structs describing the linkage" do
-		@linkage.should have(6).links
-		@linkage.links.should be_an_instance_of( Array )
+		expect( linkage.links ).to be_an_instance_of( Array )
+		expect( linkage.links.length ).to eq( 7 )
 
-		@linkage.links.each do |link|
-			link.should be_a_kind_of( Struct )
+		linkage.links.each do |link|
+			expect( link ).to be_a_kind_of( Struct )
 		end
 
-		@linkage.links.first.lword.should == 'LEFT-WALL'
-		@linkage.links.first.label.should == 'Xp'
-		@linkage.links.last.rword.should == 'RIGHT-WALL'
-		@linkage.links.last.label.should == 'RW'
-		@linkage.links[3].lword.should == 'flag.n'
-		@linkage.links[3].rword.should == 'was.v-d'
-		@linkage.links[3].label.should == 'Ss'
+		expect( linkage.links.first.lword ).to eq( 'LEFT-WALL' )
+		expect( linkage.links.first.label ).to eq( 'Xp' )
+		expect( linkage.links.last.rword ).to eq( 'RIGHT-WALL' )
+		expect( linkage.links.last.label ).to eq( 'RW' )
+		expect( linkage.links[3].lword ).to eq( 'flag.n' )
+		expect( linkage.links[3].rword ).to eq( 'was.v-d' )
+		expect( linkage.links[3].label ).to eq( 'Ss' )
 	end
 
 
 	it "knows what word is the verb in the sentence" do
-		@linkage.verb.should == "was"
+		expect( linkage.verb ).to eq( "was" )
+	end
+
+
+	it "can return the verb without stripping the subscript" do
+		expect( linkage.verb(keep_subscript: true) ).to eq( "was.v-d" )
 	end
 
 
 	it "knows what word is the subject of the sentence" do
-		@linkage.subject.should == "flag"
+		expect( linkage.subject ).to eq( "flag" )
+	end
+
+
+	it "can return the subject without stripping the subscript" do
+		expect( linkage.subject(keep_subscript: true) ).to eq( "flag.n" )
+	end
+
+
+	context "for sentences with a direct object" do
+
+		let( :text ) { "The dog fetches the ball." }
+
+
+		it "knows what word is the object of the sentence" do
+			expect( linkage.object ).to eq( "ball" )
+		end
+
+
+		it "can return the object without stripping the subscript" do
+			expect( linkage.object(keep_subscript: true) ).to eq( "ball.n-u" )
+		end
+
 	end
 
 
 	it "knows when the sentence doesn't have a direct object" do
-		@linkage.object.should be_nil()
+		expect( linkage.object ).to be_nil()
 	end
 
 
 	it "knows which of its words are nouns" do
-		@linkage.nouns.should have(1).member
-		@linkage.nouns.should include( "flag" )
+		expect( linkage.nouns.size ).to eq( 1 )
+		expect( linkage.nouns ).to include( "flag" )
 	end
 
-
-	MODE1_C_TREE_STRING = "(S (NP The flag)\n   (VP was\n       (ADJP wet))\n   .)\n"
-	MODE2_C_TREE_STRING = "[S [NP The flag NP] [VP was [ADJP wet ADJP] VP] . S] \n"
-	MODE3_C_TREE_STRING = "(S (NP The flag) (VP was (ADJP wet)) .)\n"
-
-	it "returns an indented sexps for the constituent tree string by default (mode 1)" do
-		@linkage.constituent_tree_string.should == MODE1_C_TREE_STRING
-	end
-
-
-	it "returns indented sexps for the constituent tree string if fetched with explicit mode '1'" do
-		@linkage.constituent_tree_string( 1 ).should == MODE1_C_TREE_STRING
-	end
-
-	it "returns bracketed constituents if constituent tree string is fetched in mode 2" do
-		@linkage.constituent_tree_string( 2 ).should == MODE2_C_TREE_STRING
-	end
-
-	it "returns unindented sexps for the constituent tree string if constituent tree string " +
-	   "is fetched in mode 3" do
-		@linkage.constituent_tree_string( 3 ).should == MODE3_C_TREE_STRING
-	end
-
-	it "raises an exception for any numeric constituent tree string mode greater than 3" do
-		expect {
-			@linkage.constituent_tree_string( 4 )
-		}.to raise_error( ArgumentError, /illegal mode 4/i )
-	end
-
-	it "raises an exception for any numeric constituent tree string mode less than 1" do
-		expect {
-			@linkage.constituent_tree_string( 0 )
-		}.to raise_error( ArgumentError, /illegal mode 0/i )
-	end
-
-
-	it "raises an exception when a non-numeric constituent tree string mode is given" do
-		expect {
-			@linkage.constituent_tree_string( 'glarg' )
-		}.to raise_error( TypeError )
-	end
-
-	it "returns an Array of CTree structs for its constituent tree" do
-		rval = @linkage.constituent_tree
-
-		rval.should be_an_instance_of( Array )
-		rval.should have(1).members
-		rval.first.should be_a_kind_of( Struct )
-		rval.first.label.should == 'S'
-		rval.first.children.should have(3).members
-		rval.first.children.collect {|n| n.label }.should include( 'NP', 'VP', '.' )
-	end
 
 	it "returns an informational string when inspected" do
-		@linkage.inspect.should =~ /Linkage:0x[[:xdigit:]]+: \[\d+ links\]/
+		expect( linkage.inspect ).to match( /Linkage:0x[[:xdigit:]]+: \[\d+ links\]/ )
 	end
 
 
 	context "from a simple sentence with a direct object" do
-		before( :each ) do
-			@sentence = @dict.parse( "The dog ran home." )
-			@linkage = @sentence.linkages.first
-		end
+
+		let( :text ) { "The dog fetches the ball." }
 
 
 		it "knows what word is the object in the sentence" do
-			# This depends on the linkage:
-			#       +---------------Xp---------------+
-			#       +-----Wd----+                    |
-			#       |      +-Ds-+--Ss--+---Ou---+    |
-			#       |      |    |      |        |    |
-			#   LEFT-WALL the dog.n ran.v-d home.n-u . 
-			@sentence.object.should == 'home'
+			#     +------------------Xp------------------+
+			#     +-------->WV------->+                  |
+			#     +-----Wd----+       +------Ou-----+    |
+			#     |      +Ds**+---Ss--+      +--Dmu-+    +--RW--+
+			#     |      |    |       |      |      |    |      |
+			# LEFT-WALL the dog.n fetches.v the ball.n-u . RIGHT-WALL
+			expect( sentence.object ).to eq( 'ball' )
 
-		end
-
-	end
-
-
-	context "deprecated sublinkage API" do
-
-		before( :each ) do
-			@sentence = @dict.parse( "The ball rolled down the hill and bumped the curb." )
-			@linkage = @sentence.linkages.first
-		end
-
-		it "warns about deprecation if #num_sublinkages is called" do
-			@linkage.should_receive( :warn ).with( /deprecated/i )
-			@linkage.num_sublinkages
-		end
-
-		it "warns about deprecation if #compute_union is called" do
-			@linkage.should_receive( :warn ).with( /deprecated/i )
-			@linkage.compute_union
-		end
-
-		it "warn about deprecation if #current_sublinkage= is called" do
-			@linkage.should_receive( :warn ).with( /deprecated/i )
-			@linkage.current_sublinkage = 1
-		end
-
-		it "warn about deprecation if #current_sublinkage is called" do
-			@linkage.should_receive( :warn ).with( /deprecated/i )
-			@linkage.current_sublinkage
 		end
 
 	end
 
 
 	it "should know that it's not an imperative sentence" do
-		@linkage.imperative?.should be_false()
+		expect( linkage.imperative? ).to be_falsey()
 	end
 
 
 	context "from an imperative sentence" do
-		before( :each ) do
-			@sentence = @dict.parse( "Go to the store!" )
-			@linkage = @sentence.linkages.first
-		end
+
+		let( :text ) { "Go to the store!" }
 
 
 		it "knows that it's an imperative sentence" do
-			@linkage.imperative?.should be_true()
+			expect( linkage.imperative? ).to be_truthy()
 		end
 
 
@@ -424,9 +355,9 @@ describe LinkParser::Linkage do
 	context "bugfixes" do
 
 		it "also strips off the '.p' from the subject and object when they are plural" do
-			sent = @dict.parse( 'People like goats.' )
-			sent.subject.should_not =~ /people\.p/i
-			sent.object.should_not =~ /goats\.p/i
+			sent = dict.parse( 'People like goats.' )
+			expect( sent.subject ).to_not match( /people\.p/i )
+			expect( sent.object ).to_not match( /goats\.p/i )
 		end
 
 	end
