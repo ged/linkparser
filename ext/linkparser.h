@@ -5,7 +5,7 @@
  *		Authors:
  *		  * Michael Granger <ged@FaerieMUD.org>
  *
- *  Please see the LICENSE file at the top of the distribution for licensing 
+ *  Please see the LICENSE file at the top of the distribution for licensing
  *  information.
  */
 
@@ -65,7 +65,7 @@ extern VALUE rlink_sLinkageCTree;
 extern VALUE rlink_eLpError;
 
 
-/* 
+/*
  * Structures
  */
 struct rlink_dictionary {

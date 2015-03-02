@@ -26,7 +26,7 @@ DLEXT   = RbConfig::CONFIG['DLEXT']
 EXTCONF = EXTDIR + 'extconf.rb'
 EXT     = LIBDIR + "linkparser_ext.#{DLEXT}"
 
-GEMSPEC = 'inversion.gemspec'
+GEMSPEC = 'linkparser.gemspec'
 
 # Hoe plugins
 Hoe.plugin :mercurial
@@ -113,6 +113,7 @@ task GEMSPEC do |task|
 	spec = $hoespec.spec
 	spec.files.delete( '.gemtest' )
 	spec.version = "#{spec.version.bump}.0.pre#{Time.now.strftime("%Y%m%d%H%M%S")}"
+	spec.signing_key = nil
 	File.open( task.name, 'w' ) do |fh|
 		fh.write( spec.to_ruby )
 	end

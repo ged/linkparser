@@ -4,7 +4,7 @@
 
 ## Description
 
-This module is a Ruby binding for 
+This module is a Ruby binding for
 [the Abiword version](http://www.abisource.com/projects/link-grammar/) of CMU's
 [Link Grammar](http://www.link.cs.cmu.edu/link/), a syntactic parser of English.
 
@@ -13,23 +13,23 @@ This module is a Ruby binding for
 
     dict = LinkParser::Dictionary.new
     => #<LinkParser::Dictionary:0x007f9a5b117220>
-    
+
     sent = dict.parse( "People use Ruby for all kinds of nifty things." )
-    => #<LinkParser::Sentence:0x1fe69761a146 "LEFT-WALL people.p use.v Ruby.f 
-        for.p all.a kinds.n of   nifty.a things.n . RIGHT-WALL"/15 
+    => #<LinkParser::Sentence:0x1fe69761a146 "LEFT-WALL people.p use.v Ruby.f
+        for.p all.a kinds.n of   nifty.a things.n . RIGHT-WALL"/15
         linkages/0 nulls>
-    
+
     sent.subject
     => "people"
-    
+
     sent.verb
     => "use"
-    
+
     sent.object
     => "Ruby.f"
-    
+
     puts sent.diagram( max_width: 200 )
-    > 
+    >
     >     +---------------------------------Xp--------------------------------+
     >     |                             +---------------Jp---------------+    |
     >     |                             |            +--------Dmc--------+    |
@@ -41,15 +41,15 @@ This module is a Ruby binding for
 
 ## Installation
 
-First, download and install the latest version of the link-grammar 
-library from 
+First, download and install the latest version of the link-grammar
+library from
 [Abiword's site](http://www.abisource.com/projects/link-grammar/#download).
 
 Then install the gem:
 
     gem install linkparser
 
-You may need to specify the path to the link-grammar library if you 
+You may need to specify the path to the link-grammar library if you
 installed it somewhere that your linker doesn't look by default:
 
     gem install linkparser -- --with-link-grammar=/usr/local
