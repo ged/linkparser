@@ -72,6 +72,13 @@ and generate the API documentation.
 
 ## License
 
+This gem uses the link-grammar library, which is licensed under the
+LGPL v2.1 license:
+
+https://www.gnu.org/licenses/lgpl-2.1.html
+
+The gem itself is licensed under the BSD license:
+
 Copyright (c) 2006-2015, The FaerieMUD Consortium
 All rights reserved.
 
