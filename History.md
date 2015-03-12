@@ -2,9 +2,14 @@
 
 Updated for the latest Ruby and link-grammar.
 
-This release breaks the API of previous releases, as link-grammar
-5.x removed a bunch of deprecated functions, so it was no longer
-possible to maintain backward-compatibility.
+NOTE: This release breaks the API of previous releases. In the 5.x
+release of the upstream library (link-grammar) a bunch of
+long-deprecated functions were removed, so it was no longer possible
+to maintain backward-compatibility.
+
+The 1.x version of LinkParser should continue to work fine for
+pre-5.x versions of link-grammar, and it will continue to be
+maintained for the forseeable future.
 
 
 ## v1.1.4 [2012-01-31] Michael Granger <ged@FaerieMUD.org>
