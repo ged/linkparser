@@ -1,16 +1,16 @@
 # -*- encoding: utf-8 -*-
-# stub: linkparser 2.1.0.pre20150302085132 ruby lib
+# stub: linkparser 2.1.0.pre20150312094842 ruby lib
 # stub: ext/extconf.rb
 
 Gem::Specification.new do |s|
   s.name = "linkparser"
-  s.version = "2.1.0.pre20150302085132"
+  s.version = "2.1.0.pre20150312094842"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Michael Granger", "Martin Chase"]
-  s.date = "2015-03-02"
-  s.description = "This module is a Ruby binding for \n[the Abiword version](http://www.abisource.com/projects/link-grammar/) of CMU's\n[Link Grammar](http://www.link.cs.cmu.edu/link/), a syntactic parser of English."
+  s.date = "2015-03-12"
+  s.description = "This module is a Ruby binding for\n[the Abiword version](http://www.abisource.com/projects/link-grammar/) of CMU's\n[Link Grammar](http://www.link.cs.cmu.edu/link/), a syntactic parser of English."
   s.email = ["ged@FaerieMUD.org", "stillflame@FaerieMUD.org"]
   s.extensions = ["ext/extconf.rb"]
   s.extra_rdoc_files = ["History.md", "Manifest.txt", "README.md", "History.md", "README.md", "ext/dictionary.c", "ext/linkage.c", "ext/linkparser.c", "ext/linkparser.h", "ext/parseoptions.c", "ext/sentence.c"]
@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--main", "README.md"]
   s.required_ruby_version = Gem::Requirement.new(">= 2.0.0")
   s.rubygems_version = "2.4.5"
-  s.summary = "This module is a Ruby binding for  [the Abiword version](http://www.abisource.com/projects/link-grammar/) of CMU's [Link Grammar](http://www.link.cs.cmu.edu/link/), a syntactic parser of English."
+  s.summary = "This module is a Ruby binding for [the Abiword version](http://www.abisource.com/projects/link-grammar/) of CMU's [Link Grammar](http://www.link.cs.cmu.edu/link/), a syntactic parser of English."
 
   if s.respond_to? :specification_version then
     s.specification_version = 4
