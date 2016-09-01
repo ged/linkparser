@@ -50,13 +50,13 @@ describe LinkParser::Linkage do
 
 	it "can build a 'links and domains' diagram" do
 		expect( linkage.links_and_domains.each_line ).to include(
-			"           LEFT-WALL      Xp            ----Xp-----  Xp              .\n",
-			" (s) (v)   LEFT-WALL      hWV           >---WV---->  dWV             was.v-d\n",
-			"           LEFT-WALL      Wd            ----Wd-----  Wd              flag.n\n",
-			" (s)       flag.n         Ss            ----Ss-----  Ss              was.v-d\n",
-			" (s)       the            D             ----Ds**c--  Ds**c           flag.n\n",
-			" (s) (v)   was.v-d        Pa            ----Pa-----  Pa              wet.a\n",
-			"           .              RW            ----RW-----  RW              RIGHT-WALL\n",
+			"       LEFT-WALL      Xp            ----Xp-----  Xp              .\n",
+			" (m)   LEFT-WALL      hWV           >---WV---->  dWV             was.v-d\n",
+			" (m)   LEFT-WALL      Wd            ----Wd-----  Wd              flag.n\n",
+			" (m)   flag.n         Ss            ----Ss-----  Ss              was.v-d\n",
+			" (m)   the            D             ----Ds**c--  Ds**c           flag.n\n",
+			" (m)   was.v-d        Pa            ----Pa-----  Pa              wet.a\n",
+			"       .              RW            ----RW-----  RW              RIGHT-WALL\n",
 			"\n"
 		)
 	end
@@ -174,11 +174,11 @@ describe LinkParser::Linkage do
 
 	it "can return the number of domains for any link" do
 		expect( linkage.link_num_domains(0) ).to eq( 0 )
-		expect( linkage.link_num_domains(1) ).to eq( 2 )
-		expect( linkage.link_num_domains(2) ).to eq( 0 )
+		expect( linkage.link_num_domains(1) ).to eq( 1 )
+		expect( linkage.link_num_domains(2) ).to eq( 1 )
 		expect( linkage.link_num_domains(3) ).to eq( 1 )
 		expect( linkage.link_num_domains(4) ).to eq( 1 )
-		expect( linkage.link_num_domains(5) ).to eq( 2 )
+		expect( linkage.link_num_domains(5) ).to eq( 1 )
 		expect( linkage.link_num_domains(6) ).to eq( 0 )
 
 		expect( linkage.link_num_domains(112) ).to eq( -1 )
@@ -190,19 +190,19 @@ describe LinkParser::Linkage do
 		expect( linkage.link_domain_names(0) ).to be_empty
 
 		expect( linkage.link_domain_names(1) ).to be_an_instance_of( Array )
-		expect( linkage.link_domain_names(1) ).to eq( ['s', 'v'] )
+		expect( linkage.link_domain_names(1) ).to eq( ['m'] )
 
 		expect( linkage.link_domain_names(2) ).to be_an_instance_of( Array )
-		expect( linkage.link_domain_names(2) ).to be_empty
+		expect( linkage.link_domain_names(2) ).to eq( ['m'] )
 
 		expect( linkage.link_domain_names(3) ).to be_an_instance_of( Array )
-		expect( linkage.link_domain_names(3) ).to eq( ["s"] )
+		expect( linkage.link_domain_names(3) ).to eq( ["m"] )
 
 		expect( linkage.link_domain_names(4) ).to be_an_instance_of( Array )
-		expect( linkage.link_domain_names(4) ).to eq( ['s'] )
+		expect( linkage.link_domain_names(4) ).to eq( ['m'] )
 
 		expect( linkage.link_domain_names(5) ).to be_an_instance_of( Array )
-		expect( linkage.link_domain_names(5) ).to eq( ['s', 'v'] )
+		expect( linkage.link_domain_names(5) ).to eq( ['m'] )
 
 		expect( linkage.link_domain_names(6) ).to be_an_instance_of( Array )
 		expect( linkage.link_domain_names(6) ).to be_empty
@@ -293,7 +293,7 @@ describe LinkParser::Linkage do
 
 
 		it "can return the object without stripping the subscript" do
-			expect( linkage.object(keep_subscript: true) ).to eq( "ball.n-u" )
+			expect( linkage.object(keep_subscript: true) ).to eq( linkage.words[5] )
 		end
 
 	end
