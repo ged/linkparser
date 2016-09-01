@@ -35,11 +35,7 @@ describe LinkParser::Linkage do
 
 	it "can build a diagram string for a sentence wrapped to a screen width" do
 		diagram = linkage.diagram( max_width: 10 )
-
-		pending \
-			'link-grammar itself returns "wet.a . \n" as the second-to-last ' \
-			'line.'
-		expect( diagram.each_line.map(&:length) ).to all( be <= 11 )
+		expect( diagram.each_line.map(&:strip).map(&:length) ).to all( be <= 10 )
 	end
 
 
