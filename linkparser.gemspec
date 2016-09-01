@@ -1,15 +1,15 @@
 # -*- encoding: utf-8 -*-
-# stub: linkparser 2.1.0.pre20150312094842 ruby lib
+# stub: linkparser 2.1.0.pre20160901154922 ruby lib
 # stub: ext/extconf.rb
 
 Gem::Specification.new do |s|
   s.name = "linkparser"
-  s.version = "2.1.0.pre20150312094842"
+  s.version = "2.1.0.pre20160901154922"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Michael Granger", "Martin Chase"]
-  s.date = "2015-03-12"
+  s.date = "2016-09-01"
   s.description = "This module is a Ruby binding for\n[the Abiword version](http://www.abisource.com/projects/link-grammar/) of CMU's\n[Link Grammar](http://www.link.cs.cmu.edu/link/), a syntactic parser of English."
   s.email = ["ged@FaerieMUD.org", "stillflame@FaerieMUD.org"]
   s.extensions = ["ext/extconf.rb"]
@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.licenses = ["BSD"]
   s.rdoc_options = ["--main", "README.md"]
   s.required_ruby_version = Gem::Requirement.new(">= 2.0.0")
-  s.rubygems_version = "2.4.5"
+  s.rubygems_version = "2.4.8"
   s.summary = "This module is a Ruby binding for [the Abiword version](http://www.abisource.com/projects/link-grammar/) of CMU's [Link Grammar](http://www.link.cs.cmu.edu/link/), a syntactic parser of English."
 
   if s.respond_to? :specification_version then
@@ -28,30 +28,30 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<loggability>, ["~> 0.11"])
       s.add_development_dependency(%q<hoe-mercurial>, ["~> 1.4"])
-      s.add_development_dependency(%q<hoe-deveiate>, ["~> 0.6"])
+      s.add_development_dependency(%q<hoe-deveiate>, ["~> 0.8"])
       s.add_development_dependency(%q<hoe-highline>, ["~> 0.2"])
       s.add_development_dependency(%q<rdoc>, ["~> 4.0"])
       s.add_development_dependency(%q<rake-compiler>, ["~> 0"])
       s.add_development_dependency(%q<rdoc-generator-fivefish>, ["~> 0"])
-      s.add_development_dependency(%q<hoe>, ["~> 3.13"])
+      s.add_development_dependency(%q<hoe>, ["~> 3.15"])
     else
       s.add_dependency(%q<loggability>, ["~> 0.11"])
       s.add_dependency(%q<hoe-mercurial>, ["~> 1.4"])
-      s.add_dependency(%q<hoe-deveiate>, ["~> 0.6"])
+      s.add_dependency(%q<hoe-deveiate>, ["~> 0.8"])
       s.add_dependency(%q<hoe-highline>, ["~> 0.2"])
       s.add_dependency(%q<rdoc>, ["~> 4.0"])
       s.add_dependency(%q<rake-compiler>, ["~> 0"])
       s.add_dependency(%q<rdoc-generator-fivefish>, ["~> 0"])
-      s.add_dependency(%q<hoe>, ["~> 3.13"])
+      s.add_dependency(%q<hoe>, ["~> 3.15"])
     end
   else
     s.add_dependency(%q<loggability>, ["~> 0.11"])
     s.add_dependency(%q<hoe-mercurial>, ["~> 1.4"])
-    s.add_dependency(%q<hoe-deveiate>, ["~> 0.6"])
+    s.add_dependency(%q<hoe-deveiate>, ["~> 0.8"])
     s.add_dependency(%q<hoe-highline>, ["~> 0.2"])
     s.add_dependency(%q<rdoc>, ["~> 4.0"])
     s.add_dependency(%q<rake-compiler>, ["~> 0"])
     s.add_dependency(%q<rdoc-generator-fivefish>, ["~> 0"])
-    s.add_dependency(%q<hoe>, ["~> 3.13"])
+    s.add_dependency(%q<hoe>, ["~> 3.15"])
   end
 end
