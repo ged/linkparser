@@ -43,7 +43,7 @@ hoespec = Hoe.spec 'linkparser' do
 	self.extra_rdoc_files = FileList[ '*.md', 'ext/*.[ch]' ]
 	self.license 'BSD-3-Clause'
 	self.urls = {
-		home:   'http://deveiate.org/projects/Ruby-LinkParser',
+		home:   'http://bitbucket.org/ged/linkparser',
 		code:   'http://bitbucket.org/ged/linkparser',
 		docs:   'http://deveiate.org/code/linkparser',
 		github: 'http://github.com/ged/linkparser',
@@ -106,11 +106,11 @@ if File.directory?( '.hg' )
 
 	Rake::Task[ 'docs' ].clear
 	RDoc::Task.new( 'docs' ) do |rdoc|
-	rdoc.main = "README.md"
-	# rdoc.rdoc_files.include( "*.rdoc", "ChangeLog", "lib/**/*.rb", "ext/**/*.c" )
-	rdoc.generator = :fivefish
-	rdoc.title = "Ruby LinkParser"
-	rdoc.rdoc_dir = 'doc'
+		rdoc.main = "README.md"
+		rdoc.rdoc_files.include( "*.md", "ChangeLog", "lib/**/*.rb", "ext/**/*.c" )
+		rdoc.generator = :fivefish
+		rdoc.title = "Ruby LinkParser"
+		rdoc.rdoc_dir = 'doc'
 	end
 end
 
