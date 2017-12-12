@@ -12,12 +12,12 @@ This module is a Ruby binding for
 ### Example Usage
 
     dict = LinkParser::Dictionary.new
-    => #<LinkParser::Dictionary:0x007f9a5b117220>
+    => #<LinkParser::Dictionary:0x007fc56b480d18 @options={}>
 
     sent = dict.parse( "People use Ruby for all kinds of nifty things." )
-    => #<LinkParser::Sentence:0x1fe69761a146 "LEFT-WALL people.p use.v Ruby.f
-        for.p all.a kinds.n of   nifty.a things.n . RIGHT-WALL"/15
-        linkages/0 nulls>
+    => #<LinkParser::Sentence:0x1ff15b42eeda
+          "LEFT-WALL people.p use.v Ruby.f for.p all.a kinds.n of nifty.a things.n . RIGHT-WALL"/
+          15 linkages/0 nulls>
 
     sent.subject
     => "people"
@@ -26,17 +26,17 @@ This module is a Ruby binding for
     => "use"
 
     sent.object
-    => "Ruby.f"
+    => "Ruby"
 
     puts sent.diagram( max_width: 200 )
-    >
-    >     +---------------------------------Xp--------------------------------+
-    >     |                             +---------------Jp---------------+    |
-    >     |                             |            +--------Dmc--------+    |
-    >     +------>WV------>+-----MVp----+            |     +------Jd-----+    |
-    >     +----Wd---+--Sp--+--Os--+     |     +-Dmcn-+-OFd-+    +----A---+    +--RW--+
-    >     |         |      |      |     |     |      |     |    |        |    |      |
-    > LEFT-WALL people.p use.v Ruby.f for.p all.a kinds.n of nifty.a things.n . RIGHT-WALL
+    
+        +---------------------------------Xp--------------------------------+
+        |                             +---------------Jp---------------+    |
+        |                             |            +--------Dmc--------+    |
+        +------>WV------>+-----MVp----+            |     +------Jd-----+    |
+        +----Wd---+--Sp--+--Os--+     |     +-Dmcn-+-OFd-+    +----A---+    +--RW--+
+        |         |      |      |     |     |      |     |    |        |    |      |
+    LEFT-WALL people.p use.v Ruby.f for.p all.a kinds.n of nifty.a things.n . RIGHT-WALL
 
 
 ## Installation

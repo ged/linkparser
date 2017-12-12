@@ -6,12 +6,6 @@ require 'yaml'
 require 'linkparser' unless defined?( LinkParser )
 require 'linkparser/mixins'
 
-# This is the API's representation of a parse. A LinkParser::Sentence may have one or more
-# of LinkParser::Linkages, each of which represents one possible structure of the sentence.
-# It can be thought of as a Sentence together with a collection of links. If the parse
-# has a conjunction, then the Linkage is made up of at least two "sublinkages". A
-# Linkage can be pretty printed in either ASCII or Postscript format, and individual
-# links can be extracted.
 class LinkParser::Linkage
 	extend Loggability,
 	       LinkParser::DeprecationUtilities

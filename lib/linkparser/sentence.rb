@@ -3,10 +3,6 @@
 
 require 'linkparser' unless defined?( LinkParser )
 
-# A Sentence is the API's representation of an input string, tokenized
-# and interpreted according to a specific Dictionary. After a Sentence
-# is created and parsed, various attributes of the resulting set of
-# linkages can be obtained.
 class LinkParser::Sentence
 	extend Loggability,
 	       LinkParser::DeprecationUtilities

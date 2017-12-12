@@ -50,7 +50,7 @@ rlink_log_obj( VALUE context, const char *level, const char *fmt, va_dcl )
 	vsnprintf( buf, BUFSIZ, fmt, args );
 	message = rb_str_new2( buf );
 
-	logger = rb_funcall( context, rb_intern("log"), 0, 0 );
+	logger = rb_funcall( context, rb_intern("log"), 0 );
 	rb_funcall( logger, rb_intern(level), 1, message );
 
 	va_end( args );
@@ -76,7 +76,7 @@ rlink_log( const char *level, const char *fmt, va_dcl )
 	vsnprintf( buf, BUFSIZ, fmt, args );
 	message = rb_str_new2( buf );
 
-	logger = rb_funcall( rlink_mLinkParser, rb_intern("logger"), 0, 0 );
+	logger = rb_funcall( rlink_mLinkParser, rb_intern("logger"), 0 );
 	rb_funcall( logger, rb_intern(level), 1, message );
 
 	va_end( args );

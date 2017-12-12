@@ -155,7 +155,7 @@ rlink_sentence_s_alloc(  VALUE klass )
  *     LinkParser::Sentence.new( str, dict )   -> sentence
  *
  *  Create a new LinkParser::Sentence object from the given input string
- #  using the specified LinkParser::Dictionary.
+ *  using the specified LinkParser::Dictionary.
  *
  *     dict = LinkParser::Dictionary.new
  *     LinkParser::Sentence.new( "The boy runs", dict )  #=> #<LinkParser::Sentence:0x5481ac>

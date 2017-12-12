@@ -219,9 +219,9 @@ describe LinkParser::Linkage do
 
 
 	it "can report on the various cost metrics of the parse" do
-		expect( linkage.unused_word_cost ).to be_an_instance_of( Fixnum )
-		expect( linkage.disjunct_cost ).to be_an_instance_of( Fixnum )
-		expect( linkage.link_cost ).to be_an_instance_of( Fixnum )
+		expect( linkage.unused_word_cost ).to be_an_instance_of( Integer )
+		expect( linkage.disjunct_cost ).to be_an_instance_of( Integer )
+		expect( linkage.link_cost ).to be_an_instance_of( Integer )
 	end
 
 

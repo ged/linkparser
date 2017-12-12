@@ -68,7 +68,9 @@ describe LinkParser::ParseOptions do
 
 
 	it "doesn't allow the cost model to be set to an invalid value" do
-		expect { opts.cost_model_type = :rafferty }.to raise_error
+		expect {
+			opts.cost_model_type = :rafferty
+		}.to raise_error( ArgumentError, /unknown cost model/i )
 	end
 
 end
