@@ -1,10 +1,10 @@
 # -*- encoding: utf-8 -*-
-# stub: linkparser 2.1.0.pre20171211170930 ruby lib
+# stub: linkparser 2.1.0.pre20171211171614 ruby lib
 # stub: ext/extconf.rb
 
 Gem::Specification.new do |s|
   s.name = "linkparser".freeze
-  s.version = "2.1.0.pre20171211170930"
+  s.version = "2.1.0.pre20171211171614"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.extensions = ["ext/extconf.rb".freeze]
   s.extra_rdoc_files = ["History.md".freeze, "Manifest.txt".freeze, "README.md".freeze, "History.md".freeze, "README.md".freeze, "ext/dictionary.c".freeze, "ext/linkage.c".freeze, "ext/linkparser.c".freeze, "ext/linkparser.h".freeze, "ext/parseoptions.c".freeze, "ext/sentence.c".freeze]
   s.files = [".simplecov".freeze, "ChangeLog".freeze, "History.md".freeze, "LICENSE".freeze, "Manifest.txt".freeze, "README.md".freeze, "Rakefile".freeze, "ext/dictionary.c".freeze, "ext/extconf.rb".freeze, "ext/linkage.c".freeze, "ext/linkparser.c".freeze, "ext/linkparser.h".freeze, "ext/parseoptions.c".freeze, "ext/sentence.c".freeze, "lib/linkparser.rb".freeze, "lib/linkparser/dictionary.rb".freeze, "lib/linkparser/linkage.rb".freeze, "lib/linkparser/mixins.rb".freeze, "lib/linkparser/parseoptions.rb".freeze, "lib/linkparser/sentence.rb".freeze, "spec/bugfixes_spec.rb".freeze, "spec/helpers.rb".freeze, "spec/linkparser/dictionary_spec.rb".freeze, "spec/linkparser/linkage_spec.rb".freeze, "spec/linkparser/mixins_spec.rb".freeze, "spec/linkparser/parseoptions_spec.rb".freeze, "spec/linkparser/sentence_spec.rb".freeze, "spec/linkparser_spec.rb".freeze]
-  s.homepage = "http://deveiate.org/projects/Ruby-LinkParser".freeze
+  s.homepage = "http://bitbucket.org/ged/linkparser".freeze
   s.licenses = ["BSD".freeze, "BSD-3-Clause".freeze]
   s.rdoc_options = ["--main".freeze, "README.md".freeze]
   s.required_ruby_version = Gem::Requirement.new(">= 2.0.0".freeze)

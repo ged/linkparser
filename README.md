@@ -1,6 +1,6 @@
 # linkparser
 
-* http://deveiate.org/projects/Ruby-LinkParser
+* http://bitbucket.org/ged/linkparser
 
 ## Description
 
@@ -79,7 +79,7 @@ https://www.gnu.org/licenses/lgpl-2.1.html
 
 The gem itself is licensed under the BSD license:
 
-Copyright (c) 2006-2016, The FaerieMUD Consortium
+Copyright (c) 2006-2017, The FaerieMUD Consortium
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
