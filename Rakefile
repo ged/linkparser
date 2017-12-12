@@ -41,6 +41,13 @@ hoespec = Hoe.spec 'linkparser' do
 	self.readme_file = 'README.md'
 	self.history_file = 'History.md'
 	self.extra_rdoc_files = FileList[ '*.md', 'ext/*.[ch]' ]
+	self.license 'BSD-3-Clause'
+	self.urls = {
+		home:   'http://deveiate.org/projects/Ruby-LinkParser',
+		code:   'http://bitbucket.org/ged/linkparser',
+		docs:   'http://deveiate.org/code/linkparser',
+		github: 'http://github.com/ged/linkparser',
+	}
 
 	self.developer 'Michael Granger', 'ged@FaerieMUD.org'
 	self.developer 'Martin Chase', 'stillflame@FaerieMUD.org'
@@ -99,8 +106,8 @@ if File.directory?( '.hg' )
 
 	Rake::Task[ 'docs' ].clear
 	RDoc::Task.new( 'docs' ) do |rdoc|
-	rdoc.main = "README.rdoc"
-	rdoc.rdoc_files.include( "*.rdoc", "ChangeLog", "lib/**/*.rb", "ext/**/*.c" )
+	rdoc.main = "README.md"
+	# rdoc.rdoc_files.include( "*.rdoc", "ChangeLog", "lib/**/*.rb", "ext/**/*.c" )
 	rdoc.generator = :fivefish
 	rdoc.title = "Ruby LinkParser"
 	rdoc.rdoc_dir = 'doc'

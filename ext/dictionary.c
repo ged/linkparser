@@ -291,7 +291,7 @@ rlink_parse( int argc, VALUE *argv, VALUE self )
 
 	/* Now call #parse on it */
 	if ( i == 1 )
-		rb_funcall( sentence, rb_intern("parse"), 0, 0 );
+		rb_funcall( sentence, rb_intern("parse"), 0 );
 	else
 		rb_funcall( sentence, rb_intern("parse"), 1, options );
 
