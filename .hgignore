@@ -13,3 +13,4 @@ ChangeLog
 ^\.yardoc/
 ^release\.ann$
 doc/
+experiments/diagram_hang$
