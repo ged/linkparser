@@ -34,8 +34,8 @@ describe LinkParser::Linkage do
 
 
 	it "can build a diagram string for a sentence wrapped to a screen width" do
-		diagram = linkage.diagram( max_width: 10 )
-		expect( diagram.each_line.map(&:strip).map(&:length) ).to all( be <= 10 )
+		diagram = linkage.diagram( max_width: 20 )
+		expect( diagram.each_line.map(&:strip).map(&:length) ).to all( be <= 20 )
 	end
 
 

@@ -50,7 +50,7 @@ describe LinkParser::ParseOptions do
 
 
 	it "knows whether spell_guessing is enabled or not" do
-		expect( opts.spell_guessing_enabled? ).to eq( true )
+		expect( opts.spell_guessing_enabled? ).to be( true ).or( be false )
 	end
 
 
