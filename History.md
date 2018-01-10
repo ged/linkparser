@@ -1,3 +1,17 @@
+## v2.1.0 [2018-01-10] Michael Granger <ged@FaerieMUD.org>
+
+Enhancements:
+
+- Update for the latest link-grammar (5.4.3)
+
+Bugfixes:
+
+- Fix LinkParser.link_grammar_version
+- Eliminate weird calls to rb_funcall with explicit null pointers (Ruby 2.5)
+- Eliminate use of deprecated Fixnum constant (Ruby 2.5)
+- Add a workaround and minimal test case for diagrams with very small widths
+
+
 ## v2.0.0 [2015-03-02] Michael Granger <ged@FaerieMUD.org>
 
 Updated for the latest Ruby and link-grammar.
