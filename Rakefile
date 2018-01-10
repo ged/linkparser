@@ -53,13 +53,13 @@ hoespec = Hoe.spec 'linkparser' do
 	self.developer 'Martin Chase', 'stillflame@FaerieMUD.org'
 
 	self.dependency 'loggability', '~> 0.11'
-	self.dependency 'rake-compiler', '~> 0', :development
-	self.dependency 'hoe-deveiate', '~> 0.5', :development
-	self.dependency 'rdoc-generator-fivefish', '~> 0', :development
+	self.dependency 'rake-compiler', '~> 1.0', :development
+	self.dependency 'hoe-deveiate', '~> 0.9', :development
+	self.dependency 'rdoc-generator-fivefish', '~> 0.3', :development
 
 	self.spec_extras[:extensions] = [ EXTCONF.to_s ]
 
-	self.require_ruby_version( '>=2.0.0' )
+	self.require_ruby_version( '>=2.3.0' )
 	self.hg_sign_tags = true if self.respond_to?( :hg_sign_tags= )
 	self.check_history_on_release = true if self.respond_to?( :check_history_on_release= )
 	self.rdoc_locations << "deveiate:/usr/local/www/public/code/#{remote_rdoc_dir}"

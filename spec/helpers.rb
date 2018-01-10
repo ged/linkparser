@@ -27,6 +27,10 @@ RSpec.configure do |config|
 		mock.syntax = :expect
 	end
 
+	lg_version = LinkParser.link_grammar_version[ /(\d+(\.\d+)+)$/, 1 ]
+	config.filter_run_excluding( skip_version: lg_version )
+	config.filter_run_including( only_version: lg_version )
+
 	config.include( Loggability::SpecHelpers )
 	config.include( LinkParser::SpecHelpers )
 end

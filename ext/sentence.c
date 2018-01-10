@@ -70,6 +70,7 @@ rlink_sentence_gc_free( struct rlink_sentence *ptr )
 			/* Freeing the dictionary automatically frees the sentences it belongs to, so
 			   don't double-free if the dictionary struct or its pointer is done. */
 			if ( dictionary->dict && ptr->sentence ) {
+				rlink_log( "Deleting sentence %p", "debug", ptr->sentence );
 				sentence_delete( (Sentence)ptr->sentence );
 			}
 		}

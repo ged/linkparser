@@ -223,7 +223,10 @@ rlink_linkage_diagram( int argc, VALUE *argv, VALUE self )
 
 	rlink_log_obj( self, "debug", "Display walls: %d, screen_width: %d", display_walls, screen_width );
 
-	diagram_cstr = linkage_print_diagram( (Linkage)ptr->linkage, display_walls, screen_width );
+	if ( !(diagram_cstr = linkage_print_diagram((Linkage)ptr->linkage, display_walls, screen_width)) ) {
+		rb_raise( rb_eRuntimeError, "Can't create a diagram of width %zu", screen_width );
+	}
+
 	diagram = rb_str_new2( diagram_cstr );
 	linkage_free_diagram( diagram_cstr );
 
