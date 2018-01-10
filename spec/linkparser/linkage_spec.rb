@@ -23,12 +23,12 @@ describe LinkParser::Linkage do
 
 	it "can build a diagram string for a sentence" do
 		expect( linkage.diagram.each_line.to_a ).to include(
-			"    +--------------Xp--------------+       \n",
-			"    +-------->WV------->+          |       \n",
-			"    +-----Wd-----+      |          |       \n",
+			"    +--------------Xp--------------+\n",
+			"    +-------->WV------->+          |\n",
+			"    +---->Wd-----+      |          |\n",
 			"    |      +Ds**c+--Ss--+--Pa--+   +--RW--+\n",
 			"    |      |     |      |      |   |      |\n",
-			"LEFT-WALL the flag.n was.v-d wet.a . RIGHT-WALL \n",
+			"LEFT-WALL the flag.n was.v-d wet.a . RIGHT-WALL\n",
 		)
 	end
 
@@ -45,10 +45,10 @@ describe LinkParser::Linkage do
 
 
 	it "can build a 'links and domains' diagram" do
-		expect( linkage.links_and_domains.each_line ).to include(
+		expect( linkage.links_and_domains.each_line.to_a ).to include(
 			"       LEFT-WALL      Xp            ----Xp-----  Xp              .\n",
 			" (m)   LEFT-WALL      hWV           >---WV---->  dWV             was.v-d\n",
-			" (m)   LEFT-WALL      Wd            ----Wd-----  Wd              flag.n\n",
+			" (m)   LEFT-WALL      hWd           >---Wd-----  Wd              flag.n\n",
 			" (m)   flag.n         Ss            ----Ss-----  Ss              was.v-d\n",
 			" (m)   the            D             ----Ds**c--  Ds**c           flag.n\n",
 			" (m)   was.v-d        Pa            ----Pa-----  Pa              wet.a\n",
@@ -145,7 +145,7 @@ describe LinkParser::Linkage do
 	it "can return left labels for any of its links" do
 		expect( linkage.link_llabel(0) ).to eq( "Xp" )
 		expect( linkage.link_llabel(1) ).to eq( "hWV" )
-		expect( linkage.link_llabel(2) ).to eq( "Wd" )
+		expect( linkage.link_llabel(2) ).to eq( "hWd" )
 		expect( linkage.link_llabel(3) ).to eq( "Ss" )
 		expect( linkage.link_llabel(4) ).to eq( "D" )
 		expect( linkage.link_llabel(5) ).to eq( "Pa" )
@@ -354,6 +354,13 @@ describe LinkParser::Linkage do
 			sent = dict.parse( 'People like goats.' )
 			expect( sent.subject ).to_not match( /people\.p/i )
 			expect( sent.object ).to_not match( /goats\.p/i )
+		end
+
+
+		it "raises an exception if the diagram screen_width is too small", skip_version: '5.4.2' do
+			expect {
+				linkage.diagram( max_width: 2 )
+			}.to raise_error( /can't create a diagram/i )
 		end
 
 	end
