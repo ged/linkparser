@@ -36,6 +36,7 @@ have_func( 'dictionary_create_lang' )
 have_func( 'parse_options_get_spell_guess' )
 have_func( 'linkage_get_disjunct_str' )
 have_func( 'linkgrammar_get_version' )
+have_func( 'linkgrammar_get_configuration' )
 
 create_header()
 create_makefile( 'linkparser_ext' )

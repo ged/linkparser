@@ -129,6 +129,26 @@ rlink_link_grammar_version( VALUE self )
 
 
 /*
+ *  call-seq:
+ *     LinkParser.link_grammar_config   -> string
+ *
+ *  Return the configuration used by the underlying link-grammar library.
+ *
+ */
+static VALUE
+rlink_link_grammar_config( VALUE self )
+{
+#ifdef HAVE_LINKGRAMMAR_GET_CONFIGURATION
+	const char *config = linkgrammar_get_configuration();
+	if ( !config ) rb_bug( "linkgrammar_get_configuration returned NULL pointer" );
+	return rb_str_new2( config );
+#else
+	return rb_str_new2( "Compiled with: " );
+#endif /* HAVE_LINKGRAMMAR_GET_CONFIGURATION */
+}
+
+
+/*
  * LinkParser extension init function
  */
 void
@@ -141,6 +161,8 @@ Init_linkparser_ext()
 
 	rb_define_singleton_method( rlink_mLinkParser, "link_grammar_version",
 		rlink_link_grammar_version, 0 );
+	rb_define_singleton_method( rlink_mLinkParser, "link_grammar_config",
+		rlink_link_grammar_config, 0 );
 
 	rlink_init_dict();
 	rlink_init_sentence();
