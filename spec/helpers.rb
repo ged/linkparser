@@ -1,5 +1,5 @@
 # -*- ruby -*-
-#encoding: utf-8
+# frozen_string_literal: true
 
 # SimpleCov test coverage reporting; enable this using the :coverage rake task
 require 'simplecov' if ENV['COVERAGE']
