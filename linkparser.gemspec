@@ -1,16 +1,16 @@
 # -*- encoding: utf-8 -*-
-# stub: linkparser 2.2.0.pre20190223120458 ruby lib
+# stub: linkparser 2.2.0.pre20190417140827 ruby lib
 # stub: ext/extconf.rb
 
 Gem::Specification.new do |s|
   s.name = "linkparser".freeze
-  s.version = "2.2.0.pre20190223120458"
+  s.version = "2.2.0.pre20190417140827"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
   s.authors = ["Michael Granger".freeze, "Martin Chase".freeze]
   s.cert_chain = ["certs/ged.pem".freeze]
-  s.date = "2019-02-23"
+  s.date = "2019-04-17"
   s.description = "This module is a Ruby binding for\n[the Abiword version](http://www.abisource.com/projects/link-grammar/) of CMU's\n[Link Grammar](http://www.link.cs.cmu.edu/link/), a syntactic parser of English.".freeze
   s.email = ["ged@FaerieMUD.org".freeze, "stillflame@FaerieMUD.org".freeze]
   s.extensions = ["ext/extconf.rb".freeze]
@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.licenses = ["BSD".freeze, "BSD-3-Clause".freeze]
   s.rdoc_options = ["--main".freeze, "README.md".freeze]
   s.required_ruby_version = Gem::Requirement.new(">= 2.3.0".freeze)
-  s.rubygems_version = "3.0.2".freeze
+  s.rubygems_version = "3.0.3".freeze
   s.summary = "This module is a Ruby binding for [the Abiword version](http://www.abisource.com/projects/link-grammar/) of CMU's [Link Grammar](http://www.link.cs.cmu.edu/link/), a syntactic parser of English.".freeze
 
   if s.respond_to? :specification_version then
