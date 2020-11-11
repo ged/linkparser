@@ -89,7 +89,7 @@ rlink_log( const char *level, const char *fmt, va_dcl )
  * library will have printed out the actual problem to stderr, and stderr is pointed
  * somewhere useful.
  */
-void
+_Noreturn void
 rlink_raise_lp_error()
 {
 	rb_raise( rlink_eLpError, "Unknown error" );

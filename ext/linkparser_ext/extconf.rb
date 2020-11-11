@@ -38,6 +38,8 @@ have_func( 'linkage_get_disjunct_str' )
 have_func( 'linkgrammar_get_version' )
 have_func( 'linkgrammar_get_configuration' )
 
+have_const( 'CORPUS' )
+
 create_header()
 create_makefile( 'linkparser_ext' )
 

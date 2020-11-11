@@ -538,13 +538,22 @@ rlink_parseopts_set_cost_model_type( VALUE self, VALUE model_name )
 	if ( model_name == vdal_sym ) {
 		rlink_log_obj( self, "debug", "Selected the 'VDAL' cost model" );
 		model = VDAL;
-	} else if ( model_name == corpus_sym ) {
+	}
+#ifdef CORPUS
+	else if ( model_name == corpus_sym ) {
 		rlink_log_obj( self, "debug", "Selected the 'CORPUS' cost model" );
 		model = CORPUS;
-	} else {
+	}
+	else {
 		rb_raise( rb_eArgError, "Unknown cost model %s (expected either :vdal or :corpus).",
 			 RSTRING_PTR(rb_inspect( model_name )) );
 	}
+#else
+	else {
+		rb_raise( rb_eArgError, "Unknown cost model %s (this system supports only :vdal).",
+			 RSTRING_PTR(rb_inspect( model_name )) );
+	}
+#endif // CORPUS
 
 	rlink_log_obj( self, "info", "Setting the cost model to %s", model == VDAL ? "VDAL" : "CORPUS" );
 	parse_options_reset_resources( opts );
@@ -576,9 +585,11 @@ rlink_parseopts_get_cost_model_type( VALUE self )
 	case VDAL:
 		model_name = vdal_sym;
 		break;
+#ifdef CORPUS
 	case CORPUS:
 		model_name = corpus_sym;
 		break;
+#endif // CORPUS
 	default:
 		rb_bug( "Unhandled cost model type %d", model );
 	}

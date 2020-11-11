@@ -1,6 +1,18 @@
 # linkparser
 
-* http://bitbucket.org/ged/linkparser
+home
+: https://hg.sr.ht/~ged/linkparser
+
+code
+: https://hg.sr.ht/~ged/linkparser/browse
+
+docs
+: http://deveiate.org/code/linkparser
+
+github
+: http://github.com/ged/linkparser
+
+
 
 ## Description
 
@@ -58,16 +70,21 @@ installed it somewhere that your linker doesn't look by default:
 ## Contributing
 
 You can check out the current development source
-[with Mercurial](http://repo.deveiate.org/LinkParser),
+[with Mercurial](https://hg.sr.ht/~ged/linkparser),
 or if you prefer Git, via
 [its Github mirror](http://github.com/ged/linkparser).
 
 After checking out the source, run:
 
-	$ rake newb
+    $ gen install -Ng
+    $ rake setup
 
-This task will install any missing dependencies, run the tests/specs,
-and generate the API documentation.
+This will install any missing dependencies and do any neceesary developer setup.
+
+
+## Author(s)
+
+- Michael Granger <ged@faeriemud.org>
 
 
 ## License
@@ -79,7 +96,7 @@ https://www.gnu.org/licenses/lgpl-2.1.html
 
 The gem itself is licensed under the BSD license:
 
-Copyright (c) 2006-2017, The FaerieMUD Consortium
+Copyright (c) 2006-2020, The FaerieMUD Consortium
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

@@ -1,58 +1,40 @@
 # -*- encoding: utf-8 -*-
-# stub: linkparser 2.2.0.pre20190417140827 ruby lib
-# stub: ext/extconf.rb
+# stub: linkparser 2.2.0.pre.20201111143547 ruby lib
+# stub: ext/linkparser_ext/extconf.rb
 
 Gem::Specification.new do |s|
   s.name = "linkparser".freeze
-  s.version = "2.2.0.pre20190417140827"
+  s.version = "2.2.0.pre.20201111143547"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1".freeze) if s.respond_to? :required_rubygems_version=
+  s.metadata = { "bug_tracker_uri" => "https://todo.sr.ht/~ged/linkparser/browse", "changelog_uri" => "http://deveiate.org/code/linkparser/History_md.html", "documentation_uri" => "http://deveiate.org/code/linkparser", "homepage_uri" => "https://hg.sr.ht/~ged/linkparser", "source_uri" => "https://hg.sr.ht/~ged/linkparser/browse" } if s.respond_to? :metadata=
   s.require_paths = ["lib".freeze]
-  s.authors = ["Michael Granger".freeze, "Martin Chase".freeze]
-  s.cert_chain = ["certs/ged.pem".freeze]
-  s.date = "2019-04-17"
-  s.description = "This module is a Ruby binding for\n[the Abiword version](http://www.abisource.com/projects/link-grammar/) of CMU's\n[Link Grammar](http://www.link.cs.cmu.edu/link/), a syntactic parser of English.".freeze
-  s.email = ["ged@FaerieMUD.org".freeze, "stillflame@FaerieMUD.org".freeze]
-  s.extensions = ["ext/extconf.rb".freeze]
-  s.extra_rdoc_files = ["History.md".freeze, "Manifest.txt".freeze, "README.md".freeze, "History.md".freeze, "README.md".freeze, "ext/dictionary.c".freeze, "ext/linkage.c".freeze, "ext/linkparser.c".freeze, "ext/linkparser.h".freeze, "ext/parseoptions.c".freeze, "ext/sentence.c".freeze]
-  s.files = [".simplecov".freeze, "ChangeLog".freeze, "History.md".freeze, "LICENSE".freeze, "Manifest.txt".freeze, "README.md".freeze, "Rakefile".freeze, "ext/dictionary.c".freeze, "ext/extconf.rb".freeze, "ext/linkage.c".freeze, "ext/linkparser.c".freeze, "ext/linkparser.h".freeze, "ext/parseoptions.c".freeze, "ext/sentence.c".freeze, "lib/linkparser.rb".freeze, "lib/linkparser/dictionary.rb".freeze, "lib/linkparser/linkage.rb".freeze, "lib/linkparser/mixins.rb".freeze, "lib/linkparser/parseoptions.rb".freeze, "lib/linkparser/sentence.rb".freeze, "spec/bugfixes_spec.rb".freeze, "spec/helpers.rb".freeze, "spec/linkparser/dictionary_spec.rb".freeze, "spec/linkparser/linkage_spec.rb".freeze, "spec/linkparser/mixins_spec.rb".freeze, "spec/linkparser/parseoptions_spec.rb".freeze, "spec/linkparser/sentence_spec.rb".freeze, "spec/linkparser_spec.rb".freeze]
-  s.homepage = "http://bitbucket.org/ged/linkparser".freeze
-  s.licenses = ["BSD".freeze, "BSD-3-Clause".freeze]
-  s.rdoc_options = ["--main".freeze, "README.md".freeze]
-  s.required_ruby_version = Gem::Requirement.new(">= 2.3.0".freeze)
-  s.rubygems_version = "3.0.3".freeze
-  s.summary = "This module is a Ruby binding for [the Abiword version](http://www.abisource.com/projects/link-grammar/) of CMU's [Link Grammar](http://www.link.cs.cmu.edu/link/), a syntactic parser of English.".freeze
+  s.authors = ["Michael Granger".freeze]
+  s.date = "2020-11-11"
+  s.description = "This module is a Ruby binding for the Abiword version of CMU&#39;s Link Grammar, a syntactic parser of English.".freeze
+  s.email = ["ged@faeriemud.org".freeze]
+  s.extensions = ["ext/linkparser_ext/extconf.rb".freeze]
+  s.files = ["History.md".freeze, "README.md".freeze, "ext/linkparser_ext/dictionary.c".freeze, "ext/linkparser_ext/extconf.rb".freeze, "ext/linkparser_ext/linkage.c".freeze, "ext/linkparser_ext/linkparser.c".freeze, "ext/linkparser_ext/linkparser.h".freeze, "ext/linkparser_ext/parseoptions.c".freeze, "ext/linkparser_ext/sentence.c".freeze, "lib/linkparser.rb".freeze, "lib/linkparser/dictionary.rb".freeze, "lib/linkparser/linkage.rb".freeze, "lib/linkparser/mixins.rb".freeze, "lib/linkparser/parseoptions.rb".freeze, "lib/linkparser/sentence.rb".freeze, "spec/bugfixes_spec.rb".freeze, "spec/helpers.rb".freeze, "spec/linkparser/dictionary_spec.rb".freeze, "spec/linkparser/linkage_spec.rb".freeze, "spec/linkparser/mixins_spec.rb".freeze, "spec/linkparser/parseoptions_spec.rb".freeze, "spec/linkparser/sentence_spec.rb".freeze, "spec/linkparser_spec.rb".freeze]
+  s.homepage = "https://hg.sr.ht/~ged/linkparser".freeze
+  s.licenses = ["BSD-3-Clause".freeze]
+  s.rubygems_version = "3.1.4".freeze
+  s.summary = "This module is a Ruby binding for the Abiword version of CMU&#39;s Link Grammar, a syntactic parser of English.".freeze
 
   if s.respond_to? :specification_version then
     s.specification_version = 4
+  end
 
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<loggability>.freeze, ["~> 0.11"])
-      s.add_development_dependency(%q<hoe-mercurial>.freeze, ["~> 1.4"])
-      s.add_development_dependency(%q<hoe-deveiate>.freeze, ["~> 0.10"])
-      s.add_development_dependency(%q<hoe-highline>.freeze, ["~> 0.2"])
-      s.add_development_dependency(%q<rake-compiler>.freeze, ["~> 1.0"])
-      s.add_development_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0.3"])
-      s.add_development_dependency(%q<rdoc>.freeze, [">= 4.0", "< 7"])
-      s.add_development_dependency(%q<hoe>.freeze, ["~> 3.17"])
-    else
-      s.add_dependency(%q<loggability>.freeze, ["~> 0.11"])
-      s.add_dependency(%q<hoe-mercurial>.freeze, ["~> 1.4"])
-      s.add_dependency(%q<hoe-deveiate>.freeze, ["~> 0.10"])
-      s.add_dependency(%q<hoe-highline>.freeze, ["~> 0.2"])
-      s.add_dependency(%q<rake-compiler>.freeze, ["~> 1.0"])
-      s.add_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0.3"])
-      s.add_dependency(%q<rdoc>.freeze, [">= 4.0", "< 7"])
-      s.add_dependency(%q<hoe>.freeze, ["~> 3.17"])
-    end
+  if s.respond_to? :add_runtime_dependency then
+    s.add_runtime_dependency(%q<loggability>.freeze, ["~> 0.17"])
+    s.add_runtime_dependency(%q<rake-compiler>.freeze, ["~> 1.1"])
+    s.add_runtime_dependency(%q<rdoc>.freeze, ["~> 6.2"])
+    s.add_development_dependency(%q<rake-deveiate>.freeze, ["~> 0.15"])
+    s.add_development_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0.4"])
   else
-    s.add_dependency(%q<loggability>.freeze, ["~> 0.11"])
-    s.add_dependency(%q<hoe-mercurial>.freeze, ["~> 1.4"])
-    s.add_dependency(%q<hoe-deveiate>.freeze, ["~> 0.10"])
-    s.add_dependency(%q<hoe-highline>.freeze, ["~> 0.2"])
-    s.add_dependency(%q<rake-compiler>.freeze, ["~> 1.0"])
-    s.add_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0.3"])
-    s.add_dependency(%q<rdoc>.freeze, [">= 4.0", "< 7"])
-    s.add_dependency(%q<hoe>.freeze, ["~> 3.17"])
+    s.add_dependency(%q<loggability>.freeze, ["~> 0.17"])
+    s.add_dependency(%q<rake-compiler>.freeze, ["~> 1.1"])
+    s.add_dependency(%q<rdoc>.freeze, ["~> 6.2"])
+    s.add_dependency(%q<rake-deveiate>.freeze, ["~> 0.15"])
+    s.add_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0.4"])
   end
 end
