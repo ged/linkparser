@@ -1,3 +1,16 @@
+# Release History for linkparser
+
+---
+
+## v2.2.0 [2020-12-24] Michael Granger <ged@faeriemud.org>
+
+Enhancements:
+
+- Updated for Ruby 2.7
+- Add support for fetching the link-grammar config.
+- Updated for link-grammar 5.8.0.
+
+
 ## v2.1.0 [2018-01-10] Michael Granger <ged@FaerieMUD.org>
 
 Enhancements:

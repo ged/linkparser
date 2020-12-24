@@ -9,7 +9,7 @@ module LinkParser
 
 
 	# Release version
-	VERSION = '2.1.0'
+	VERSION = '2.2.0'
 
 
 	# Loggability API -- set up a logger
