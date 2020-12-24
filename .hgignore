@@ -3,6 +3,7 @@ ChangeLog
 coverage/
 doc/
 spec/.status
+pkg/
 tmp/
 \.bundle$
 \.db$

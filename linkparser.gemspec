@@ -1,16 +1,16 @@
 # -*- encoding: utf-8 -*-
-# stub: linkparser 2.2.0.pre.20201111143547 ruby lib
+# stub: linkparser 2.3.0.pre.20201224135544 ruby lib
 # stub: ext/linkparser_ext/extconf.rb
 
 Gem::Specification.new do |s|
   s.name = "linkparser".freeze
-  s.version = "2.2.0.pre.20201111143547"
+  s.version = "2.3.0.pre.20201224135544"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1".freeze) if s.respond_to? :required_rubygems_version=
   s.metadata = { "bug_tracker_uri" => "https://todo.sr.ht/~ged/linkparser/browse", "changelog_uri" => "http://deveiate.org/code/linkparser/History_md.html", "documentation_uri" => "http://deveiate.org/code/linkparser", "homepage_uri" => "https://hg.sr.ht/~ged/linkparser", "source_uri" => "https://hg.sr.ht/~ged/linkparser/browse" } if s.respond_to? :metadata=
   s.require_paths = ["lib".freeze]
   s.authors = ["Michael Granger".freeze]
-  s.date = "2020-11-11"
+  s.date = "2020-12-24"
   s.description = "This module is a Ruby binding for the Abiword version of CMU&#39;s Link Grammar, a syntactic parser of English.".freeze
   s.email = ["ged@faeriemud.org".freeze]
   s.extensions = ["ext/linkparser_ext/extconf.rb".freeze]
